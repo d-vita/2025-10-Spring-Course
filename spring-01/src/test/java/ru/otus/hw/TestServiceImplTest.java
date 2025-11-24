@@ -13,7 +13,9 @@ import ru.otus.hw.service.TestServiceImpl;
 
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class TestServiceImplTest {
@@ -57,12 +59,12 @@ public class TestServiceImplTest {
 
         verify(ioService).printLine(q1.text());
         q1.answers().forEach(a ->
-                verify(ioService).printFormattedLine("- %s", a.text())
+                verify(ioService).printLine(String.format("- %s", a.text()))
         );
 
         verify(ioService).printLine(q2.text());
         q2.answers().forEach(a ->
-                verify(ioService).printFormattedLine("- %s", a.text())
+                verify(ioService).printLine(String.format("- %s", a.text()))
         );
 
         verifyNoMoreInteractions(ioService);
