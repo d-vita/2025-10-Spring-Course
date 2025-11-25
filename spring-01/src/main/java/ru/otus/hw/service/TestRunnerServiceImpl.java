@@ -12,14 +12,18 @@ public class TestRunnerServiceImpl implements TestRunnerService {
 
     private final TestService testService;
 
+    private final IOService ioService;
+
     @Override
     public void run() {
         try {
             testService.executeTest();
         } catch (QuestionReadException e) {
             LOGGER.error("Error reading questions", e);
+            ioService.printLine("Error reading questions");
         } catch (Exception e) {
             LOGGER.error("An unexpected error occurred", e);
+            ioService.printLine("An unexpected error occurred");
         }
     }
 }

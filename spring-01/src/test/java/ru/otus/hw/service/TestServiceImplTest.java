@@ -1,4 +1,4 @@
-package ru.otus.hw;
+package ru.otus.hw.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,8 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
-import ru.otus.hw.service.IOService;
-import ru.otus.hw.service.TestServiceImpl;
 
 import java.util.List;
 

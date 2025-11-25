@@ -5,9 +5,6 @@ import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
 
@@ -25,19 +22,12 @@ public class TestServiceImpl implements TestService {
 
     private void printAllQuestions() {
         for (Question question : questionDao.findAll()) {
-            List<String> formattedQuestion = formatQuestion(question);
-            for (String line : formattedQuestion) {
-                ioService.printLine(line);
-            }
+            ioService.printLine(question.text());
+            question.answers().forEach(answer -> ioService.printLine(formatAnswer(answer)));
         }
     }
 
-    private List<String> formatQuestion(Question question) {
-        List<String> lines = new ArrayList<>();
-        lines.add(question.text());
-        for (Answer answer : question.answers()) {
-            lines.add(String.format("- %s", answer.text()));
-        }
-        return lines;
+    private String formatAnswer(Answer answer) {
+        return String.format("- %s", answer.text());
     }
 }
