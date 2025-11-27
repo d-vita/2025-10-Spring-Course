@@ -20,6 +20,6 @@ public class QuestionDto {
     private List<Answer> answers;
 
     public Question toDomainObject() {
-        return new Question(text, List.copyOf(answers));
+        return new Question(text, answers);
     }
 }
