@@ -8,12 +8,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
+import ru.otus.hw.domain.Student;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
 public class TestServiceImplTest {
@@ -50,20 +54,34 @@ public class TestServiceImplTest {
 
         when(questionDao.findAll()).thenReturn(List.of(q1, q2));
 
-        testService.executeTest();
+        when(ioService.readIntForRange(eq(1), eq(3), anyString()))
+                .thenReturn(3)
+                .thenReturn(1);
+
+        Student student = new Student("Ivan", "Petrov");
+
+        testService.executeTestFor(student);
 
         verify(ioService).printLine("");
-        verify(ioService).printLine("Please answer the questions below");
+        verify(ioService).printFormattedLine("Please answer the questions below%n");
 
-        verify(ioService).printLine(q1.text());
-        q1.answers().forEach(a ->
-                verify(ioService).printLine(String.format("- %s", a.text()))
+        verify(ioService).printLine(
+                """
+                Is there life on Mars?
+                - Science doesn't know this yet
+                - Certainly. The red UFO is from Mars. And green is from Venus
+                - Absolutely not"""
         );
 
-        verify(ioService).printLine(q2.text());
-        q2.answers().forEach(a ->
-                verify(ioService).printLine(String.format("- %s", a.text()))
+        verify(ioService).printLine(
+                """
+                How should resources be loaded form jar in Java?
+                - ClassLoader#getResourceAsStream or ClassPathResource#getInputStream
+                - ClassLoader#getResource#getFile + FileReader
+                - Wingardium Leviosa"""
         );
+
+        verify(ioService, times(2)).readIntForRange(eq(1), eq(3), anyString());
 
         verifyNoMoreInteractions(ioService);
     }
