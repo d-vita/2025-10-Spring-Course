@@ -1,5 +1,5 @@
 <h3>Introduction to the Spring Framework<h3>
-<h3>Homework №2:</h4>
+<h3>Homework №3:</h4>
 <h3>🎓 Student Testing Application — Extended Version</h5>
 
 <p>
@@ -8,18 +8,14 @@ In this assignment, you will continue developing the student testing application
 <h3>🧩 Current Task</h2>
 
 <p>
-The updated version of the application must request the student’s first and last name, present a series of questions with multiple-choice answers, and output the final test result.</p>
-
-<p>
-The work must be done using the provided project template. Some classes in the new template differ from those in Homework №1, so you may need to adapt or migrate classes/files from the previous solution, taking these changes into account.
-</p>
+The main task is to migrate the existing student testing application to Spring Boot and add localization support.</p>
 
 <h3>⚙️ Requirements</h2>
 
 <ul>
-    <li>Use Java + annotation-based configuration for defining the Spring application context.</li> 
-    <li>Resource file name (CSV) and passing score must be configured via the properties file.</li> 
-    <li>Adapt/transfer the unit test for the testing service.</li> 
-    <li>Write an integration test for the question DAO (integration only with the file system; no Spring context, dependencies mocked where applicable).</li> 
-    <li>All tests included in the template must pass.</li>
+    <li>Migrate the student testing application to Spring Boot.</li> 
+    <li>Localize all output messages, questions, and answer options.</li> 
+    <li>Configure MessageSource automatically via Spring Boot, based on application.yml settings.</li> 
+    <li>Move all properties to application.yml.</li> 
+    <li>Transfer and adapt existing unit and integration tests.</li>
 </ul>
