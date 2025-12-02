@@ -12,6 +12,7 @@ import ru.otus.hw.domain.Student;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -23,7 +24,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 public class TestServiceImplTest {
 
     @Mock
-    private IOService ioService;
+    private LocalizedIOService ioService;
 
     @Mock
     private QuestionDao questionDao;
@@ -54,7 +55,9 @@ public class TestServiceImplTest {
 
         when(questionDao.findAll()).thenReturn(List.of(q1, q2));
 
-        when(ioService.readIntForRange(eq(1), eq(3), anyString()))
+        when(ioService.getMessage(anyString(), anyInt())).thenReturn("Error message");
+
+        when(ioService.readIntForRange(anyInt(), anyInt(), anyString()))
                 .thenReturn(3)
                 .thenReturn(1);
 
@@ -63,9 +66,9 @@ public class TestServiceImplTest {
         testService.executeTestFor(student);
 
         verify(ioService).printLine("");
-        verify(ioService).printFormattedLine("Please answer the questions below%n");
+        verify(ioService).printLineLocalized("TestService.answer.the.questions");
 
-        verify(ioService).printLine(
+        verify(ioService).printFormattedLine(
                 """
                 Is there life on Mars?
                 - Science doesn't know this yet
@@ -73,7 +76,7 @@ public class TestServiceImplTest {
                 - Absolutely not"""
         );
 
-        verify(ioService).printLine(
+        verify(ioService).printFormattedLine(
                 """
                 How should resources be loaded form jar in Java?
                 - ClassLoader#getResourceAsStream or ClassPathResource#getInputStream
