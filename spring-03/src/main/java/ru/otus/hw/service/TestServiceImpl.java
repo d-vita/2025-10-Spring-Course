@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
 
-    private final IOService ioService;
+    private final LocalizedIOService ioService;
 
     private final QuestionDao questionDao;
 
@@ -26,7 +26,7 @@ public class TestServiceImpl implements TestService {
         var testResult = new TestResult(student);
 
         for (var question: questions) {
-            ioService.printLine(formatQuestion(question));
+            ioService.printFormattedLine(formatQuestion(question));
 
             int answerIndex = readStudentAnswer(question);
             boolean isAnswerCorrect = isAnswerCorrect(question.answers(), answerIndex);
@@ -39,7 +39,7 @@ public class TestServiceImpl implements TestService {
 
     private void printTestIntro() {
         ioService.printLine("");
-        ioService.printFormattedLine("Please answer the questions below%n");
+        ioService.printLineLocalized("TestService.answer.the.questions");
     }
 
     private int readStudentAnswer(Question question) {
@@ -47,7 +47,7 @@ public class TestServiceImpl implements TestService {
         return ioService.readIntForRange(
                 1,
                 max,
-                "Incorrect input. Only numbers from 1 to %d are allowed".formatted(max)
+                ioService.getMessage("TestService.incorrect.input.error.message", max)
         );
     }
 

@@ -14,7 +14,7 @@ public class TestRunnerServiceImpl implements TestRunnerService {
 
     private final TestService testService;
 
-    private final IOService ioService;
+    private final LocalizedIOService ioService;
 
     private final StudentService studentService;
 
@@ -28,10 +28,10 @@ public class TestRunnerServiceImpl implements TestRunnerService {
             resultService.showResult(testResult);
         } catch (QuestionReadException e) {
             LOGGER.error("Error reading questions", e);
-            ioService.printLine("Error reading questions");
+            ioService.printLineLocalized("TestRunnerService.read.questions.error.message");
         } catch (Exception e) {
             LOGGER.error("An unexpected error occurred", e);
-            ioService.printLine("An unexpected error occurred");
+            ioService.printLineLocalized("TestService.unexpected.error.message");
         }
     }
 }
