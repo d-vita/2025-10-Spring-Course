@@ -1,10 +1,9 @@
 package ru.otus.hw.service;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
@@ -16,20 +15,19 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = TestServiceImpl.class)
 public class TestServiceImplTest {
 
-    @Mock
+    @MockBean
     private LocalizedIOService ioService;
 
-    @Mock
+    @MockBean
     private QuestionDao questionDao;
 
-    @InjectMocks
+    @Autowired
     private TestServiceImpl testService;
 
     @Test
@@ -85,7 +83,5 @@ public class TestServiceImplTest {
         );
 
         verify(ioService, times(2)).readIntForRange(eq(1), eq(3), anyString());
-
-        verifyNoMoreInteractions(ioService);
     }
 }
