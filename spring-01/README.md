@@ -1,6 +1,6 @@
 <h3>Introduction to the Spring Framework<h3>
 <h3>Homework №1:</h4>
-<h3>🎓 Student Testing Console Application</h5>
+<h3>🎓 Student Testing Console Application</h3>
 
 <p>
 Develop a <b>single-user console application</b> for testing students based on a fixed list of questions.  
@@ -11,7 +11,7 @@ The application should request the student's <b>first and last name</b>, present
 The development of the application is divided into <b>two stages</b>, which are completed in the first and second homework assignments, respectively.
 </p>
 
-<h3>🧩 Current Task</h2>
+<h3>🧩 Current Task</h3>
 
 <p>
 The application should <b>load and display</b> the questions along with their possible answers on the screen.  
