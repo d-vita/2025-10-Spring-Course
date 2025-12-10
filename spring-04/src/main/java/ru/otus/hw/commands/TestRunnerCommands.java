@@ -10,7 +10,7 @@ import ru.otus.hw.service.TestRunnerService;
 public class TestRunnerCommands {
     private final TestRunnerService testRunnerService;
 
-    @ShellMethod(value = "Run test for student", key = "st")
+    @ShellMethod(value = "Run test for student", key = {"st", "start"})
     public void startTest () {
         testRunnerService.run();
     }
