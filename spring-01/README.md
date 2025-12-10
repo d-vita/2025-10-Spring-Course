@@ -1,5 +1,5 @@
-<h3>Introduction to the Spring Framework<h3>
-<h3>Homework №1:</h4>
+<h3>Introduction to the Spring Framework</h3>
+<h3>Homework №1:</h3>
 <h3>🎓 Student Testing Console Application</h3>
 
 <p>
