@@ -1,16 +1,16 @@
-<h3>Introduction to the Spring Framework<h3>
-<h3>Homework №4:</h4>
-<h3>🎓 Student Testing Application — Extended Version</h5>
+<h3>Introduction to the Spring Framework</h3>
+<h3>Homework №4:</h3>
+<h3>🎓 Student Testing Application — Extended Version</h3>
 
 <p>
 In this assignment, you will continue developing the student testing application that began in Homework №1. The goal is to enhance the existing console-based solution using Spring Framework features and the updated project template provided to you.</p>
 
-<h3>🧩 Current Task</h2>
+<h3>🧩 Current Task</h3>
 
 <p>
 The main task is to rewrite the application interface using Spring Shell.</p>
 
-<h3>⚙️ Requirements</h2>
+<h3>⚙️ Requirements</h3>
 
 <ul>
     <li>Consider current requirements from previous work.</li> 
