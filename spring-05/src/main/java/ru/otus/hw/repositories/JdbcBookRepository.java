@@ -35,8 +35,8 @@ public class JdbcBookRepository implements BookRepository {
                    g.id AS genre_id,
                    g.name AS genre_name
                 FROM books b
-                JOIN authors a ON b.author_id = a.id
-                JOIN genres g  ON b.genre_id = g.id  
+                INNER JOIN authors a ON b.author_id = a.id
+                INNER JOIN genres g  ON b.genre_id = g.id  
                 WHERE b.id = :id 
                 """;
         try {
@@ -59,8 +59,8 @@ public class JdbcBookRepository implements BookRepository {
                    g.id AS genre_id,
                    g.name AS genre_name
                 FROM books b
-                JOIN authors a ON b.author_id = a.id
-                JOIN genres g  ON b.genre_id = g.id
+                INNER JOIN authors a ON b.author_id = a.id
+                INNER JOIN genres g  ON b.genre_id = g.id
                 """;
         return jdbcTemplate.query(query, new BookRowMapper());
     }
