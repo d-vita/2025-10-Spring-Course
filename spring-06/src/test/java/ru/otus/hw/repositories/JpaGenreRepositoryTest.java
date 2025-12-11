@@ -12,11 +12,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @JdbcTest
-@Import(JdbcGenreRepository.class)
-class JdbcGenreRepositoryTest {
+@Import(JpaGenreRepository.class)
+class JpaGenreRepositoryTest {
 
     @Autowired
-    private JdbcGenreRepository repository;
+    private JpaGenreRepository repository;
 
     @Test
     void shouldFindAllGenres() {

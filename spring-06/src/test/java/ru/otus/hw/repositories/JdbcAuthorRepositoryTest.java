@@ -12,11 +12,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import(JdbcAuthorRepository.class)
+@Import(JpaAuthorRepository.class)
 class JdbcAuthorRepositoryTest {
 
     @Autowired
-    private JdbcAuthorRepository repository;
+    private JpaAuthorRepository repository;
 
     @Test
     void shouldFindAllAuthors() {
