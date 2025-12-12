@@ -1,15 +1,9 @@
 package ru.otus.hw.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class AuthorDto {
-    private long id;
-
-    private String fullName;
+public record AuthorDto(Long id, String fullName) {
+    @Override
+    public String toString() {
+        return "Id: %d, FullName: %s".formatted(id, fullName);
+    }
 }

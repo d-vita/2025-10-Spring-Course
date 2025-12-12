@@ -4,18 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.otus.hw.models.Author;
+import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
+import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class BookDto {
-    private long id;
 
-    private String title;
-
-    private Author author;
-
-    private Genre genre;
+public record BookDto(long id, String title, AuthorDto author, GenreDto genre) {
+    @Override
+    public String toString() {
+        return "Id: %d, title: %s, author: {%s}, genres: %s".formatted(id, title, author, genre);
+    }
 }

@@ -1,17 +1,10 @@
 package ru.otus.hw.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class CommentDto {
-    private long id;
-
-    private String text;
-
-    private long bookId;
+public record CommentDto(Long id, String message, long bookId) {
+    @Override
+    public String toString() {
+        return "Id: %d, Name: %s, Book title: %s".formatted(id, message, bookId);
+    }
 }
