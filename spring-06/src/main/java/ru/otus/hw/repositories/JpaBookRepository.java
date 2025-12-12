@@ -16,7 +16,7 @@ import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphTyp
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcBookRepository implements BookRepository {
+public class JpaBookRepository implements BookRepository {
 
     @PersistenceContext
     private final EntityManager em;
@@ -31,9 +31,7 @@ public class JdbcBookRepository implements BookRepository {
     @Transactional(readOnly = true)
     public List<Book> findAll() {
         EntityGraph<?> entityGraph = em.getEntityGraph("book-author-genre-entity-graph");
-
         TypedQuery<Book> query = em.createQuery("select distinct b from Book b ", Book.class);
-
         query.setHint(FETCH.getKey(), entityGraph);
         return query.getResultList();
     }
