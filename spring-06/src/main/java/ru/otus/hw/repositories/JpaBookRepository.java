@@ -22,13 +22,11 @@ public class JpaBookRepository implements BookRepository {
     private final EntityManager em;
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Book> findById(long id) {
         return Optional.ofNullable(em.find(Book.class, id));
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Book> findAll() {
         EntityGraph<?> entityGraph = em.getEntityGraph("book-author-genre-entity-graph");
         TypedQuery<Book> query = em.createQuery("select distinct b from Book b ", Book.class);
@@ -37,7 +35,6 @@ public class JpaBookRepository implements BookRepository {
     }
 
     @Override
-    @Transactional
     public Book save(Book book) {
         if (book.getId() == 0) {
             em.persist(book);
@@ -47,7 +44,6 @@ public class JpaBookRepository implements BookRepository {
     }
 
     @Override
-    @Transactional
     public void deleteById(long id) {
         em.createQuery("delete from Book b where b.id = :id")
                 .setParameter("id", id)

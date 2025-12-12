@@ -19,14 +19,12 @@ public class JpaGenreRepository implements GenreRepository {
     private final EntityManager em;
 
     @Override
-    @Transactional(readOnly = true)
     public List<Genre> findAll() {
         TypedQuery<Genre> query = em.createQuery("select g from Genre g", Genre.class);
         return query.getResultList();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Genre> findById(long id) {
         return Optional.ofNullable(em.find(Genre.class, id));
     }
