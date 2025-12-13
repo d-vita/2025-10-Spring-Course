@@ -39,7 +39,10 @@ class JpaCommentRepositoryTest {
                 .hasValue(expectedComment);
     }
 
-
+    @Test
+    void shouldReturnEmptyWhenNotFound() {
+        assertThat(repository.findById(NONEXISTENT_COMMENT_ID)).isNotPresent();
+    }
     @Test
     void shouldReturnCommentsByBookId() {
         var commentOne = em.find(Comment.class, EXISTING_COMMENT_ID_1);
