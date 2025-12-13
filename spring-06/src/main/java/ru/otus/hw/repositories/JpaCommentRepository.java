@@ -4,8 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.models.Comment;
 
 import java.util.List;
@@ -17,6 +15,7 @@ public class JpaCommentRepository implements CommentRepository {
 
     @PersistenceContext
     private final EntityManager em;
+
     @Override
     public Optional<Comment> findById(long id) {
         return Optional.ofNullable(em.find(Comment.class, id));

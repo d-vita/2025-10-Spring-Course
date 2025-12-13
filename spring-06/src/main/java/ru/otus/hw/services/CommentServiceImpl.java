@@ -23,6 +23,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentConverter commentConverter;
 
     private final BookRepository bookRepository;
+
     @Override
     @Transactional(readOnly = true)
     public Optional<CommentDto> findById(long id) {
