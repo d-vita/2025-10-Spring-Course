@@ -9,8 +9,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDto;
-import ru.otus.hw.repositories.JpaBookRepository;
-import ru.otus.hw.repositories.JpaCommentRepository;
 
 import java.util.List;
 
@@ -19,8 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Import({
         CommentServiceImpl.class,
-        JpaCommentRepository.class,
-        JpaBookRepository.class,
         CommentConverter.class
 })
 @Transactional(propagation = Propagation.NEVER)

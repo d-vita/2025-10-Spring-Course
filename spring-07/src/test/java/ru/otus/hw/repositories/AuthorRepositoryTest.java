@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Author;
 
 import java.util.List;
@@ -13,15 +12,14 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(JpaAuthorRepository.class)
-class JpaAuthorRepositoryTest {
+class AuthorRepositoryTest {
 
     private static final int EXPECTED_NUMBER_OF_AUTHORS = 3;
     private static final long FIRST_AUTHOR_ID = 1L;
     private static final long NON_EXISTING_AUTHOR_ID = 999L;
 
     @Autowired
-    private JpaAuthorRepository repository;
+    private AuthorRepository repository;
 
     @Autowired
     private TestEntityManager em;

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
@@ -13,15 +12,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @DataJpaTest
-@Import(JpaGenreRepository.class)
-class JpaGenreRepositoryTest {
+class GenreRepositoryTest {
 
     private static final int EXPECTED_NUMBER_OF_GENRES = 3;
     private static final long FIRST_GENRE_ID = 2L;
     private static final long NON_EXISTING_GENRE_ID = 999L;
 
     @Autowired
-    private JpaGenreRepository repository;
+    private GenreRepository repository;
 
     @Autowired
     private TestEntityManager em;

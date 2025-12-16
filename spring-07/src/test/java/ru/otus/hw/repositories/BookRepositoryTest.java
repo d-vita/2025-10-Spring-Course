@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -14,15 +13,14 @@ import ru.otus.hw.models.Genre;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import({JpaBookRepository.class})
-class JpaBookRepositoryTest {
+class BookRepositoryTest {
 
     private static final long FIRST_BOOK_ID = 1L;
     private static final int EXPECTED_QUERIES_COUNT = 1;
     private static final int EXPECTED_NUMBER_OF_BOOKS = 3;
     private static final long NON_EXISTING_BOOK_ID = 999L;
     @Autowired
-    private JpaBookRepository repository;
+    private BookRepository repository;
 
     @Autowired
     private TestEntityManager em;

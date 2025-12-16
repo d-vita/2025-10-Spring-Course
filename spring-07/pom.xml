@@ -12,7 +12,7 @@
     <groupId>ru.otus.hw</groupId>
     <artifactId>spring-07</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-hibernate-demo</name>
+    <name>spring-data-jpa-demo</name>
 
     <properties>
         <java.version>17</java.version>

@@ -13,9 +13,6 @@ import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.GenreDto;
-import ru.otus.hw.repositories.JpaAuthorRepository;
-import ru.otus.hw.repositories.JpaBookRepository;
-import ru.otus.hw.repositories.JpaGenreRepository;
 
 import java.util.List;
 
@@ -24,10 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Import({
         BookServiceImpl.class,
-
-        JpaAuthorRepository.class,
-        JpaGenreRepository.class,
-        JpaBookRepository.class,
 
         BookConverter.class,
         AuthorConverter.class,

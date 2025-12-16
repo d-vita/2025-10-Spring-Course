@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -12,8 +11,7 @@ import ru.otus.hw.models.Comment;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import({JpaCommentRepository.class})
-class JpaCommentRepositoryTest {
+class CommentRepositoryTest {
 
     private static final Long EXISTING_COMMENT_ID_1 = 1L;
 
@@ -24,7 +22,7 @@ class JpaCommentRepositoryTest {
     private static final Long NONEXISTENT_COMMENT_ID = 101L;
 
     @Autowired
-    private JpaCommentRepository repository;
+    private CommentRepository repository;
 
     @Autowired
     private TestEntityManager em;
