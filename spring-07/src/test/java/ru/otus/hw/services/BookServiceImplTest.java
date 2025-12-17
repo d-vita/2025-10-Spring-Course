@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Import({
         BookServiceImpl.class,
-
         BookConverter.class,
         AuthorConverter.class,
         GenreConverter.class
