@@ -1,7 +1,8 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://admin:secret@mongo:27017/appdb?authSource=admin
+      port: 27017
+      database: app_db
 
 logging:
   level:

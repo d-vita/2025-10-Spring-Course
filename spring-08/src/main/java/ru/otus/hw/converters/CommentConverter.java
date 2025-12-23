@@ -13,7 +13,7 @@ public class CommentConverter {
         return new CommentDto(
                 comment.getId(),
                 comment.getMessage(),
-                comment.getBook().getId()
+                comment.getBookId()
         );
     }
 }

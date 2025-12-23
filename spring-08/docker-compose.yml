@@ -1,37 +1,27 @@
 version: "3.9"
 
 services:
-  mongo:
-    image: mongo:7.0
-    container_name: mongo
-    restart: unless-stopped
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    hostname: mongodb
+    volumes:
+      - mongodb-data:/data/db/
+      - mongodb-log:/var/log/mongodb/
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: secret
-      MONGO_INITDB_DATABASE: appdb
-    volumes:
-      - mongo-data:/data/db
     networks:
-      - backend-network
-    healthcheck:
-      test: [
-        "CMD",
-        "mongosh",
-        "--username=admin",
-        "--password=secret",
-        "--authenticationDatabase=admin",
-        "--eval",
-        "db.adminCommand('ping')"
-      ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - mongodb_network
 
 volumes:
-  mongo-data:
+  mongodb-data:
+    driver: local
+    name: mongo-data
+  mongodb-log:
+    driver: local
+    name: mongo-log
 
 networks:
-  backend-network:
+  mongodb_network:
     driver: bridge
+    name: mongo-network
