@@ -12,7 +12,6 @@ import ru.otus.hw.repositories.CommentRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -26,40 +25,40 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<CommentDto> findById(long id) {
+    public Optional<CommentDto> findById(String id) {
         return commentRepository.findById(id).map(commentConverter::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDto> findAllByBookId(long bookId) {
-        return commentRepository.findAllByBookId(bookId).stream()
+    public List<CommentDto> findByBookId(String bookId) {
+        return commentRepository.findByBookId(bookId).stream()
                 .map(commentConverter::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     @Transactional
-    public CommentDto insert(String message, long bookId) {
-        return commentConverter.toDto(save(0, message, bookId));
+    public CommentDto insert(String message, String bookId) {
+        return commentConverter.toDto(save(null, message, bookId));
     }
 
     @Override
     @Transactional
-    public CommentDto update(long id, String message, long bookId) {
+    public CommentDto update(String id, String message, String bookId) {
         return commentConverter.toDto(save(id, message, bookId));
     }
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         commentRepository.deleteById(id);
     }
 
-    private Comment save(long id, String message, long bookId) {
+    private Comment save(String id, String message, String bookId) {
         var book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
-        var comment = new Comment(id, message, book);
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %s not found".formatted(bookId)));
+        var comment = new Comment(id, message, book.getId());
         return commentRepository.save(comment);
     }
 }

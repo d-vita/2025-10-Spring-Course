@@ -27,7 +27,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<BookDto> findById(long id) {
+    public Optional<BookDto> findById(String id) {
         return bookRepository.findById(id).map(bookConverter::toDto);
     }
 
@@ -41,28 +41,28 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto insert(String title, long authorId, long genreId) {
-        return bookConverter.toDto(save(0, title, authorId, genreId));
+    public BookDto insert(String title, String authorId, String genreId) {
+        return bookConverter.toDto(save(null, title, authorId, genreId));
     }
 
     @Override
     @Transactional
-    public BookDto update(long id, String title, long authorId, long genreId) {
+    public BookDto update(String id, String title, String authorId, String genreId) {
         return bookConverter.toDto(save(id, title, authorId, genreId));
     }
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         bookRepository.deleteById(id);
     }
 
-    private Book save(long id, String title, long authorId, long genreId) {
+    private Book save(String id, String title, String authorId, String genreId) {
         var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
+                .orElseThrow(() -> new EntityNotFoundException("Author with id %s not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
-        var book = new Book(id, title, author, genre);
+                .orElseThrow(() -> new EntityNotFoundException("Genre with id %s not found".formatted(genreId)));
+        var book = new Book(id, title, author.getId(), genre.getId());
         return bookRepository.save(book);
     }
 }
