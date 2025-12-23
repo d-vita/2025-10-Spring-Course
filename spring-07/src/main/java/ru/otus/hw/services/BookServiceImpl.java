@@ -13,7 +13,6 @@ import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -37,7 +36,7 @@ public class BookServiceImpl implements BookService {
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream()
                 .map(bookConverter::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
