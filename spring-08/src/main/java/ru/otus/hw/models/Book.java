@@ -2,7 +2,9 @@ package ru.otus.hw.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,9 +20,9 @@ public class Book {
 
     private String title;
 
-    private Author author;
+    private String authorId;
 
-    private Genre genre;
+    private String genreIds;
 
     private List<String> commentIds;
 }

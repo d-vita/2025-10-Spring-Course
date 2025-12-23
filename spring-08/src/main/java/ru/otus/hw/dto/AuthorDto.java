@@ -1,9 +1,9 @@
 package ru.otus.hw.dto;
 
 
-public record AuthorDto(Long id, String fullName) {
+public record AuthorDto(String id, String fullName) {
     @Override
     public String toString() {
-        return "Id: %d, FullName: %s".formatted(id, fullName);
+        return "Id: %s, FullName: %s".formatted(id, fullName);
     }
 }

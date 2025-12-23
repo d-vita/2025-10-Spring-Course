@@ -1,9 +1,9 @@
 package ru.otus.hw.dto;
 
 
-public record GenreDto(long id, String name) {
+public record GenreDto(String id, String name) {
     @Override
     public String toString() {
-        return "Id: %d, Name: %s".formatted(id, name);
+        return "Id: %s, Name: %s".formatted(id, name);
     }
 }

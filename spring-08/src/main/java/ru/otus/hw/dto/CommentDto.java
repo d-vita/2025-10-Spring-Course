@@ -1,9 +1,9 @@
 package ru.otus.hw.dto;
 
 
-public record CommentDto(Long id, String message, long bookId) {
+public record CommentDto(String id, String message, String bookId) {
     @Override
     public String toString() {
-        return "Id: %d, Message: %s, BookId: %d".formatted(id, message, bookId);
+        return "Id: %s, Message: %s, BookId: %s".formatted(id, message, bookId);
     }
 }
