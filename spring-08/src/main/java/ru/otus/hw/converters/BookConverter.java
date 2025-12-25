@@ -8,12 +8,16 @@ import ru.otus.hw.models.Book;
 @RequiredArgsConstructor
 @Component
 public class BookConverter {
+    private final AuthorConverter authorConverter;
+
+    private final GenreConverter genreConverter;
+
     public BookDto toDto(Book book) {
         return new BookDto(
                 book.getId(),
                 book.getTitle(),
-                book.getAuthorId(),
-                book.getGenreId()
+                authorConverter.toDto(book.getAuthor()),
+                genreConverter.toDto(book.getGenre())
         );
     }
 }

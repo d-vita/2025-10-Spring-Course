@@ -9,11 +9,13 @@ import ru.otus.hw.models.Comment;
 @Component
 public class CommentConverter {
 
+    private final BookConverter bookConverter;
+
     public CommentDto toDto(Comment comment) {
         return new CommentDto(
                 comment.getId(),
                 comment.getMessage(),
-                comment.getBookId()
+                bookConverter.toDto(comment.getBook())
         );
     }
 }
