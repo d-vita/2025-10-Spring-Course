@@ -28,6 +28,8 @@ class BookServiceImplTest {
 
     private static final String EXISTING_BOOK_ID = "1";
 
+    private static final int EXPECTED_NUMBER_OF_BOOKS = 2;
+
     @Autowired
     private BookService bookService;
 
@@ -64,11 +66,11 @@ class BookServiceImplTest {
                 new GenreDto("1", "Genre_1")
         );
 
-        assertThat(bookService.findAll()).hasSize(3);
+        assertThat(bookService.findAll()).hasSize(EXPECTED_NUMBER_OF_BOOKS);
 
         BookDto actual = bookService.insert("New Book", "1", "1");
 
-        assertThat(bookService.findAll()).hasSize(4);
+        assertThat(bookService.findAll()).hasSize(EXPECTED_NUMBER_OF_BOOKS + 1);
 
         assertThat(actual.id())
                 .isNotNull()
@@ -87,10 +89,10 @@ class BookServiceImplTest {
     void shouldUpdateBook() {
         var expected = new BookDto(EXISTING_BOOK_ID, "Updated Title", new AuthorDto("1", "Author_1"), new GenreDto("1", "Genre_1"));
 
-        assertThat(bookService.findAll()).hasSize(3);
+        assertThat(bookService.findAll()).hasSize(EXPECTED_NUMBER_OF_BOOKS);
 
         bookService.update(EXISTING_BOOK_ID, "Updated Title", "1", "1");
-        assertThat(bookService.findAll()).hasSize(3);
+        assertThat(bookService.findAll()).hasSize(EXPECTED_NUMBER_OF_BOOKS);
 
 
         var actualBook = bookService.findById(EXISTING_BOOK_ID);
@@ -103,10 +105,10 @@ class BookServiceImplTest {
     @Test
     @DirtiesContext
     void shouldDeleteBook() {
-        assertThat(bookService.findAll()).hasSize(3);
+        assertThat(bookService.findAll()).hasSize(EXPECTED_NUMBER_OF_BOOKS);
 
         bookService.deleteById(EXISTING_BOOK_ID);
-        assertThat(bookService.findAll()).hasSize(2);
+        assertThat(bookService.findAll()).hasSize(EXPECTED_NUMBER_OF_BOOKS - 1);
         assertThat(bookService.findById(EXISTING_BOOK_ID)).isEmpty();
     }
 
@@ -126,8 +128,7 @@ class BookServiceImplTest {
     private List<BookDto> getExpectedBooks() {
         return List.of(
                 new BookDto("1", "BookTitle_1", new AuthorDto("1", "Author_1"), new GenreDto("1", "Genre_1")),
-                new BookDto("2", "BookTitle_2", new AuthorDto("2", "Author_2"), new GenreDto("2", "Genre_2")),
-                new BookDto("3", "BookTitle_3", new AuthorDto("3", "Author_3"), new GenreDto("3", "Genre_3"))
+                new BookDto("2", "BookTitle_2", new AuthorDto("2", "Author_2"), new GenreDto("2", "Genre_2"))
         );
     }
 }

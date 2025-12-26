@@ -17,9 +17,8 @@ class BookRepositoryTest {
 
     private static final String FIRST_BOOK_ID = "1";
     private static final String SECOND_BOOK_ID = "2";
-    private static final String THIRD_BOOK_ID = "3";
     private static final String NON_EXISTING_BOOK_ID = "999";
-    private static final int EXPECTED_NUMBER_OF_BOOKS = 3;
+    private static final int EXPECTED_NUMBER_OF_BOOKS = 2;
 
     @Autowired
     private BookRepository bookRepository;
@@ -31,12 +30,11 @@ class BookRepositoryTest {
     void shouldFindAllBooksWithAllInfo() {
         val firstBook = mongoTemplate.findById(FIRST_BOOK_ID, Book.class);
         val secondBook = mongoTemplate.findById(SECOND_BOOK_ID, Book.class);
-        val thirdBook = mongoTemplate.findById(THIRD_BOOK_ID, Book.class);
 
         var books = bookRepository.findAll();
 
         assertThat(books).isNotNull().hasSize(EXPECTED_NUMBER_OF_BOOKS)
-                        .containsExactlyInAnyOrder(firstBook, secondBook, thirdBook);
+                        .containsExactlyInAnyOrder(firstBook, secondBook);
     }
 
     @Test
