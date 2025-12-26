@@ -31,12 +31,12 @@ public class MongoDbChangelogs {
         Genre genre2 = genreRepository.save(new Genre("2", "Genre_2"));
         Genre genre3 = genreRepository.save(new Genre("3", "Genre_3"));
 
-        Book book1 = bookRepository.save(new Book("1", "BookTitle_1", author1, genre1));
-        Book book2 = bookRepository.save(new Book("2", "BookTitle_2", author2, genre2));
-        Book book3 = bookRepository.save(new Book("3", "BookTitle_3", author3, genre3));
+        Book book1 = bookRepository.save(new Book("1", "BookTitle_1", author1.getId(), genre1.getId()));
+        Book book2 = bookRepository.save(new Book("2", "BookTitle_2", author2.getId(), genre2.getId()));
+        Book book3 = bookRepository.save(new Book("3", "BookTitle_3", author3.getId(), genre3.getId()));
 
-        commentRepository.save(new Comment("1", "Comment1", book1));
-        commentRepository.save(new Comment("2", "Comment2", book2));
-        commentRepository.save(new Comment("3", "Comment3", book3));
+        commentRepository.save(new Comment("1", "Comment1", book1.getId()));
+        commentRepository.save(new Comment("2", "Comment2", book2.getId()));
+        commentRepository.save(new Comment("3", "Comment3", book3.getId()));
     }
 }

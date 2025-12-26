@@ -14,7 +14,7 @@ import ru.otus.hw.repositories.GenreRepository;
 @ChangeLog(order = "000")
 public class MongoDbChangelogs {
 
-    @ChangeSet(order = "002", id = "initData", author = "admin")
+    @ChangeSet(order = "001", id = "initData", author = "admin")
     public void initData(AuthorRepository authorRepository, GenreRepository genreRepository,
                      BookRepository bookRepository, CommentRepository commentRepository) {
         Author author1 = authorRepository.save(new Author("1", "Author_1"));
@@ -25,11 +25,11 @@ public class MongoDbChangelogs {
         Genre genre2 = genreRepository.save(new Genre("2", "Genre_2"));
         Genre genre3 = genreRepository.save(new Genre("3", "Genre_3"));
 
-        Book book1 = bookRepository.save(new Book("1", "BookTitle_1", author1, genre1));
-        Book book2 = bookRepository.save(new Book("2", "BookTitle_2", author2, genre2));
+        Book book1 = bookRepository.save(new Book("1", "BookTitle_1", author1.getId(), genre1.getId()));
+        Book book2 = bookRepository.save(new Book("2", "BookTitle_2", author2.getId(), genre2.getId()));
 
-        commentRepository.save(new Comment("1", "Comment_1", book1));
-        commentRepository.save(new Comment("2", "Comment_2", book2));
-        commentRepository.save(new Comment("3", "Comment_3", book1));
+        commentRepository.save(new Comment("1", "Comment_1", book1.getId()));
+        commentRepository.save(new Comment("2", "Comment_2", book2.getId()));
+        commentRepository.save(new Comment("3", "Comment_3", book1.getId()));
     }
 }

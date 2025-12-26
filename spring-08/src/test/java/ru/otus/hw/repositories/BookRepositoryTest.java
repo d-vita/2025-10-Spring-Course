@@ -56,7 +56,7 @@ class BookRepositoryTest {
         var author = mongoTemplate.findById("1", Author.class);
         var genre = mongoTemplate.findById("1", Genre.class);
 
-        var book = new Book(null, "InsertedBook", author, genre);
+        var book = new Book(null, "InsertedBook", author.getId(), genre.getId());
 
         var saved = bookRepository.save(book);
         assertThat(saved.getId()).isGreaterThan("3");
@@ -71,7 +71,7 @@ class BookRepositoryTest {
         var author = mongoTemplate.findById("2", Author.class);
         var genre = mongoTemplate.findById("2", Genre.class);
 
-        var updated = new Book("1", "UpdatedTitle", author, genre);
+        var updated = new Book("1", "UpdatedTitle", author.getId(), genre.getId());
 
         bookRepository.save(updated);
 

@@ -56,7 +56,7 @@ class CommentRepositoryTest {
     @DirtiesContext
     void shouldSaveNewComment() {
         var relatedBook = mongoTemplate.findById(BOOK_ID, Book.class);
-        var commentToSave = new Comment(null, "NEW_TEST_COMMENT", relatedBook);
+        var commentToSave = new Comment(null, "NEW_TEST_COMMENT", relatedBook.getId());
 
         var savedComment = repository.save(commentToSave);
         assertThat(savedComment).isNotNull()
@@ -76,7 +76,7 @@ class CommentRepositoryTest {
         var updatedMessage = "UPDATED_COMMENT_MESSAGE";
         var existingComment = mongoTemplate.findById(EXISTING_COMMENT_ID_1, Comment.class);
 
-        var commentToUpdate = new Comment(existingComment.getId(), updatedMessage, existingComment.getBook());
+        var commentToUpdate = new Comment(existingComment.getId(), updatedMessage, existingComment.getBookId());
         var updated = repository.save(commentToUpdate);
 
         assertThat(updated).isNotNull()
