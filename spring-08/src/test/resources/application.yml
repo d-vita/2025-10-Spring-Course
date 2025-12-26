@@ -1,20 +1,23 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-  sql:
-    init:
-      mode: always
-      data-locations: data.sql
-      schema-locations: schema.sql
+  data:
+    mongodb:
+      port: 0
+      database: test_db
 
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: none
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.4.18
 
-    properties:
-      hibernate:
-        format_sql: true
+mongock:
+  runner-type: "ApplicationRunner"
+  change-logs-scan-package:
+    - ru.otus.hw.changelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
 
 logging:
   level:
