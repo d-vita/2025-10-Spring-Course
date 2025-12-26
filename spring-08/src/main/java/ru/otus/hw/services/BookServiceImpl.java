@@ -58,7 +58,7 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public void deleteById(String id) {
         if (commentRepository.existsByBookId(id)) {
-            commentRepository.deleteByBookId(id);
+            commentRepository.deleteAllByBookId(id);
         }
         bookRepository.deleteById(id);
     }

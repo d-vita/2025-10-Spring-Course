@@ -2,7 +2,6 @@ package ru.otus.hw.changelogs;
 
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
-import com.mongodb.client.MongoDatabase;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -28,10 +27,9 @@ public class MongoDbChangelogs {
 
         Book book1 = bookRepository.save(new Book("1", "BookTitle_1", author1, genre1));
         Book book2 = bookRepository.save(new Book("2", "BookTitle_2", author2, genre2));
-        Book book3 = bookRepository.save(new Book("3", "BookTitle_3", author3, genre3));
 
-        commentRepository.save(new Comment("1", "Comment1", book1));
-        commentRepository.save(new Comment("2", "Comment2", book2));
-        commentRepository.save(new Comment("3", "Comment3", book1));
+        commentRepository.save(new Comment("1", "Comment_1", book1));
+        commentRepository.save(new Comment("2", "Comment_2", book2));
+        commentRepository.save(new Comment("3", "Comment_3", book1));
     }
 }

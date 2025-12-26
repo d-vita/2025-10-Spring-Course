@@ -2,29 +2,31 @@ package ru.otus.hw.services;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.converters.AuthorConverter;
+import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.CommentConverter;
+import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.dto.CommentDto;
 
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+@DataMongoTest
 @Import({
         CommentServiceImpl.class,
-        CommentConverter.class
+        CommentConverter.class,
+        BookConverter.class,
+        AuthorConverter.class,
+        GenreConverter.class
 })
-@Transactional(propagation = Propagation.NEVER)
 class CommentServiceImplTest {
 
-    private static final Long EXISTING_COMMENT_ID = 1L;
+    private static final String EXISTING_COMMENT_ID = "1";
 
-    private static final Long EXISTING_BOOK_ID = 1L;
+    private static final String EXISTING_BOOK_ID = "1";
 
     @Autowired
     private CommentService commentService;
@@ -32,66 +34,73 @@ class CommentServiceImplTest {
 
     @Test
     void shouldReturnCorrectCommentById() {
-        var expected = new CommentDto(EXISTING_COMMENT_ID, "Comment_1", 1L);
         var actual = commentService.findById(EXISTING_COMMENT_ID);
 
-        assertThat(actual).isPresent()
-                .hasValue(expected);
+        assertThat(actual).isPresent();
+
+        var dto = actual.get();
+        assertThat(dto.id()).isEqualTo("1");
+        assertThat(dto.message()).isEqualTo("Comment_1");
+
+        assertThat(dto.book()).isNotNull();
+        assertThat(dto.book().id()).isEqualTo("1");
+        assertThat(dto.book().title()).isEqualTo("BookTitle_1");
+        assertThat(dto.book().author().fullName()).isEqualTo("Author_1");
+        assertThat(dto.book().genre().name()).isEqualTo("Genre_1");
     }
 
 
     @Test
     void shouldReturnCommentsByBookId() {
-        var expected = List.of(
-                new CommentDto(1L, "Comment_1", 1L),
-                new CommentDto(4L, "Comment_4", 1L)
-        );
-        var actual = commentService.findAllByBookId(EXISTING_BOOK_ID);
+        var actual = commentService.findByBookId(EXISTING_BOOK_ID);
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual)
+                .hasSize(2)
+                .extracting(CommentDto::message)
+                .containsExactlyInAnyOrder("Comment_1", "Comment_3");
     }
 
 
     @Test
     @DirtiesContext
     void shouldSaveNewComment() {
-        var expected = new CommentDto(5L, "New comment was created", 1L);
+        var before = commentService.findByBookId(EXISTING_BOOK_ID);
+        assertThat(before).hasSize(2);
 
-        assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
+        var created = commentService.insert("New comment", EXISTING_BOOK_ID);
 
-        commentService.insert("New comment was created", EXISTING_BOOK_ID);
-        assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(3);
+        assertThat(created.id()).isNotNull();
+        assertThat(created.message()).isEqualTo("New comment");
+        assertThat(created.book().id()).isEqualTo(EXISTING_BOOK_ID);
 
-        var actual = commentService.findById(5L);
-        assertThat(actual).isPresent()
-                .hasValue(expected);
+        var after = commentService.findByBookId(EXISTING_BOOK_ID);
+        assertThat(after).hasSize(3);
     }
 
 
     @Test
     @DirtiesContext
     void shouldUpdateComment() {
-        var expected = new CommentDto(EXISTING_COMMENT_ID, "Test comment was updated", 1L);
+        var updated = commentService.update("1", "Updated comment", EXISTING_BOOK_ID);
 
-        assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
+        assertThat(updated.id()).isEqualTo("1");
+        assertThat(updated.message()).isEqualTo("Updated comment");
 
-        commentService.update(EXISTING_COMMENT_ID, "Test comment was updated", EXISTING_BOOK_ID);
-        assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
-
-        var actual = commentService.findById(EXISTING_COMMENT_ID);
-        assertThat(actual).isPresent()
-                .hasValue(expected);
+        var fromDb = commentService.findById("1");
+        assertThat(fromDb).isPresent();
+        assertThat(fromDb.get().message()).isEqualTo("Updated comment");
     }
 
 
     @Test
     @DirtiesContext
     void shouldDeleteComment() {
-        assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
+        assertThat(commentService.findByBookId(EXISTING_BOOK_ID)).hasSize(2);
 
-        commentService.deleteById(EXISTING_COMMENT_ID);
-        assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(1);
-        assertThat(commentService.findById(EXISTING_COMMENT_ID)).isEmpty();
+        commentService.deleteById("1");
+
+        assertThat(commentService.findByBookId(EXISTING_BOOK_ID)).hasSize(1);
+        assertThat(commentService.findById("1")).isEmpty();
     }
 
 }
