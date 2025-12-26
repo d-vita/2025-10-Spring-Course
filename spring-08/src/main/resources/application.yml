@@ -1,0 +1,18 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://admin:secret@localhost:27017/?authSource=admin
+      database: app_db
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.hw.changelogs
+  mongo-db:
+    write-concern:
+      journal: true
+    read-concern: local
+
+logging:
+  level:
+    ROOT: ERROR
