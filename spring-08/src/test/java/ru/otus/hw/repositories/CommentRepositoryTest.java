@@ -2,35 +2,35 @@ package ru.otus.hw.repositories;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+@DataMongoTest
 class CommentRepositoryTest {
 
-    private static final Long EXISTING_COMMENT_ID_1 = 1L;
+    private static final String EXISTING_COMMENT_ID_1 = "1";
 
-    private static final Long EXISTING_COMMENT_ID_4 = 4L;
+    private static final String EXISTING_COMMENT_ID_3 = "3";
 
-    private static final Long BOOK_ID = 1L;
+    private static final String BOOK_ID = "1";
 
-    private static final Long NONEXISTENT_COMMENT_ID = 101L;
+    private static final String NONEXISTENT_COMMENT_ID = "101";
 
     @Autowired
     private CommentRepository repository;
 
     @Autowired
-    private TestEntityManager em;
+    private MongoTemplate mongoTemplate;
 
 
     @Test
     void shouldReturnCorrectCommentById() {
-        var expectedComment = em.find(Comment.class, EXISTING_COMMENT_ID_1);
+        var expectedComment = mongoTemplate.findById(EXISTING_COMMENT_ID_1, Comment.class);
         var actualComment = repository.findById(EXISTING_COMMENT_ID_1);
 
         assertThat(actualComment).isPresent()
@@ -43,10 +43,10 @@ class CommentRepositoryTest {
     }
     @Test
     void shouldReturnCommentsByBookId() {
-        var commentOne = em.find(Comment.class, EXISTING_COMMENT_ID_1);
-        var commentTwo = em.find(Comment.class, EXISTING_COMMENT_ID_4);
+        var commentOne = mongoTemplate.findById(EXISTING_COMMENT_ID_1, Comment.class);
+        var commentTwo = mongoTemplate.findById(EXISTING_COMMENT_ID_3, Comment.class);
 
-        var actual = repository.findAllByBookId(BOOK_ID);
+        var actual = repository.findByBookId(BOOK_ID);
 
         assertThat(actual).containsExactly(commentOne, commentTwo);
     }
@@ -55,17 +55,17 @@ class CommentRepositoryTest {
     @Test
     @DirtiesContext
     void shouldSaveNewComment() {
-        var relatedBook = em.find(Book.class, BOOK_ID);
-        var commentToSave = new Comment(0, "NEW_TEST_COMMENT", relatedBook);
+        var relatedBook = mongoTemplate.findById(BOOK_ID, Book.class);
+        var commentToSave = new Comment(null, "NEW_TEST_COMMENT", relatedBook);
 
         var savedComment = repository.save(commentToSave);
         assertThat(savedComment).isNotNull()
-                .matches(b -> b.getId() != 0)
+                .matches(b -> b.getId() != null)
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(commentToSave);
 
-        var foundComment = em.find(Comment.class, savedComment.getId());
+        var foundComment = mongoTemplate.findById(savedComment.getId(), Comment.class);
         assertThat(foundComment).isEqualTo(savedComment);
     }
 
@@ -74,7 +74,7 @@ class CommentRepositoryTest {
     @DirtiesContext
     void shouldUpdateComment() {
         var updatedMessage = "UPDATED_COMMENT_MESSAGE";
-        var existingComment = em.find(Comment.class, EXISTING_COMMENT_ID_1);
+        var existingComment = mongoTemplate.findById(EXISTING_COMMENT_ID_1, Comment.class);
 
         var commentToUpdate = new Comment(existingComment.getId(), updatedMessage, existingComment.getBook());
         var updated = repository.save(commentToUpdate);
@@ -82,17 +82,17 @@ class CommentRepositoryTest {
         assertThat(updated).isNotNull()
                 .matches(b -> b.getMessage().equals(updatedMessage));
 
-        assertThat(em.find(Comment.class, updated.getId())).isEqualTo(updated);
+        assertThat(mongoTemplate.findById(updated.getId(), Comment.class)).isEqualTo(updated);
     }
 
 
     @Test
     @DirtiesContext
     void shouldDeleteComment() {
-        var commentToDelete = em.find(Comment.class, EXISTING_COMMENT_ID_1);
+        var commentToDelete = mongoTemplate.findById(EXISTING_COMMENT_ID_1, Comment.class);
         assertThat(commentToDelete).isNotNull();
 
         repository.deleteById(EXISTING_COMMENT_ID_1);
-        assertThat(em.find(Comment.class, EXISTING_COMMENT_ID_1)).isNull();
+        assertThat(mongoTemplate.findById(EXISTING_COMMENT_ID_1, Comment.class)).isNull();
     }
 }
