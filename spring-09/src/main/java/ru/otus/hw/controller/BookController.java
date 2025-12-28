@@ -45,9 +45,16 @@ public class BookController {
         return "redirect:/";
     }
 
-    @PostMapping(value = "/add")
-    public String saveBook(BookDto book) {
-        bookService.insert(book.title(), book.author().id(), book.genre().id());
+    @GetMapping("/add")
+    public String addPage(Model model) {
+        return "add";
+    }
+
+    @PostMapping("/add")
+    public String saveBook(@RequestParam String title,
+                           @RequestParam("author.id") long authorId,
+                           @RequestParam("genre.id") long genreId) {
+        bookService.insert(title, authorId, genreId);
         return "redirect:/";
     }
 }
