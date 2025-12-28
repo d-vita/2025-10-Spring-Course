@@ -124,12 +124,12 @@ button {
     font-size: 0.9rem;
 }
 
-button[type="submit"][name="save"] {
+button.btn-update {
     background-color: #2563eb;
     color: #ffffff;
 }
 
-button[type="submit"][name="save"]:hover {
+button.btn-update:hover {
     background-color: #1d4ed8;
 }
 

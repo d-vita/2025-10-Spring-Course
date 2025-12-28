@@ -14,7 +14,7 @@
       th:method="post"
       th:object="${book}">
 
-    <h3 th:text="#{person-form-header}">Book info</h3>
+    <h3 th:text="#{book-form-header}">Book info</h3>
 
     <div class="row">
         <label for="id-input" th:text="#{book-field-id} + ':'">ID</label>
@@ -25,7 +25,7 @@
     </div>
 
     <div class="row">
-        <label for="person-name-input" th:text="#{person-field-name} + ':'">Title</label>
+        <label for="person-name-input" th:text="#{book-field-title} + ':'">Title</label>
         <input id="person-name-input"
                name="title"
                type="text"
@@ -39,7 +39,7 @@
     </div>
 
     <div class="row">
-        <label for="person-name-input" th:text="#{person-field-name} + ':'">Author ID</label>
+        <label for="person-name-input" th:text="#{book-field-author-id} + ':'">Author ID</label>
         <input id="author-id-input"
                name="author.id"
                type="text"
@@ -53,7 +53,7 @@
     </div>
 
     <div class="row">
-        <label for="person-name-input" th:text="#{person-field-name} + ':'">Genre ID</label>
+        <label for="person-name-input" th:text="#{book-field-genre-id} + ':'">Genre ID</label>
         <input id="genre-id-input"
                name="genre.id"
                type="text"
@@ -68,8 +68,9 @@
 
     <div class="actions">
         <!-- Update -->
-        <button type="submit" name="save"
-                th:text="#{save-button-caption}">
+        <button type="submit" name="update"
+                class="btn-update"
+                th:text="#{update-button-caption}">
             Update
         </button>
 

@@ -33,7 +33,7 @@ public class BookController {
         return "edit";
     }
 
-    @PostMapping(value = "/edit", params = "save")
+    @PostMapping(value = "/edit", params = "update")
     public String updateBook(BookDto book) {
         bookService.update(book.id(), book.title(), book.author().id(), book.genre().id());
         return "redirect:/";
