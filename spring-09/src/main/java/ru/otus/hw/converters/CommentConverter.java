@@ -9,7 +9,7 @@ import ru.otus.hw.models.Comment;
 @Component
 public class CommentConverter {
 
-    public CommentDto toDto(Comment comment) {
+    public CommentDto fromDomainObject(Comment comment) {
         return new CommentDto(
                 comment.getId(),
                 comment.getMessage(),

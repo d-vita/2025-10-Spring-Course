@@ -16,8 +16,8 @@ public class BookConverter {
         return new BookDto(
                 book.getId(),
                 book.getTitle(),
-                authorConverter.toDto(book.getAuthor()),
-                genreConverter.toDto(book.getGenre())
+                authorConverter.fromDomainObject(book.getAuthor()),
+                genreConverter.fromDomainObject(book.getGenre())
         );
     }
 }
