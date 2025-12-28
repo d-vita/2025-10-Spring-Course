@@ -124,6 +124,15 @@ button {
     font-size: 0.9rem;
 }
 
+button.btn-add {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+button.btn-add:hover {
+    background-color: #1d4ed8;
+}
+
 button.btn-update {
     background-color: #2563eb;
     color: #ffffff;
