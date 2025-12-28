@@ -44,4 +44,10 @@ public class BookController {
         bookService.deleteById(book.id());
         return "redirect:/";
     }
+
+    @PostMapping(value = "/add")
+    public String saveBook(BookDto book) {
+        bookService.insert(book.title(), book.author().id(), book.genre().id());
+        return "redirect:/";
+    }
 }
