@@ -28,27 +28,27 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public Optional<BookDto> findById(long id) {
-        return bookRepository.findById(id).map(bookConverter::toDto);
+        return bookRepository.findById(id).map(bookConverter::fromDomainObject);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream()
-                .map(bookConverter::toDto)
+                .map(bookConverter::fromDomainObject)
                 .toList();
     }
 
     @Override
     @Transactional
     public BookDto insert(String title, long authorId, long genreId) {
-        return bookConverter.toDto(save(0, title, authorId, genreId));
+        return bookConverter.fromDomainObject(save(0, title, authorId, genreId));
     }
 
     @Override
     @Transactional
     public BookDto update(long id, String title, long authorId, long genreId) {
-        return bookConverter.toDto(save(id, title, authorId, genreId));
+        return bookConverter.fromDomainObject(save(id, title, authorId, genreId));
     }
 
     @Override

@@ -12,7 +12,7 @@ public class BookConverter {
 
     private final GenreConverter genreConverter;
 
-    public BookDto toDto(Book book) {
+    public BookDto fromDomainObject(Book book) {
         return new BookDto(
                 book.getId(),
                 book.getTitle(),
