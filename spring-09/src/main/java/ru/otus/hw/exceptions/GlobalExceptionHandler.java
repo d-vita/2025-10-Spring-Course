@@ -1,6 +1,8 @@
 package ru.otus.hw.exceptions;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -9,10 +11,13 @@ import org.springframework.web.servlet.ModelAndView;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ModelAndView handeNotFoundException(EntityNotFoundException ex) {
-        return new ModelAndView("authorError",
-                "errorText", "Author not found");
+    private final MessageSource messageSource;
+
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handeNotFoundException(NotFoundException ex) {
+        String errorText = messageSource.getMessage("person-not-found-error", null,
+                LocaleContextHolder.getLocale());
+        return new ModelAndView("customError", "errorText", errorText);
     }
 
 }
