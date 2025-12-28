@@ -131,11 +131,56 @@
         </div>
     </div>
 
+    <div class="row">
+        <label for="person-name-input" th:text="#{person-field-name} + ':'">Author ID</label>
+        <input id="author-id-input"
+               name="author.id"
+               type="text"
+               th:value="*{author.id}"/>
+
+        <div class="errors"
+             th:if="${#fields.hasErrors('author.id')}"
+             th:errors="*{title}">
+            Wrong author ID
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="person-name-input" th:text="#{person-field-name} + ':'">Genre ID</label>
+        <input id="genre-id-input"
+               name="genre.id"
+               type="text"
+               th:value="*{genre.id}"/>
+
+        <div class="errors"
+             th:if="${#fields.hasErrors('genre.id')}"
+             th:errors="*{title}">
+            Wrong author ID
+        </div>
+    </div>
+
     <div class="actions">
-        <button type="submit" th:text="#{save-button-caption}">Save</button>
-        <a th:href="@{/}" class="btn-cancel">
-            <button type="button" th:text="#{cancel-button-caption}">Cancel</button>
-        </a>
+        <!-- Update -->
+        <button type="submit" name="save"
+                th:text="#{save-button-caption}">
+            Update
+        </button>
+
+        <!-- Delete -->
+        <button type="submit" name="delete"
+                class="btn-delete"
+                th:text="#{delete-button-caption}"
+                onclick="return confirm('Are you sure you want to delete this book?');">
+            Delete
+        </button>
+
+        <!-- Cancel -->
+        <button type="button"
+                class="btn-cancel"
+                th:text="#{cancel-button-caption}"
+                th:onclick="|window.location.href='@{/}'|">
+            Cancel
+        </button>
     </div>
 </form>
 

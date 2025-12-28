@@ -33,9 +33,15 @@ public class BookController {
         return "edit";
     }
 
-    @PostMapping("/edit")
-    public String savePerson(BookDto book) {
-        bookService.insert(book.title(), book.author().id(), book.genre().id());
+    @PostMapping(value = "/edit", params = "save")
+    public String updateBook(BookDto book) {
+        bookService.update(book.id(), book.title(), book.author().id(), book.genre().id());
+        return "redirect:/";
+    }
+
+    @PostMapping(value = "/edit", params = "delete")
+    public String deleteBook(BookDto book) {
+        bookService.deleteById(book.id());
         return "redirect:/";
     }
 }
