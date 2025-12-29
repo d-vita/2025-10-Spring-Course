@@ -17,16 +17,16 @@
     <h3 th:text="#{book-form-header}">Book info</h3>
 
     <div class="row">
-        <label for="id-input" th:text="#{book-field-id} + ':'">ID</label>
-        <input id="id-input"
+        <label for="book-id-input" th:text="#{books-col-id} + ':'">ID</label>
+        <input id="book-id-input"
                type="text"
                readonly
                th:value="*{id}"/>
     </div>
 
     <div class="row">
-        <label for="person-name-input" th:text="#{book-field-title} + ':'">Title</label>
-        <input id="person-name-input"
+        <label for="book-title-input" th:text="#{books-col-title} + ':'">Title</label>
+        <input id="book-title-input"
                name="title"
                type="text"
                th:value="*{title}"/>
@@ -39,7 +39,7 @@
     </div>
 
     <div class="row">
-        <label for="person-name-input" th:text="#{book-field-author-id} + ':'">Author ID</label>
+        <label for="author-id-input" th:text="#{books-col-author-id} + ':'">Author ID</label>
         <input id="author-id-input"
                name="author.id"
                type="text"
@@ -53,7 +53,7 @@
     </div>
 
     <div class="row">
-        <label for="person-name-input" th:text="#{book-field-genre-id} + ':'">Genre ID</label>
+        <label for="genre-id-input" th:text="#{books-col-genre-id} + ':'">Genre ID</label>
         <input id="genre-id-input"
                name="genre.id"
                type="text"
@@ -70,14 +70,14 @@
         <!-- Update -->
         <button type="submit" name="update"
                 class="btn-update"
-                th:text="#{update-button-caption}">
+                th:text="#{button-update}">
             Update
         </button>
 
         <!-- Delete -->
         <button type="submit" name="delete"
                 class="btn-delete"
-                th:text="#{delete-button-caption}"
+                th:text="#{button-delete}"
                 onclick="return confirm('Are you sure you want to delete this book?');">
             Delete
         </button>
@@ -85,7 +85,7 @@
         <!-- Cancel -->
         <button type="button"
                 class="btn-cancel"
-                th:text="#{cancel-button-caption}"
+                th:text="#{button-cancel}"
                 th:onclick="|window.location.href='@{/}'|">
             Cancel
         </button>

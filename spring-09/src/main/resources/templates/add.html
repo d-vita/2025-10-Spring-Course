@@ -10,12 +10,12 @@
 <body>
 
 <form th:action="@{/add}" th:method="post">
-    <h3>Add New Book</h3>
+    <h3 th:text="#{books-header-add}">Add New Book</h3>
 
 
     <div class="row">
-        <label for="title-input" th:text="#{book-title-input} + ':'">Title:</label>
-        <input id="title-input"
+        <label for="book-title-input" th:text="#{books-col-title} + ':'">Title:</label>
+        <input id="book-title-input"
                type="text"
                name="title"
                th:placeholder="#{book-title-placeholder}"
@@ -23,7 +23,7 @@
     </div>
 
     <div class="row">
-        <label for="author-id-input" th:text="#{book-author-id-input} + ':'">Author ID:</label>
+        <label for="author-id-input" th:text="#{books-col-author-id} + ':'">Author ID:</label>
         <input id="author-id-input"
                type="text"
                name="author.id"
@@ -32,7 +32,7 @@
     </div>
 
     <div class="row">
-        <label for="genre-id-input" th:text="#{book-genre-id-input} + ':'">Genre ID:</label>
+        <label for="genre-id-input" th:text="#{books-col-genre-id} + ':'">Genre ID:</label>
         <input id="genre-id-input"
                type="text"
                name="genre.id"
@@ -44,14 +44,14 @@
         <!-- Add -->
         <button type="submit"
                 class="btn-add"
-                th:text="#{add-button-caption}">
+                th:text="#{button-add}">
             Add
         </button>
 
         <!-- Cancel -->
         <button type="button"
                 class="btn-cancel"
-                th:text="#{cancel-button-caption}"
+                th:text="#{button-cancel}"
                 th:onclick="|window.location.href='@{/}'|">
             Cancel
         </button>

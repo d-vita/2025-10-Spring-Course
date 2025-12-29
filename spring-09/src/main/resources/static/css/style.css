@@ -175,3 +175,26 @@ a.btn-add {
 a.btn-add:hover {
     background-color: #059669;
 }
+
+.lang-switcher-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.lang-header {
+    font-size: 14px;
+    margin: 0;
+    display: inline-block;
+}
+
+.lang-switcher {
+    display: flex; /* чтобы ссылки EN и RU были в ряд */
+    gap: 5px;      /* расстояние между ссылками */
+}
+
+.lang-switcher a {
+    font-size: 13px;
+    text-decoration: none;
+}
