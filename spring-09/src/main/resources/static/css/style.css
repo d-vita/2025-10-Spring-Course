@@ -133,12 +133,12 @@ button.btn-add:hover {
     background-color: #1d4ed8;
 }
 
-button.btn-update {
+button.btn-save {
     background-color: #2563eb;
     color: #ffffff;
 }
 
-button.btn-update:hover {
+button.btn-save:hover {
     background-color: #1d4ed8;
 }
 
@@ -165,7 +165,7 @@ a.btn-add {
     padding: 8px 14px;
     margin-bottom: 12px;
     background-color: #10b981;
-    color: #ffffff; /* белый текст */
+    color: #ffffff;
     border-radius: 6px;
     font-weight: 600;
     text-decoration: none;
@@ -190,11 +190,43 @@ a.btn-add:hover {
 }
 
 .lang-switcher {
-    display: flex; /* чтобы ссылки EN и RU были в ряд */
-    gap: 5px;      /* расстояние между ссылками */
+    display: flex;
+    gap: 5px;
 }
 
 .lang-switcher a {
     font-size: 13px;
     text-decoration: none;
+}
+
+/* Select (author, genre) */
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    background-color: #ffffff;
+    color: #1f2937;
+    cursor: pointer;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+}
+
+select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+select option {
+    font-size: 0.95rem;
 }
