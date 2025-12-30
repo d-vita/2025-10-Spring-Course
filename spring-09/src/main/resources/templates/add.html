@@ -23,21 +23,21 @@
     </div>
 
     <div class="row">
-        <label for="author-id-input" th:text="#{books-col-author-id} + ':'">Author ID:</label>
-        <input id="author-id-input"
-               type="text"
-               name="author.id"
-               th:placeholder="#{book-author-id-placeholder}"
-               required/>
+        <label for="author-select" th:text="#{books-col-author} + ':'">Author</label>
+        <select id="author-select" name="authorId">
+            <option th:each="author : ${authors}"
+                    th:value="${author.id}"
+                    th:text="${author.fullName}"></option>
+        </select>
     </div>
 
     <div class="row">
-        <label for="genre-id-input" th:text="#{books-col-genre-id} + ':'">Genre ID:</label>
-        <input id="genre-id-input"
-               type="text"
-               name="genre.id"
-               th:placeholder="#{book-genre-id-placeholder}"
-               required/>
+        <label for="genre-select" th:text="#{books-col-genre} + ':'">Genre</label>
+        <select id="genre-select" name="genreId">
+            <option th:each="genre : ${genres}"
+                    th:value="${genre.id}"
+                    th:text="${genre.name}"></option>
+        </select>
     </div>
 
     <div class="actions">

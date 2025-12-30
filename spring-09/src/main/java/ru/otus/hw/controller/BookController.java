@@ -39,7 +39,7 @@ public class BookController {
         return "add";
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public String saveBook(@Valid @ModelAttribute("book") BookFormDto bookForm,
                            BindingResult bindingResult,
                            Model model) {
@@ -49,8 +49,8 @@ public class BookController {
             return "add";
         }
 
-        var bookId = bookService.insert(bookForm.title(), bookForm.authorId(), bookForm.genreId());
-        return "redirect:/" + bookId;
+        bookService.insert(bookForm.title(), bookForm.authorId(), bookForm.genreId());
+        return "redirect:/";
     }
 
     @GetMapping("/{id}/edit")
