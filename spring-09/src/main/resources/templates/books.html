@@ -9,21 +9,14 @@
 </head>
 <body>
 
-<!-- Switch language -->
-<div class="lang-switcher-wrapper">
-    <h3 class="lang-header" th:text="#{lang-switcher-header}">Select language</h3>
-    <div class="lang-switcher">
-        <a href="#" th:href="@{/(lang=en)}" th:text="#{en-lang-switch-button-caption}">EN</a>
-        <a href="#" th:href="@{/(lang=ru)}" th:text="#{ru-lang-switch-button-caption}">RU</a>
-    </div>
-</div>
-
 <h3 class="books-header" th:text="#{books-header} + ':'">Books:</h3>
 
 <!-- Add new book -->
 <a th:href="@{/add}" class="btn-add" th:text="#{books-add-button}"> Add New Book</a>
+<a th:href="@{/authors}" class="btn-add btn-light-gray">Authors</a>
+<a th:href="@{/genres}" class="btn-add btn-light-gray">Genres</a>
 
-<table class="books">
+<table class="general">
     <thead>
     <tr>
         <th th:text="#{books-col-title}">Title</th>
