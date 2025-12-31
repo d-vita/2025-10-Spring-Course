@@ -12,7 +12,7 @@
 <h3 class="books-header" th:text="#{books-header} + ':'">Books:</h3>
 
 <!-- Add new book -->
-<a th:href="@{/add}" class="btn-add" th:text="#{books-add-button}"> Add New Book</a>
+<a th:href="@{/add}" class="btn-add" th:text="'+ ' + #{button-books-add}">Add New Book</a>
 <a th:href="@{/authors}" class="btn-add btn-light-gray">Authors</a>
 <a th:href="@{/genres}" class="btn-add btn-light-gray">Genres</a>
 

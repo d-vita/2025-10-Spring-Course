@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.dto.BookFormDto;
 import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.services.AuthorService;
@@ -24,6 +25,7 @@ public class BookController {
     private final BookService bookService;
     private final AuthorService authorService;
     private final GenreService genreService;
+    private final BookConverter bookConverter;
 
     @GetMapping("/")
     public String getBooks(Model model) {
@@ -57,7 +59,7 @@ public class BookController {
     public String getEditBookPage(@PathVariable long id, Model model) {
         var book = bookService.findById(id).orElseThrow(NotFoundException::new);
 
-        model.addAttribute("book", book);
+        model.addAttribute("book", bookConverter.toFormDto(book));
         model.addAttribute("authors", authorService.findAll());
         model.addAttribute("genres", genreService.findAll());
 

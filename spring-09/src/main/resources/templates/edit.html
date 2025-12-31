@@ -21,13 +21,17 @@
         <input id="book-title-input"
                name="title"
                type="text"
-               th:value="*{title}"/>
+               th:field="*{title}"
+               th:placeholder="#{book-title-placeholder}"/>
+        <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+<!--               th:value="*{title}"-->
+<!--               th:classappend="${#fields.hasErrors('title')} ? 'input-error' : ''"/>-->
 
-        <div class="errors"
-             th:if="${#fields.hasErrors('title')}"
-             th:errors="*{title}">
-            Wrong book name
-        </div>
+<!--        <div class="errors"-->
+<!--             th:if="${#fields.hasErrors('title')}"-->
+<!--             th:errors="*{title}">-->
+<!--            Wrong book name-->
+<!--        </div>-->
     </div>
 
     <div class="row">
@@ -36,7 +40,7 @@
             <option th:each="author : ${authors}"
                     th:value="${author.id}"
                     th:text="${author.fullName}"
-                    th:selected="${author.id == book.author.id}"></option>
+                    th:selected="${author.id == book.authorId}"></option>
         </select>
     </div>
 
@@ -46,7 +50,7 @@
             <option th:each="genre : ${genres}"
                     th:value="${genre.id}"
                     th:text="${genre.name}"
-                    th:selected="${genre.id == book.genre.id}"></option>
+                    th:selected="${genre.id == book.genreId}"></option>
         </select>
     </div>
 
