@@ -101,7 +101,7 @@ class BookControllerTest {
         when(genreService.findAll()).thenReturn(List.of());
 
         mockMvc.perform(post("/add")
-                        .param("title", "") // пустое название → ошибка валидации
+                        .param("title", "")
                         .param("authorId", "1")
                         .param("genreId", "1"))
                 .andExpect(status().isOk())
@@ -156,7 +156,7 @@ class BookControllerTest {
         when(genreService.findAll()).thenReturn(List.of());
 
         mockMvc.perform(post("/1/edit")
-                        .param("title", "") // пустое название → ошибка валидации
+                        .param("title", "")
                         .param("authorId", "1")
                         .param("genreId", "1"))
                 .andExpect(status().isOk())

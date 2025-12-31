@@ -176,31 +176,6 @@ a.btn-add:hover {
     background-color: #059669;
 }
 
-/* Language switcher */
-
-.lang-switcher-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.lang-header {
-    font-size: 14px;
-    margin: 0;
-    display: inline-block;
-}
-
-.lang-switcher {
-    display: flex;
-    gap: 5px;
-}
-
-.lang-switcher a {
-    font-size: 13px;
-    text-decoration: none;
-}
-
 /* Select (author, genre) */
 select {
     width: 100%;
