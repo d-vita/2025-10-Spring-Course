@@ -22,6 +22,7 @@
         <th th:text="#{books-col-title}">Title</th>
         <th th:text="#{books-col-author}">Author</th>
         <th th:text="#{books-col-genre}">Genre</th>
+        <th th:text="#{books-col-comments}">Comments</th>
         <th></th>
         <th></th>
     </tr>
@@ -32,7 +33,16 @@
         <td th:text="${book.author.fullName}">Author Name</td>
         <td th:text="${book.genre.name}">Genre Name</td>
 
-        <!-- Book -->
+        <!-- Comments -->
+        <td class="col-actions">
+            <a th:href="@{/{id}/comments(id=${book.id})}"
+               class="edit-link"
+               th:text="#{button-comments}">
+                Comments
+            </a>
+        </td>
+
+        <!-- Edit -->
         <td class="col-actions">
             <form th:action="@{/{id}/edit(id=${book.id})}" method="get"
                   style="margin:0; padding:0; background:transparent;">
