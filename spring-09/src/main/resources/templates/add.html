@@ -30,6 +30,11 @@
         <select id="author-select"
                 th:field="*{authorId}"
                 th:classappend="${#fields.hasErrors('authorId')} ? 'input-error' : ''">
+
+            <option value="" disabled selected>
+                -- choose author --
+            </option>
+
             <option th:each="author : ${authors}"
                     th:value="${author.id}"
                     th:text="${author.fullName}"></option>
@@ -44,6 +49,11 @@
         <select id="genre-select"
                 th:field="*{genreId}"
                 th:classappend="${#fields.hasErrors('genreId')} ? 'input-error' : ''">
+
+            <option value="" disabled selected>
+                -- choose genre --
+            </option>
+
             <option th:each="genre : ${genres}"
                     th:value="${genre.id}"
                     th:text="${genre.name}"></option>

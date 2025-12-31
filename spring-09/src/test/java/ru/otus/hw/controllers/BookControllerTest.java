@@ -107,7 +107,8 @@ class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("add"))
                 .andExpect(model().attributeExists("authors"))
-                .andExpect(model().attributeExists("genres"));
+                .andExpect(model().attributeExists("genres"))
+                .andExpect(model().attributeExists("book"));
     }
 
     @Test
