@@ -17,41 +17,42 @@
     <h3 th:text="#{book-form-header}">Update Book information</h3>
 
     <div class="row">
-        <label for="book-title-input" th:text="#{books-col-title} + ':'">Title</label>
+        <label for="book-title-input" th:text="#{books-col-title} + ':'">Title:</label>
         <input id="book-title-input"
-               name="title"
                type="text"
                th:field="*{title}"
-               th:placeholder="#{book-title-placeholder}"/>
-        <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
-<!--               th:value="*{title}"-->
-<!--               th:classappend="${#fields.hasErrors('title')} ? 'input-error' : ''"/>-->
+               th:placeholder="#{book-title-placeholder}"
+               th:classappend="${#fields.hasErrors('title')} ? 'input-error' : ''"/>
 
-<!--        <div class="errors"-->
-<!--             th:if="${#fields.hasErrors('title')}"-->
-<!--             th:errors="*{title}">-->
-<!--            Wrong book name-->
-<!--        </div>-->
+        <div class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
     </div>
 
     <div class="row">
-        <label for="author-select" th:text="#{books-col-author} + ':'">Author</label>
-        <select id="author-select" name="authorId">
+        <label for="author-select" th:text="#{books-col-author} + ':'">Choose Author</label>
+
+        <select id="author-select"
+                th:field="*{authorId}"
+                th:classappend="${#fields.hasErrors('authorId')} ? 'input-error' : ''">
             <option th:each="author : ${authors}"
                     th:value="${author.id}"
-                    th:text="${author.fullName}"
-                    th:selected="${author.id == book.authorId}"></option>
+                    th:text="${author.fullName}"></option>
         </select>
+
+        <div class="error-message" th:if="${#fields.hasErrors('authorId')}" th:errors="*{authorId}"></div>
     </div>
 
     <div class="row">
         <label for="genre-select" th:text="#{books-col-genre} + ':'">Genre</label>
-        <select id="genre-select" name="genreId">
+
+        <select id="genre-select"
+                th:field="*{genreId}"
+                th:classappend="${#fields.hasErrors('genreId')} ? 'input-error' : ''">
             <option th:each="genre : ${genres}"
                     th:value="${genre.id}"
-                    th:text="${genre.name}"
-                    th:selected="${genre.id == book.genreId}"></option>
+                    th:text="${genre.name}"></option>
         </select>
+
+        <div class="error-message" th:if="${#fields.hasErrors('genreId')}" th:errors="*{genreId}"></div>
     </div>
 
     <div class="actions">
