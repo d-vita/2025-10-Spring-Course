@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{comments-page-title}">Book comments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="book-card">
+
+    <!-- Book info -->
+    <h3 th:text="${book.title}">Book Title</h3>
+
+    <div class="book-meta" style="display: flex; gap: 40px; margin-bottom: 24px;">
+        <div>
+            <strong th:text="#{books-col-author} + ':'">Author:</strong>
+            <span th:text="${book.author.fullName}">Author Name</span>
+        </div>
+        <div>
+            <strong th:text="#{books-col-genre} + ':'">Genre:</strong>
+            <span th:text="${book.genre.name}">Genre</span>
+        </div>
+    </div>
+
+    <!-- Comments -->
+    <h3 class="comments-header" th:text="#{comments-header}">Comments</h3>
+
+    <table class="general">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th th:text="#{comments-col-text}">Comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="comment, iter : ${comments}">
+            <td th:text="${iter.index + 1}">1</td>
+            <td th:text="${comment.message}">Comment message</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(comments)}">
+            <td colspan="2" class="no-comments">No comments yet</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Back button -->
+    <div style="margin-top: 20px;">
+        <a th:href="@{/}" class="btn-add btn-light-blue" th:text="#{back-to-books}">
+            Back to Books
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>
