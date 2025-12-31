@@ -1,4 +1,4 @@
-package ru.otus.hw.controller;
+package ru.otus.hw.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.dto.BookFormDto;
-import ru.otus.hw.exceptions.NotFoundException;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
@@ -23,9 +23,13 @@ import ru.otus.hw.services.GenreService;
 public class BookController {
 
     private final BookService bookService;
+
     private final AuthorService authorService;
+
     private final GenreService genreService;
+
     private final BookConverter bookConverter;
+
 
     @GetMapping("/")
     public String getBooks(Model model) {
@@ -57,7 +61,7 @@ public class BookController {
 
     @GetMapping("/{id}/edit")
     public String getEditBookPage(@PathVariable long id, Model model) {
-        var book = bookService.findById(id).orElseThrow(NotFoundException::new);
+        var book = bookService.findById(id).orElseThrow(EntityNotFoundException::new);
 
         model.addAttribute("book", bookConverter.toFormDto(book));
         model.addAttribute("authors", authorService.findAll());
