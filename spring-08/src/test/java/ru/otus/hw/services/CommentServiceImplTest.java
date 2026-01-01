@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         CommentServiceImpl.class,
         CommentConverter.class,
         BookConverter.class,
+        BookServiceImpl.class,
         AuthorConverter.class,
         GenreConverter.class
 })

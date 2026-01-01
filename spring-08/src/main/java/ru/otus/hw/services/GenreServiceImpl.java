@@ -20,7 +20,7 @@ public class GenreServiceImpl implements GenreService {
     @Transactional(readOnly = true)
     public List<GenreDto> findAll() {
         return genreRepository.findAll().stream()
-                .map(genreConverter::toDto)
+                .map(genreConverter::toGenreDto)
                 .toList();
     }
 }

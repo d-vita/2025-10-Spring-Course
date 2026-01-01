@@ -20,7 +20,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional(readOnly = true)
     public List<AuthorDto> findAll() {
         return authorRepository.findAll().stream()
-                .map(authorConverter::toDto)
+                .map(authorConverter::toAuthorDto)
                 .toList();
     }
 }
