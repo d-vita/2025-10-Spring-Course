@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.models.Book;
 
+
 @RequiredArgsConstructor
 @Component
 public class BookConverter {
@@ -12,12 +13,12 @@ public class BookConverter {
 
     private final GenreConverter genreConverter;
 
-    public BookDto toDto(Book book) {
+    public BookDto fromDomainObject(Book book) {
         return new BookDto(
                 book.getId(),
                 book.getTitle(),
-                authorConverter.toDto(book.getAuthor()),
-                genreConverter.toDto(book.getGenre())
+                authorConverter.fromDomainObject(book.getAuthor()),
+                genreConverter.fromDomainObject(book.getGenre())
         );
     }
 }

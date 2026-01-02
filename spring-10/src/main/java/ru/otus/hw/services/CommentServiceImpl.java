@@ -12,7 +12,6 @@ import ru.otus.hw.repositories.CommentRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -27,27 +26,27 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public Optional<CommentDto> findById(long id) {
-        return commentRepository.findById(id).map(commentConverter::toDto);
+        return commentRepository.findById(id).map(commentConverter::fromDomainObject);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CommentDto> findAllByBookId(long bookId) {
         return commentRepository.findAllByBookId(bookId).stream()
-                .map(commentConverter::toDto)
-                .collect(Collectors.toList());
+                .map(commentConverter::fromDomainObject)
+                .toList();
     }
 
     @Override
     @Transactional
     public CommentDto insert(String message, long bookId) {
-        return commentConverter.toDto(save(0, message, bookId));
+        return commentConverter.fromDomainObject(save(0, message, bookId));
     }
 
     @Override
     @Transactional
     public CommentDto update(long id, String message, long bookId) {
-        return commentConverter.toDto(save(id, message, bookId));
+        return commentConverter.fromDomainObject(save(id, message, bookId));
     }
 
     @Override
