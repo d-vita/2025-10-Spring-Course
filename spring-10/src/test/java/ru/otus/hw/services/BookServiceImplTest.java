@@ -13,10 +13,12 @@ import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @DataJpaTest
 @Import({
@@ -47,9 +49,7 @@ class BookServiceImplTest {
         var actual = bookService.findById(1L);
         var expected = getExpectedBooks().get(0);
 
-        assertThat(actual)
-                .isPresent()
-                .hasValue(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
 
@@ -69,8 +69,7 @@ class BookServiceImplTest {
         assertThat(bookService.findAll()).hasSize(4);
 
         var actual = bookService.findById(4L);
-        assertThat(actual).isPresent()
-                .hasValue(expectedBook);
+        assertThat(actual).isEqualTo(expectedBook);
     }
 
 
@@ -87,8 +86,7 @@ class BookServiceImplTest {
 
         var actualBook = bookService.findById(EXISTING_BOOK_ID);
 
-        assertThat(actualBook).isPresent()
-                .hasValue(expected);
+        assertThat(actualBook).isEqualTo(expected);
     }
 
 
@@ -99,7 +97,9 @@ class BookServiceImplTest {
 
         bookService.deleteById(EXISTING_BOOK_ID);
         assertThat(bookService.findAll()).hasSize(2);
-        assertThat(bookService.findById(EXISTING_BOOK_ID)).isEmpty();
+        assertThatThrownBy(() -> bookService.findById(EXISTING_BOOK_ID))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Book");
     }
 
 
