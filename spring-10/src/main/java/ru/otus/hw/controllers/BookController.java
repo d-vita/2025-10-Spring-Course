@@ -35,18 +35,18 @@ public class BookController {
     }
 
     @PostMapping("/api/books")
-    public ResponseEntity<BookDto> create(@RequestBody @Valid BookFormDto bookDto) {
+    public ResponseEntity<BookDto> create(@RequestBody @Valid BookFormDto bookFormDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(bookService.insert(bookDto));
+                .body(bookService.insert(bookFormDto));
     }
 
     @PutMapping("/api/books/{id}")
     public ResponseEntity<BookDto> update(
             @PathVariable long id,
-            @RequestBody @Valid BookFormDto bookForm
+            @RequestBody @Valid BookFormDto bookFormDto
     ) {
-        return ResponseEntity.ok(bookService.update(id, bookForm));
+        return ResponseEntity.ok(bookService.update(id, bookFormDto));
     }
 
     @DeleteMapping("/api/books/{id}")

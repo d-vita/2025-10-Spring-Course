@@ -43,24 +43,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto insert(BookFormDto bookDto) {
+    public BookDto insert(BookFormDto bookFormDto) {
         return bookConverter.fromDomainObject(save(
-                0,
-                bookDto.title(),
-                bookDto.authorId(),
-                bookDto.genreId())
-        );
+                0, bookFormDto));
     }
 
     @Override
     @Transactional
-    public BookDto update(long id, BookFormDto bookDto) {
+    public BookDto update(long id, BookFormDto bookFormDto) {
         return bookConverter.fromDomainObject(save(
-                id,
-                bookDto.title(),
-                bookDto.authorId(),
-                bookDto.genreId())
-        );
+                id, bookFormDto));
     }
 
     @Override
@@ -69,12 +61,14 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    private Book save(long id, String title, long authorId, long genreId) {
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
-        var book = new Book(id, title, author, genre);
+    private Book save(long id, BookFormDto bookFormDto) {
+        var author = authorRepository.findById(bookFormDto.authorId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Author with id %d not found".formatted(bookFormDto.authorId())));
+        var genre = genreRepository.findById(bookFormDto.genreId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Genre with id %d not found".formatted(bookFormDto.genreId())));
+        var book = new Book(id, bookFormDto.title(), author, genre);
         return bookRepository.save(book);
     }
 }
