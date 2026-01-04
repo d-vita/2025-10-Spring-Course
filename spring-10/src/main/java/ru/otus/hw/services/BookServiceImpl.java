@@ -28,9 +28,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public BookDto findById(long id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Book from book id " + id + " not found"));
-        return bookConverter.fromDomainObject(book);
+        return bookConverter.fromDomainObject(getBook(id));
     }
 
     @Override
@@ -44,21 +42,24 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDto insert(BookFormDto bookFormDto) {
-        return bookConverter.fromDomainObject(save(
-                0, bookFormDto));
+        return bookConverter.fromDomainObject(save(0, bookFormDto));
     }
 
     @Override
     @Transactional
     public BookDto update(long id, BookFormDto bookFormDto) {
-        return bookConverter.fromDomainObject(save(
-                id, bookFormDto));
+        return bookConverter.fromDomainObject(save(id, bookFormDto));
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
         bookRepository.deleteById(id);
+    }
+
+    private Book getBook(long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
     }
 
     private Book save(long id, BookFormDto bookFormDto) {
