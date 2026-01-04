@@ -35,13 +35,10 @@ public class BookController {
     }
 
     @PostMapping("/api/books")
-    public ResponseEntity<BookDto> create(@RequestBody @Valid BookFormDto bookForm) {
-        var book = bookService.insert(
-                bookForm.title(),
-                bookForm.authorId(),
-                bookForm.genreId()
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(book);
+    public ResponseEntity<BookDto> create(@RequestBody @Valid BookFormDto bookDto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(bookService.insert(bookDto));
     }
 
     @PutMapping("/api/books/{id}")
@@ -49,12 +46,7 @@ public class BookController {
             @PathVariable long id,
             @RequestBody @Valid BookFormDto bookForm
     ) {
-        return ResponseEntity.ok(bookService.update(
-                id,
-                bookForm.title(),
-                bookForm.authorId(),
-                bookForm.genreId())
-        );
+        return ResponseEntity.ok(bookService.update(id, bookForm));
     }
 
     @DeleteMapping("/api/books/{id}")
