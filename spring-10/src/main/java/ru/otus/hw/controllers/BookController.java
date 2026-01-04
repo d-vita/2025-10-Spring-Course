@@ -35,7 +35,7 @@ public class BookController {
     }
 
     @PostMapping("/api/books")
-    public ResponseEntity<BookDto> saveBook(@RequestBody @Valid BookFormDto bookForm) {
+    public ResponseEntity<BookDto> create(@RequestBody @Valid BookFormDto bookForm) {
         var book = bookService.insert(
                 bookForm.title(),
                 bookForm.authorId(),
@@ -45,15 +45,16 @@ public class BookController {
     }
 
     @PutMapping("/api/books/{id}")
-    public BookDto updateBook(
+    public ResponseEntity<BookDto> update(
             @PathVariable long id,
             @RequestBody @Valid BookFormDto bookForm
     ) {
-        return bookService.update(
+        return ResponseEntity.ok(bookService.update(
                 id,
                 bookForm.title(),
                 bookForm.authorId(),
-                bookForm.genreId());
+                bookForm.genreId())
+        );
     }
 
     @DeleteMapping("/api/books/{id}")

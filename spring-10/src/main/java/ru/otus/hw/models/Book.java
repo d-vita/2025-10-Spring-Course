@@ -1,6 +1,5 @@
 package ru.otus.hw.models;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,13 +30,13 @@ public class Book {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToOne(targetEntity = Author.class, fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "author_id")
+    @ManyToOne(targetEntity = Author.class, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToOne(targetEntity = Genre.class, fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "genre_id")
+    @ManyToOne(targetEntity = Genre.class, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "genre_id", nullable = false)
     private Genre genre;
 }

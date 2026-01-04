@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 
 
 public record BookFormDto(
-        Long id,
         @NotBlank(message = "Title cannot be empty")
         @Size(min = 2, max = 100, message = "Title should be between 2 and 100 characters")
         String title,

@@ -31,6 +31,6 @@ public class Comment {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 }
