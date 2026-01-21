@@ -30,7 +30,7 @@ public class Comment {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "book_id")
     private Book book;
 }
