@@ -4,7 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-    entry: './src/ui/index.js',
+    entry: './src/index.js',
     mode: "production",
     output: {
         path: path.resolve(__dirname, 'target/classes/public/'),
@@ -45,7 +45,7 @@ module.exports = {
         
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: 'src/ui/index.html'
+            template: 'src/index.html'
         })
     ]
 }
