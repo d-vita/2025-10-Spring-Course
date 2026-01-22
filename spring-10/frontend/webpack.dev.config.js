@@ -2,7 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path');
 
 module.exports = {
-    entry: './src/ui/index.js',
+    entry: './src/index.js',
     devtool: 'inline-source-map',
     mode: 'development',
     output: {
@@ -12,7 +12,7 @@ module.exports = {
     },
 
     devServer: {
-        static: path.resolve(__dirname) + '/src/ui',
+        static: path.resolve(__dirname) + '/src',
         compress: true,
         port: 9000,
         host: 'localhost',
@@ -57,7 +57,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: 'src/ui/index.html'
+            template: 'src/index.html'
         })
     ]
 }

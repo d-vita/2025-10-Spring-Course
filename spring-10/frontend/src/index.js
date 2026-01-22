@@ -1,6 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './components/App'
+import Books from './components/Books'
+
+const App = () => (
+    <div>
+        <Books />
+    </div>
+);
 
 ReactDOM.render(
   <App />,
