@@ -8,6 +8,8 @@ import { EditBookForm } from './EditBookForm';
 import './styles/styles.css';
 
 const Books = () => {
+    const [genres, setGenres] = useState([]);
+    const [authors, setAuthors] = useState([]);
     const [books, setBooks] = useState([]);
     const [showAddForm, setShowAddForm] = useState(false);
     const [editBook, setEditBook] = useState(null);
@@ -17,6 +19,16 @@ const Books = () => {
         setBooks(response.data);
     };
 
+    const loadAuthors = async () => {
+        const response = await axios.get('/api/authors');
+        setAuthors(response.data);
+    };
+
+    const loadGenres = async () => {
+        const response = await axios.get('/api/genres');
+        setGenres(response.data);
+    };
+
     useEffect(() => {
         loadBooks();
     }, []);
@@ -24,6 +36,8 @@ const Books = () => {
     const deleteBook = async (id) => {
         await axios.delete(`/api/books/${id}`);
         loadBooks();
+        loadAuthors();
+        loadGenres();
     };
 
     const addBook = async (book) => {
@@ -51,8 +65,8 @@ const Books = () => {
 
             {showAddForm && (
                 <AddBookForm
-                    authors={[]} // authors из API
-                    genres={[]}  // genres из API
+                    authors={authors}
+                    genres={genres}
                     onSubmit={addBook}
                     onCancel={() => setShowAddForm(false)}
                 />
@@ -62,8 +76,8 @@ const Books = () => {
             {editBook && (
                 <EditBookForm
                     book={editBook}
-                    authors={[]}
-                    genres={[]}
+                    authors={authors}
+                    genres={genres}
                     onSubmit={updateBook}
                     onCancel={() => setEditBook(null)}
                 />

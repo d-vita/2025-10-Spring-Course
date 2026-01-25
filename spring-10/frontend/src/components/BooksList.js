@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const BooksList = ({ books, onDelete }) => {
+export const BooksList = ({ books, onDelete, onEdit }) => {
     return (
         <table className="general">
             <thead>
@@ -9,8 +9,8 @@ export const BooksList = ({ books, onDelete }) => {
                 <th>Author</th>
                 <th>Genre</th>
                 <th>Comments</th>
-                <th></th>
-                <th></th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
             </thead>
             <tbody>
@@ -25,7 +25,10 @@ export const BooksList = ({ books, onDelete }) => {
                         </button>
                     </td>
                     <td>
-                        <button className="btn-edit">
+                        <button
+                            className="btn-edit"
+                            onClick={() => onEdit(book)}
+                        >
                             Edit
                         </button>
                     </td>
