@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BooksList } from './BooksList';
 import { AddBookForm } from './AddBookForm';
 import { EditBookForm } from './EditBookForm';
+import { Comments } from './Comments';
 
 import './styles/styles.css';
 
@@ -13,6 +14,7 @@ const Books = () => {
     const [books, setBooks] = useState([]);
     const [showAddForm, setShowAddForm] = useState(false);
     const [editBook, setEditBook] = useState(null);
+    const [commentsBookId, setCommentsBookId] = useState(null);
 
     const loadBooks = async () => {
         const response = await axios.get('/api/books');
@@ -31,6 +33,8 @@ const Books = () => {
 
     useEffect(() => {
         loadBooks();
+        loadAuthors();
+        loadGenres();
     }, []);
 
     const deleteBook = async (id) => {
@@ -51,6 +55,18 @@ const Books = () => {
         loadBooks();
         setEditBook(null);
     };
+
+    const viewComments = (bookId) => {
+        setCommentsBookId(bookId);
+    };
+
+    const backToBooks = () => {
+        setCommentsBookId(null);
+    };
+
+    if (commentsBookId) {
+        return <Comments bookId={commentsBookId} onBack={backToBooks} />;
+    }
 
     return (
         <div>
@@ -88,6 +104,7 @@ const Books = () => {
                     books={books}
                     onDelete={deleteBook}
                     onEdit={setEditBook}
+                    onViewComments={viewComments}
                 />
             )}
         </div>

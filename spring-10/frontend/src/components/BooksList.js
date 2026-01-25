@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const BooksList = ({ books, onDelete, onEdit }) => {
+export const BooksList = ({ books, onDelete, onEdit, onViewComments }) => {
     return (
         <table className="general">
             <thead>
@@ -20,23 +20,17 @@ export const BooksList = ({ books, onDelete, onEdit }) => {
                     <td>{book.author?.fullName || ''}</td>
                     <td>{book.genre?.name || ''}</td>
                     <td>
-                        <button className="edit-link">
+                        <button className="edit-link" onClick={() => onViewComments(book.id)}>
                             Comments
                         </button>
                     </td>
                     <td>
-                        <button
-                            className="btn-edit"
-                            onClick={() => onEdit(book)}
-                        >
+                        <button className="btn-edit" onClick={() => onEdit(book)}>
                             Edit
                         </button>
                     </td>
                     <td>
-                        <button
-                            className="btn-delete"
-                            onClick={() => onDelete(book.id)}
-                        >
+                        <button className="btn-delete" onClick={() => onDelete(book.id)}>
                             Delete
                         </button>
                     </td>

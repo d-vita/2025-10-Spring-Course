@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export const EditBookForm = ({ book, authors, genres, onSubmit, onCancel }) => {
     const [title, setTitle] = useState(book.title);
     const [authorId, setAuthorId] = useState(book.authorId);
     const [genreId, setGenreId] = useState(book.genreId);
+
+    useEffect(() => {
+        if (book) {
+            setTitle(book.title || '');
+            setAuthorId(book.author?.id || '');
+            setGenreId(book.genre?.id || '');
+        }
+    }, [book]);
 
     return (
         <form
@@ -47,12 +55,8 @@ export const EditBookForm = ({ book, authors, genres, onSubmit, onCancel }) => {
             </div>
 
             <div className="actions">
-                <button type="submit" className="btn-save">
-                    Save
-                </button>
-                <button type="button" className="btn-cancel" onClick={onCancel}>
-                    Cancel
-                </button>
+                <button type="submit" className="btn-save">Save</button>
+                <button type="button" className="btn-cancel" onClick={onCancel}>Cancel</button>
             </div>
         </form>
     );
