@@ -1,51 +1,58 @@
-const TerserPlugin = require("terser-webpack-plugin");
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path');
-const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
-    entry: './src/index.js',
-    mode: "production",
-    output: {
-        path: path.resolve(__dirname, 'target/classes/public/'),
-        filename: 'bundle.min.js',
-        libraryTarget: 'umd'
-    },
+module.exports = (env, argv) => {
+    const isProd = argv.mode === 'production';
 
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: /(node_modules|bower_components|build)/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ["@babel/preset-env", '@babel/preset-react']
-                    }
-                }
-            }
-        ]
-    },
+    return {
+        entry: './src/index.js',
 
-    optimization: {
-        minimize: true,
-        minimizer: [
-          new TerserPlugin({
-            extractComments: true,
-          }),
+        output: {
+            path: path.resolve(__dirname, '../src/main/resources/public'),
+            filename: isProd ? 'bundle.[contenthash].js' : 'bundle.js',
+            clean: true,
+        },
+
+        resolve: {
+            extensions: ['.js'],
+        },
+
+        module: {
+            rules: [
+                {
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    use: 'babel-loader',
+                },
+                {
+                    test: /\.css$/,
+                    use: [
+                        'style-loader',
+                        'css-loader'
+                    ],
+                },
+            ],
+        },
+
+        plugins: [
+            new HtmlWebpackPlugin({
+                template: './src/index.html',
+                filename: 'index.html',
+            }),
         ],
-    },
 
-    plugins: [
-        new webpack.DefinePlugin({
-            "process.env": {
-                NODE_ENV: JSON.stringify("production")
-            }
-        }),
-        
-        new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: 'src/index.html'
-        })
-    ]
-}
+        devServer: {
+            port: 9000,
+            open: true,
+            hot: true,
+            proxy: {
+                '/api': {
+                    target: 'http://localhost:8080',
+                    changeOrigin: true,
+                },
+            },
+        },
+
+        devtool: isProd ? false : 'source-map',
+    };
+};

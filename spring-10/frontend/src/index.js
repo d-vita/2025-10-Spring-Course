@@ -1,14 +1,8 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Books from './components/Books'
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import Books from './components/Books';
 
-const App = () => (
-    <div>
-        <Books />
-    </div>
-);
+const container = document.getElementById('root');
+const root = createRoot(container);
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-)
+root.render(<Books />);
