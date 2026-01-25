@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>ru.otus.hw</groupId>
-    <artifactId>spring-07</artifactId>
+    <artifactId>spring-09</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-data-jpa-demo</name>
 
