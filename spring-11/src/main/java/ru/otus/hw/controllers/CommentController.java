@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDto;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.repositories.CommentRepository;
 
 @RequiredArgsConstructor
@@ -21,6 +23,10 @@ public class CommentController {
     @GetMapping("/{bookId}/comments")
     public Flux<CommentDto> getCommentsByBook(@PathVariable String bookId) {
         return commentRepository.findAllByBookId(bookId)
-                .map(commentConverter::fromDomainObject);
+                .map(commentConverter::fromDomainObject)
+                .switchIfEmpty(
+                        Mono.error(new EntityNotFoundException("Comments for book with id %s not found".formatted(bookId)
+                        ))
+                );
     }
 }

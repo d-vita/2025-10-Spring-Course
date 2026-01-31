@@ -15,12 +15,12 @@ public class BookConverter {
 
     private final GenreConverter genreConverter;
 
-    public BookDto fromDomainObject(Book book, Author author, Genre genre) {
+    public BookDto fromDomainObject(Book book) {
         return new BookDto(
                 book.getId(),
                 book.getTitle(),
-                authorConverter.fromDomainObject(author),
-                genreConverter.fromDomainObject(genre)
+                authorConverter.fromDomainObject(book.getAuthor()),
+                genreConverter.fromDomainObject(book.getGenre())
         );
     }
 }
