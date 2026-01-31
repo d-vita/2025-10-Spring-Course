@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import ru.otus.hw.converters.AuthorConverter;
 import ru.otus.hw.dto.AuthorDto;
-import ru.otus.hw.services.AuthorService;
-
-import java.util.List;
+import ru.otus.hw.repositories.AuthorRepository;
 
 
 @RequiredArgsConstructor
@@ -15,10 +15,12 @@ import java.util.List;
 @RequestMapping("/api/authors")
 public class AuthorController {
 
-    private final AuthorService authorService;
+    private final AuthorRepository authorRepository;
+    private final AuthorConverter authorConverter;
 
     @GetMapping
-    public List<AuthorDto> getAuthors() {
-        return authorService.findAll();
+    public Flux<AuthorDto> getAuthors() {
+        return authorRepository.findAll()
+                .map(authorConverter::fromDomainObject);
     }
 }
