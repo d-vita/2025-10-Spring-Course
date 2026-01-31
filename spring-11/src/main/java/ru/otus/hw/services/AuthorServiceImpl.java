@@ -3,6 +3,7 @@ package ru.otus.hw.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import ru.otus.hw.converters.AuthorConverter;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.repositories.AuthorRepository;
@@ -17,10 +18,9 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorConverter authorConverter;
 
     @Override
-    @Transactional(readOnly = true)
-    public List<AuthorDto> findAll() {
-        return authorRepository.findAll().stream()
-                .map(authorConverter::fromDomainObject)
-                .toList();
+    public Flux<AuthorDto> findAll() {
+        return authorRepository
+                .findAll()
+                .map(authorConverter::fromDomainObject);
     }
 }
