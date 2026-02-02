@@ -2,57 +2,40 @@ package ru.otus.hw.repositories;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import reactor.test.StepVerifier;
 import ru.otus.hw.models.Genre;
 
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-
-@DataJpaTest
+@DataMongoTest
 class GenreRepositoryTest {
 
     private static final int EXPECTED_NUMBER_OF_GENRES = 3;
-    private static final long FIRST_GENRE_ID = 2L;
-    private static final long NON_EXISTING_GENRE_ID = 999L;
+    private static final String NON_EXISTING_GENRE_ID = "999";
 
     @Autowired
     private GenreRepository repository;
 
-    @Autowired
-    private TestEntityManager em;
-
     @Test
     void shouldFindAllGenres() {
-        var genres = repository.findAll();
-
-        assertThat(genres)
-                .isNotNull()
-                .hasSize(EXPECTED_NUMBER_OF_GENRES)
-                .allMatch(g -> g.getName() != null && !g.getName().isBlank());
-
-        assertThat(genres)
-                .usingRecursiveComparison()
-                .isEqualTo(List.of(
-                        new Genre(1L, "Genre_1"),
-                        new Genre(2L, "Genre_2"),
-                        new Genre(3L, "Genre_3")
-        ));
+        StepVerifier.create(repository.findAll())
+                .expectNextCount(EXPECTED_NUMBER_OF_GENRES)
+                .verifyComplete();
     }
 
     @Test
     void shouldFindGenreById() {
-        var actualGenre = repository.findById(FIRST_GENRE_ID);
-        var expectedGenre = em.find(Genre.class, FIRST_GENRE_ID);
+        var expectedGenre = new Genre("1", "Genre_1");
 
-        assertThat(actualGenre).isPresent().get()
-                .usingRecursiveComparison().isEqualTo(expectedGenre);
+        StepVerifier.create(repository.findById("1"))
+                .expectNext(expectedGenre)
+                .verifyComplete();
     }
 
     @Test
     void shouldReturnEmptyWhenNotFound() {
-        assertThat(repository.findById(NON_EXISTING_GENRE_ID)).isEmpty();
+        StepVerifier.create(repository.findById(NON_EXISTING_GENRE_ID))
+                .expectNextCount(0)
+                .verifyComplete();
     }
 }

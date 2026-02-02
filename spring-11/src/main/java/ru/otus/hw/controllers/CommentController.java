@@ -18,6 +18,7 @@ import ru.otus.hw.repositories.CommentRepository;
 public class CommentController {
 
     private final CommentRepository commentRepository;
+
     private final CommentConverter commentConverter;
 
     @GetMapping("/{bookId}/comments")

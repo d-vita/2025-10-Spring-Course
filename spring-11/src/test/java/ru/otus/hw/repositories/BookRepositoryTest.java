@@ -1,94 +1,93 @@
 package ru.otus.hw.repositories;
 
-import lombok.val;
-import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import reactor.test.StepVerifier;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+@DataMongoTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BookRepositoryTest {
 
-    private static final long FIRST_BOOK_ID = 1L;
-    private static final int EXPECTED_QUERIES_COUNT = 1;
-    private static final int EXPECTED_NUMBER_OF_BOOKS = 3;
-    private static final long NON_EXISTING_BOOK_ID = 999L;
+    private static final String NON_EXISTING_BOOK_ID = "999";
     @Autowired
     private BookRepository repository;
 
-    @Autowired
-    private TestEntityManager em;
-
     @Test
-    void shouldFindAllBooksWithAllInfo() {
-        SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
-                .unwrap(SessionFactory.class);
-        sessionFactory.getStatistics().setStatisticsEnabled(true);
-
-        var book = repository.findAll();
-
-        assertThat(book).isNotNull().hasSize(EXPECTED_NUMBER_OF_BOOKS)
-                .allMatch(b -> !b.getTitle().equals(""))
-                .allMatch(b -> b.getAuthor().getFullName() != null)
-                .allMatch(b -> b.getGenre().getName() != null);
-        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERIES_COUNT);
+    @Order(1)
+    void shouldReturnAllBooks() {
+        StepVerifier.create(repository.findAll())
+                .expectNext(
+                        new Book("1", "BookTitle_1", new Author("1", "Author_1"), new Genre("1", "Genre_1")),
+                        new Book("2", "BookTitle_2", new Author("2", "Author_2"), new Genre("2", "Genre_2"))
+                )
+                .verifyComplete();
     }
 
     @Test
-    void shouldFindBookById() {
-        val actualBook = repository.findById(FIRST_BOOK_ID);
-        val expectedBook = em.find(Book.class, FIRST_BOOK_ID);
-        assertThat(actualBook).isPresent().get()
-                .usingRecursiveComparison().isEqualTo(expectedBook);
+    @Order(2)
+    void shouldReturnBookById() {
+        StepVerifier.create(repository.findById("1"))
+                .expectNextMatches(book ->
+                        book.getId().equals("1") &&
+                                book.getTitle().equals("BookTitle_1") &&
+                                book.getAuthor() != null &&
+                                book.getAuthor().getId().equals("1") &&
+                                book.getAuthor().getFullName().equals("Author_1") &&
+                                book.getGenre() != null &&
+                                book.getGenre().getId().equals("1") &&
+                                book.getGenre().getName().equals("Genre_1")
+                )
+                .verifyComplete();
     }
 
     @Test
     void shouldReturnEmptyWhenNotFound() {
-        assertThat(repository.findById(NON_EXISTING_BOOK_ID)).isEmpty();
+        StepVerifier.create(repository.findById(NON_EXISTING_BOOK_ID))
+                .verifyComplete();
     }
 
     @Test
+    @Order(3)
     void shouldInsertBook() {
-        var author = em.find(Author.class, 1L);
-        var genre = em.find(Genre.class, 1L);
+        Author newAuthor = new Author("3", "Author_3");
+        Genre newGenre = new Genre("3", "Genre_3");
 
-        var book = new Book(0L, "InsertedBook", author, genre);
+        repository.save(new Book(null, "InsertedBook", newAuthor, newGenre))
+                .block();
 
-        var saved = repository.save(book);
-        assertThat(saved.getId()).isGreaterThan(3L);
-
-        var actual = repository.findById(saved.getId());
-        assertThat(actual).isPresent()
-                .get()
-                .usingRecursiveComparison()
-                .isEqualTo(saved);
+        StepVerifier.create(repository.findAll())
+                .expectNextMatches(book -> book.getTitle().equals("BookTitle_1"))
+                .expectNextMatches(book -> book.getTitle().equals("BookTitle_2"))
+                .expectNextMatches(book -> book.getTitle().equals("InsertedBook"))
+                .verifyComplete();
     }
 
     @Test
+    @Order(4)
     void shouldUpdateBook() {
-        var author = em.find(Author.class, 2L);
-        var genre = em.find(Genre.class, 2L);
-
-        var updated = new Book(1L, "UpdatedTitle", author, genre);
-
-        repository.save(updated);
-
-        var actual = repository.findById(1L);
-        assertThat(actual).isPresent()
-                .get()
-                .usingRecursiveComparison()
-                .isEqualTo(updated);
+        StepVerifier.create(
+                        repository.findById("1")
+                                .flatMap(book -> {
+                                    book.setTitle("UpdatedTitle");
+                                    return repository.save(book);
+                                })
+                )
+                .expectNext(new Book("1", "UpdatedTitle", new Author("1", "Author_1"), new Genre("1", "Genre_1")))
+                .verifyComplete();
     }
 
     @Test
     void shouldDeleteBookById() {
-        repository.deleteById(2L);
-        assertThat(repository.findById(2L)).isEmpty();
+        StepVerifier.create(repository.deleteById("2")
+                        .then(repository.findById("2")))
+                .verifyComplete();
     }
 }

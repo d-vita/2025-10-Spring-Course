@@ -32,8 +32,11 @@ import ru.otus.hw.repositories.GenreRepository;
 public class BookController {
 
     private final BookRepository bookRepository;
+
     private final BookConverter bookConverter;
+
     private final AuthorRepository authorRepository;
+
     private final GenreRepository genreRepository;
 
     @GetMapping
@@ -81,13 +84,17 @@ public class BookController {
     private Mono<Book> save(String id, BookFormDto bookFormDto) {
         Mono<Author> authorMono = authorRepository.findById(bookFormDto.authorId())
                 .switchIfEmpty(
-                        Mono.error(new EntityNotFoundException("Author with id %s not found".formatted(bookFormDto.authorId())
+                        Mono.error(
+                                new EntityNotFoundException(
+                                        "Author with id %s not found".formatted(bookFormDto.authorId())
                         ))
                 );
 
-        Mono<Genre> genreMono= genreRepository.findById(bookFormDto.authorId())
+        Mono<Genre> genreMono = genreRepository.findById(bookFormDto.authorId())
                 .switchIfEmpty(
-                        Mono.error(new EntityNotFoundException("Genre with id %s not found".formatted(bookFormDto.genreId())
+                        Mono.error(
+                                new EntityNotFoundException(
+                                        "Genre with id %s not found".formatted(bookFormDto.genreId())
                         ))
                 );
 
