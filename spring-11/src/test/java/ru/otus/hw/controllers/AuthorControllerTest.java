@@ -1,39 +1,35 @@
 package ru.otus.hw.controllers;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import ru.otus.hw.dto.AuthorDto;
 
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@WebMvcTest(AuthorController.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthorControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
 
-    @MockBean
-    private AuthorService authorService;
+    @Autowired
+    private WebTestClient webTestClient;
 
     @Test
-    void shouldReturnAllAuthors() throws Exception {
-        List<AuthorDto> authors = List.of(
-                new AuthorDto(1L, "Author 1"),
-                new AuthorDto(2L, "Author 2")
-        );
-        Mockito.when(authorService.findAll()).thenReturn(authors);
+    void shouldReturnAllAuthors() {
+        List<AuthorDto> authors = webTestClient.get()
+                .uri("/api/authors")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(AuthorDto.class)
+                .returnResult()
+                .getResponseBody();
 
-        mockMvc.perform(get("/api/authors"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(authors.size()))
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].fullName").value("Author 1"))
-                .andExpect(jsonPath("$[1].fullName").value("Author 2"));
+        assertThat(authors).isNotNull().isNotEmpty();
+
+        assertThat(authors)
+                .extracting(AuthorDto::fullName)
+                .contains("Author_1", "Author_2", "Author_3");
     }
 }

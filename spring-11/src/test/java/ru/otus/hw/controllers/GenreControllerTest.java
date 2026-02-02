@@ -1,38 +1,35 @@
 package ru.otus.hw.controllers;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import ru.otus.hw.dto.GenreDto;
 
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@WebMvcTest(GenreController.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class GenreControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
 
-    @MockBean
-    private GenreService genreService;
+    @Autowired
+    private WebTestClient webTestClient;
 
     @Test
-    void shouldReturnAllGenres() throws Exception {
-        List<GenreDto> genres = List.of(
-                new GenreDto(1L, "Fiction"),
-                new GenreDto(2L, "Science")
-        );
-        Mockito.when(genreService.findAll()).thenReturn(genres);
+    void shouldReturnAllGenres() {
+        List<GenreDto> genres = webTestClient.get()
+                .uri("/api/genres")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(GenreDto.class)
+                .returnResult()
+                .getResponseBody();
 
-        mockMvc.perform(get("/api/genres"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(genres.size()))
-                .andExpect(jsonPath("$[0].name").value("Fiction"))
-                .andExpect(jsonPath("$[1].name").value("Science"));
+        assertThat(genres).isNotNull().isNotEmpty();
+
+        assertThat(genres)
+                .extracting(GenreDto::name)
+                .contains("Genre_1", "Genre_2", "Genre_3");
     }
 }

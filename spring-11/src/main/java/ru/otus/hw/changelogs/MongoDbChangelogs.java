@@ -35,8 +35,8 @@ public class MongoDbChangelogs {
         Book book2 = bookRepository.save(new Book("2", "BookTitle_2", author2, genre2)).block();
         Book book3 = bookRepository.save(new Book("3", "BookTitle_3", author3, genre3)).block();
 
-        commentRepository.save(new Comment("1", "Comment1", book1.getId())).subscribe();
-        commentRepository.save(new Comment("2", "Comment2", book2.getId())).subscribe();
-        commentRepository.save(new Comment("3", "Comment3", book3.getId())).subscribe();
+        commentRepository.save(new Comment("1", "Comment1", book1.getId())).block();
+        commentRepository.save(new Comment("2", "Comment2", book2.getId())).block();
+        commentRepository.save(new Comment("3", "Comment3", book3.getId())).block();
     }
 }
