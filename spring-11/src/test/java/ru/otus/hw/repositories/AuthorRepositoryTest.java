@@ -3,56 +3,40 @@ package ru.otus.hw.repositories;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import reactor.test.StepVerifier;
 import ru.otus.hw.models.Author;
 
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-@DataJpaTest
+@DataMongoTest
 class AuthorRepositoryTest {
 
     private static final int EXPECTED_NUMBER_OF_AUTHORS = 3;
-    private static final long FIRST_AUTHOR_ID = 1L;
-    private static final long NON_EXISTING_AUTHOR_ID = 999L;
+    private static final String NON_EXISTING_AUTHOR_ID = "999";
 
     @Autowired
     private AuthorRepository repository;
 
-    @Autowired
-    private TestEntityManager em;
-
     @Test
     void shouldFindAllAuthors() {
-        var authors = repository.findAll();
-
-        assertThat(authors)
-                .isNotNull()
-                .hasSize(EXPECTED_NUMBER_OF_AUTHORS)
-                .allMatch(a -> a.getFullName() != null && !a.getFullName().isBlank());
-
-        assertThat(authors)
-                .usingRecursiveComparison()
-                .isEqualTo(List.of(
-                        new Author(1L, "Author_1"),
-                        new Author(2L, "Author_2"),
-                        new Author(3L, "Author_3")
-                ));
+        StepVerifier.create(repository.findAll())
+                .expectNextCount(EXPECTED_NUMBER_OF_AUTHORS)
+                .verifyComplete();
     }
 
     @Test
     void shouldFindAuthorById() {
-        var actualAuthor = repository.findById(FIRST_AUTHOR_ID);
-        var expectedAuthor = em.find(Author.class, FIRST_AUTHOR_ID);
+        var expectedAuthor = new Author("1", "Author_1");
 
-        assertThat(actualAuthor).isPresent().get()
-                .usingRecursiveComparison().isEqualTo(expectedAuthor);
+        StepVerifier.create(repository.findById("1"))
+                .expectNext(expectedAuthor)
+                .verifyComplete();
     }
 
     @Test
     void shouldReturnEmptyWhenNotFound() {
-        assertThat(repository.findById(NON_EXISTING_AUTHOR_ID)).isEmpty();
+        StepVerifier.create(repository.findById(NON_EXISTING_AUTHOR_ID))
+                .expectNextCount(0)
+                .verifyComplete();
     }
 }
