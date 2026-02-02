@@ -1,94 +1,158 @@
 package ru.otus.hw.controllers;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.hw.services.BookService;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
+import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.BookFormDto;
+import ru.otus.hw.dto.CommentDto;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@WebMvcTest(BookController.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookControllerTest {
+
     @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private BookService bookService;
+    private WebTestClient webTestClient;
 
     @Test
-    void shouldReturnAllBooks() throws Exception {
-        List<BookDto> books = List.of(
-                new BookDto(1L, "Book 1", new AuthorDto(1L, "Author 1"), new GenreDto(1L, "Fiction")),
-                new BookDto(2L, "Book 2", new AuthorDto(2L, "Author 2"), new GenreDto(2L, "Science"))
-        );
-        Mockito.when(bookService.findAll()).thenReturn(books);
+    void shouldReturnAllBooks() {
+        List<BookDto> books = webTestClient.get()
+                .uri("/api/books")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(BookDto.class)
+                .returnResult()
+                .getResponseBody();
 
-        mockMvc.perform(get("/api/books"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(books.size()))
-                .andExpect(jsonPath("$[0].title").value("Book 1"))
-                .andExpect(jsonPath("$[0].author.fullName").value("Author 1"))
-                .andExpect(jsonPath("$[0].genre.name").value("Fiction"));
+        assertThat(books).isNotNull().isNotEmpty();
+
+        assertThat(books)
+                .extracting(BookDto::title)
+                .contains("BookTitle_1", "BookTitle_2");
     }
 
     @Test
-    void shouldReturnBookById() throws Exception {
-        BookDto book = new BookDto(1L, "Book 1", new AuthorDto(1L, "Author 1"), new GenreDto(1L, "Fiction"));
-        Mockito.when(bookService.findById(1L)).thenReturn(book);
+    void shouldReturnBookById() {
+        String bookId = "1";
 
-        mockMvc.perform(get("/api/books/{id}", 1L))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Book 1"))
-                .andExpect(jsonPath("$.author.fullName").value("Author 1"))
-                .andExpect(jsonPath("$.genre.name").value("Fiction"));
+        BookDto book = webTestClient.get()
+                .uri("/api/books/{id}", bookId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BookDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(book).isNotNull();
+        assertThat(book.title()).isEqualTo("BookTitle_1");
+        assertThat(book.author().fullName()).isEqualTo("Author_1");
+        assertThat(book.genre().name()).isEqualTo("Genre_1");
     }
 
     @Test
-    void shouldCreateBook() throws Exception {
-        BookFormDto form = new BookFormDto("New Book", 1L, 1L);
-        BookDto created = new BookDto(1L, "New Book", new AuthorDto(1L, "Author 1"), new GenreDto(1L, "Fiction"));
-        Mockito.when(bookService.insert(any(BookFormDto.class))).thenReturn(created);
+    void shouldReturnCommentsForBook() {
+        String bookId = "1";
 
-        mockMvc.perform(post("/api/books")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"New Book\",\"authorId\":1,\"genreId\":1}"))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.title").value("New Book"))
-                .andExpect(jsonPath("$.author.fullName").value("Author 1"))
-                .andExpect(jsonPath("$.genre.name").value("Fiction"));
+        var comments = webTestClient.get()
+                .uri("/api/books/{bookId}/comments", bookId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(CommentDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(comments).isNotNull().isNotEmpty();
+        assertThat(comments)
+                .extracting(CommentDto::message)
+                .contains("Comment1", "Comment3");
     }
 
     @Test
-    void shouldUpdateBook() throws Exception {
-        BookFormDto form = new BookFormDto("Updated Book", 1L, 1L);
-        BookDto updated = new BookDto(1L, "Updated Book", new AuthorDto(1L, "Author 1"), new GenreDto(1L, "Fiction"));
+    void shouldCreateBook() {
+        BookFormDto form = new BookFormDto("New Book", "1", "1");
 
-        Mockito.when(bookService.update(eq(1L), any(BookFormDto.class))).thenReturn(updated);
+        BookDto created = webTestClient.post()
+                .uri("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(form), BookFormDto.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(BookDto.class)
+                .returnResult()
+                .getResponseBody();
 
-        mockMvc.perform(put("/api/books/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"Updated Book\",\"authorId\":1,\"genreId\":1}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Updated Book"))
-                .andExpect(jsonPath("$.author.fullName").value("Author 1"))
-                .andExpect(jsonPath("$.genre.name").value("Fiction"));
+        assertThat(created).isNotNull();
+        assertThat(created.title()).isEqualTo("New Book");
+        assertThat(created.author().fullName()).isEqualTo("Author_1");
+        assertThat(created.genre().name()).isEqualTo("Genre_1");
     }
 
     @Test
-    void shouldDeleteBook() throws Exception {
-        mockMvc.perform(delete("/api/books/{id}", 1L))
-                .andExpect(status().isNoContent());
+    void shouldUpdateBook() {
+        BookFormDto formCreate = new BookFormDto("Temp Book", "2", "2");
 
-        Mockito.verify(bookService).deleteById(1L);
+        BookDto created = webTestClient.post()
+                .uri("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(formCreate), BookFormDto.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(BookDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        assert created != null;
+        String bookId = created.id();
+
+        BookFormDto formUpdate = new BookFormDto("Updated Book", "3", "3");
+
+        BookDto updated = webTestClient.put()
+                .uri("/api/books/{id}", bookId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(formUpdate), BookFormDto.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BookDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(updated).isNotNull();
+        assertThat(updated.title()).isEqualTo("Updated Book");
+        assertThat(updated.author().fullName()).isEqualTo("Author_3");
+        assertThat(updated.genre().name()).isEqualTo("Genre_3");
+    }
+
+    @Test
+    void shouldDeleteBook() {
+        BookFormDto formCreate = new BookFormDto("To Delete", "1", "1");
+
+        BookDto created = webTestClient.post()
+                .uri("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(formCreate), BookFormDto.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(BookDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        assert created != null;
+        String bookId = created.id();
+
+        webTestClient.delete()
+                .uri("/api/books/{id}", bookId)
+                .exchange()
+                .expectStatus().isNoContent();
+
+        webTestClient.get()
+                .uri("/api/books/{id}", bookId)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 }
