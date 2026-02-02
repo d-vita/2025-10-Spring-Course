@@ -90,7 +90,7 @@ public class BookController {
                         ))
                 );
 
-        Mono<Genre> genreMono = genreRepository.findById(bookFormDto.authorId())
+        Mono<Genre> genreMono = genreRepository.findById(bookFormDto.genreId())
                 .switchIfEmpty(
                         Mono.error(
                                 new EntityNotFoundException(
