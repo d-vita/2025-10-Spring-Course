@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{genres-page-title}">List of all genres</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<h3 class="books-header" th:text="#{genres-header} + ':'">List of Genres:</h3>
+
+<table class="general">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th th:text="#{genres-col-name}">Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="genre, iterStat : ${genres}">
+        <td th:text="${iterStat.index + 1}">1</td>
+        <td th:text="${genre.name}">Genre Name</td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{ / }" class="btn-add btn-light-blue btn-bottom" th:text="#{back-to-books}">Back to Books</a>
+
+</body>
+</html>
