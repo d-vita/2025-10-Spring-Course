@@ -24,4 +24,4 @@ values
 insert into users(username, password, enabled)
 values
     ('admin', '$2a$10$DOWSDmY7pN0m5zFZ3L2EWeFhZJfZpZr6ZpL5M8nJkF4Z2J1L1y', true),
-    ('user1', '2a$10$DOWSDmY7pN0m5zFZ3L2EWeFhZJfZpZr6ZpL5M8nJkF4Z2J1L1y', true);
+    ('user1', '$2a$10$314MEUjIUx.Rvx6rPhS4uOLXD0OnIPATWmw/h1w26uAGAbO6Imei.', true);
