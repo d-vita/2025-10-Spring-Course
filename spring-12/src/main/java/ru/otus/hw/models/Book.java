@@ -14,8 +14,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 @Data
 @AllArgsConstructor
@@ -33,14 +31,12 @@ public class Book {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "author_id")
-    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "genre_id")
-    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = "genre_id", nullable = false)
     private Genre genre;
 }

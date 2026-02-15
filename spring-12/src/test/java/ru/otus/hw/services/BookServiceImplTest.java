@@ -12,11 +12,14 @@ import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.BookFormDto;
 import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @DataJpaTest
 @Import({
@@ -47,48 +50,59 @@ class BookServiceImplTest {
         var actual = bookService.findById(1L);
         var expected = getExpectedBooks().get(0);
 
-        assertThat(actual)
-                .isPresent()
-                .hasValue(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
 
     @Test
     @DirtiesContext
     void shouldSaveNewBook() {
-        BookDto expectedBook = new BookDto(
-                4L,
+        BookFormDto bookForm = new BookFormDto(
                 "New Book",
-                new AuthorDto(1L, "Author_1"),
-                new GenreDto(1L, "Genre_1")
+                1L,
+                1L
         );
 
         assertThat(bookService.findAll()).hasSize(3);
 
-        bookService.insert("New Book", 1L, 1L);
+        BookDto savedBook = bookService.insert(bookForm);
         assertThat(bookService.findAll()).hasSize(4);
 
-        var actual = bookService.findById(4L);
-        assertThat(actual).isPresent()
-                .hasValue(expectedBook);
+        assertThat(savedBook.title()).isEqualTo("New Book");
+        assertThat(savedBook.author())
+                .isEqualTo(new AuthorDto(1L, "Author_1"));
+        assertThat(savedBook.genre())
+                .isEqualTo(new GenreDto(1L, "Genre_1"));
+
+        BookDto foundBook = bookService.findById(savedBook.id());
+        assertThat(foundBook).isEqualTo(savedBook);
     }
 
 
     @Test
     @DirtiesContext
     void shouldUpdateBook() {
-        var expected = new BookDto(EXISTING_BOOK_ID, "Updated Title", new AuthorDto(1L, "Author_1"), new GenreDto(1L, "Genre_1"));
+        BookFormDto form = new BookFormDto(
+                "Updated Title",
+                1L,
+                1L
+        );
 
         assertThat(bookService.findAll()).hasSize(3);
 
-        bookService.update(EXISTING_BOOK_ID, "Updated Title", 1L, 1L);
+        BookDto updatedBook = bookService.update(EXISTING_BOOK_ID, form);
+
         assertThat(bookService.findAll()).hasSize(3);
 
+        assertThat(updatedBook.id()).isEqualTo(EXISTING_BOOK_ID);
+        assertThat(updatedBook.title()).isEqualTo("Updated Title");
+        assertThat(updatedBook.author())
+                .isEqualTo(new AuthorDto(1L, "Author_1"));
+        assertThat(updatedBook.genre())
+                .isEqualTo(new GenreDto(1L, "Genre_1"));
 
-        var actualBook = bookService.findById(EXISTING_BOOK_ID);
-
-        assertThat(actualBook).isPresent()
-                .hasValue(expected);
+        BookDto actualBook = bookService.findById(EXISTING_BOOK_ID);
+        assertThat(actualBook).isEqualTo(updatedBook);
     }
 
 
@@ -99,7 +113,9 @@ class BookServiceImplTest {
 
         bookService.deleteById(EXISTING_BOOK_ID);
         assertThat(bookService.findAll()).hasSize(2);
-        assertThat(bookService.findById(EXISTING_BOOK_ID)).isEmpty();
+        assertThatThrownBy(() -> bookService.findById(EXISTING_BOOK_ID))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Book");
     }
 
 
