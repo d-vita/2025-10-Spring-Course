@@ -32,3 +32,22 @@ create table users (
    enabled boolean not null default true,
    primary key (id)
 );
+
+create table roles (
+   id bigserial,
+   role_name varchar(50) not null unique,
+   role_description varchar(255),
+   primary key (id)
+);
+
+create index idx_users_username
+    on users (username);
+
+create index idx_roles_role_name
+    on roles (role_name);
+
+create index idx_user_roles_user
+    on user_roles (user_id);
+
+create index idx_user_roles_role
+    on user_roles (role_id);

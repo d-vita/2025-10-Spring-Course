@@ -3,13 +3,12 @@
 <h3>📚 Console Application — Library Book Catalog</h3>
 
 <p>
-Migrate a library book catalog application to use Spring Data JPA repositories as a data access technology.
+Goal: Learn to secure an application using full authorization and access control.
+Result: A fully-fledged application with Spring Security-based security.
 </p>
 
 <h3>⚙️ Requirements</h3>
 
 <ul>
-  <li>Enable spring-boot-starter-data-jpa.</li>
-  <li>Rewrite all repositories to Spring Data JPA repositories.</li>
-  <li>All tests from the previous work should pass.</li>
+  <li>Configure URL-level authorization in the application.</li>
 </ul>
