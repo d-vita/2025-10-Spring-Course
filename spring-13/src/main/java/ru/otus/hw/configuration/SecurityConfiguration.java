@@ -29,7 +29,8 @@ public class SecurityConfiguration {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET,"/api/books", "/api/books/**", "/api/authors", "/api/genres")
+                        .requestMatchers(HttpMethod.GET,"/api/books", "/api/books/**",
+                                "/api/authors", "/api/genres", "api/books/1/comments")
                             .hasAnyRole("USER", "EDITOR", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/books/**").hasAnyRole("ADMIN", "EDITOR")
                         .requestMatchers(HttpMethod.POST, "/api/books/**").hasAnyRole("ADMIN")

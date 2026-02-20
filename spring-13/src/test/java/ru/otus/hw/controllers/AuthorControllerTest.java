@@ -6,19 +6,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.configuration.SecurityConfiguration;
 import ru.otus.hw.dto.AuthorDto;
+import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.BookFormDto;
+import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.services.AuthorService;
+import ru.otus.hw.services.CustomUserDetailsService;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthorController.class)
+@Import(SecurityConfiguration.class)
 public class AuthorControllerTest {
 
     @Autowired
@@ -27,10 +36,32 @@ public class AuthorControllerTest {
     @MockBean
     private AuthorService authorService;
 
-    @Test
-    @WithMockUser(username = "user")
-    void shouldAllowAuthorizedAccess() throws Exception {
+    @MockBean
+    private CustomUserDetailsService userDetailsService;
 
+    @Test
+    @WithMockUser(username = "user", roles = {"USER"})
+    void getAuthorAllowedForUser() throws Exception {
+
+        Mockito.when(authorService.findAll()).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/authors"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "editor", roles = {"EDITOR"})
+    void getAuthorAllowedForEditor() throws Exception {
+
+        Mockito.when(authorService.findAll()).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/authors"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void getAuthorAllowedForAdmin() throws Exception {
         Mockito.when(authorService.findAll()).thenReturn(List.of());
 
         mockMvc.perform(get("/api/authors"))
@@ -44,7 +75,7 @@ public class AuthorControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(username = "editor", roles = {"EDITOR"})
     void shouldReturnAllAuthors() throws Exception {
         List<AuthorDto> authors = List.of(
                 new AuthorDto(1L, "Author 1"),
