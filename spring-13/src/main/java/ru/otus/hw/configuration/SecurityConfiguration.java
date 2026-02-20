@@ -27,10 +27,10 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET,"/api/books", "/api/books/**",
-                                "/api/authors", "/api/genres", "api/books/1/comments")
+                                "/api/authors", "/api/genres", "api/books/**/comments")
                             .hasAnyRole("USER", "EDITOR", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/books/**").hasAnyRole("ADMIN", "EDITOR")
                         .requestMatchers(HttpMethod.POST, "/api/books/**").hasAnyRole("ADMIN")
