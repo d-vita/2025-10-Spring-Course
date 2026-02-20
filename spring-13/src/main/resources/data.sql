@@ -18,14 +18,14 @@ INSERT INTO comments(message, book_id) VALUES
     ('Comment_3', 3), ('Comment_4', 1);
 
 INSERT INTO roles (role_name, role_description) VALUES
-    ('ROLE_ADMIN', 'System Administrator'),
-    ('ROLE_EDITOR', 'Can edit book'),
-    ('ROLE_USER', 'Regular user');
+    ('ADMIN', 'System Administrator'),
+    ('EDITOR', 'Can edit book'),
+    ('USER', 'Regular user');
 
 INSERT INTO users (username, password, enabled) VALUES
-    ('admin', '$2a$10$DowJZlXhMZ0N6T0/W5p6sOzQ2kI6Q6tRwYB6G7z6qrxq2YKqF3vQe', true),
-    ('editor', '$2a$10$DowJZlXhMZ0N6T0/W5p6sOzQ2kI6Q6tRwYB6G7z6qrxq2YKqF3vQe', true),
-    ('user', '$2a$10$314MEUjIUx.Rvx6rPhS4uOLXD0OnIPATWmw/h1w26uAGAbO6Imei', true);
+    ('admin', '$2a$10$GOp7OmaKXowPEJyY5rJi0Ou7eOWknNWFkP1O6cGCIXDD.bP4dY8NO', true),
+    ('editor', '$2a$10$k1l0NyGVzZ8vRtQiaxKXDesxZLE8k/Ai5ohSjy3FvA71DQKgEoEiy', true),
+    ('user', '$2a$10$vTYKPNy5T40sCltNOMYcg.zW1q4jpuLykEnVTAySVmCkzlzL5H2zW', true);
 
 INSERT INTO user_roles (user_id, role_id) VALUES
     (1, 1),

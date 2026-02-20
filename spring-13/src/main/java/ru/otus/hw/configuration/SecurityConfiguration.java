@@ -29,29 +29,20 @@ public class SecurityConfiguration {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/books", "/api/books/**", "/api/authors", "/api/genres")
-                            .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/books/**")
-                            .hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/books/**")
-                            .hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/books/**")
-                            .hasAnyRole("ADMIN", "EDITOR")
+                            .hasAnyRole("USER", "EDITOR", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/books/**").hasAnyRole("ADMIN", "EDITOR")
+                        .requestMatchers(HttpMethod.POST, "/api/books/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasAnyRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults());
-
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-//        BCryptPasswordEncoder encoder =  new BCryptPasswordEncoder();
-//        System.out.println(encoder.encode("admin123"));
-//        System.out.println(encoder.encode("editor123"));
-//        System.out.println(encoder.encode("user123"));
         return new BCryptPasswordEncoder();
     }
 }
