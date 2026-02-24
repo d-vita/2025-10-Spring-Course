@@ -9,10 +9,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDto;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @DataJpaTest
 @Import({
@@ -35,8 +37,7 @@ class CommentServiceImplTest {
         var expected = new CommentDto(EXISTING_COMMENT_ID, "Comment_1", 1L);
         var actual = commentService.findById(EXISTING_COMMENT_ID);
 
-        assertThat(actual).isPresent()
-                .hasValue(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
 
@@ -47,7 +48,6 @@ class CommentServiceImplTest {
                 new CommentDto(4L, "Comment_4", 1L)
         );
         var actual = commentService.findAllByBookId(EXISTING_BOOK_ID);
-
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -63,8 +63,7 @@ class CommentServiceImplTest {
         assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(3);
 
         var actual = commentService.findById(5L);
-        assertThat(actual).isPresent()
-                .hasValue(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
 
@@ -79,8 +78,7 @@ class CommentServiceImplTest {
         assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
 
         var actual = commentService.findById(EXISTING_COMMENT_ID);
-        assertThat(actual).isPresent()
-                .hasValue(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
 
@@ -91,7 +89,10 @@ class CommentServiceImplTest {
 
         commentService.deleteById(EXISTING_COMMENT_ID);
         assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(1);
-        assertThat(commentService.findById(EXISTING_COMMENT_ID)).isEmpty();
+
+        assertThatThrownBy(() -> commentService.findById(EXISTING_COMMENT_ID))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Comment with id 1 not found");
     }
 
 }
