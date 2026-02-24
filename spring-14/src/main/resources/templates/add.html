@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title> Add new book</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<form th:action="@{/add}" th:object="${book}" th:method="post">
+    <h3 th:text="#{books-header-add}">Add New Book</h3>
+
+
+    <div class="row">
+        <label for="book-title-input" th:text="#{books-col-title} + ':'">Title:</label>
+        <input id="book-title-input"
+               type="text"
+               th:field="*{title}"
+               th:placeholder="#{book-title-placeholder}"
+               th:classappend="${#fields.hasErrors('title')} ? 'input-error' : ''"/>
+
+        <div class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+    </div>
+
+    <div class="row">
+        <label for="author-select" th:text="#{books-col-choose-author} + ':'">Choose Author</label>
+
+        <select id="author-select"
+                th:field="*{authorId}"
+                th:classappend="${#fields.hasErrors('authorId')} ? 'input-error' : ''">
+
+            <option value="" disabled selected>
+                -- choose author --
+            </option>
+
+            <option th:each="author : ${authors}"
+                    th:value="${author.id}"
+                    th:text="${author.fullName}"></option>
+        </select>
+
+        <div class="error-message" th:if="${#fields.hasErrors('authorId')}" th:errors="*{authorId}"></div>
+    </div>
+
+    <div class="row">
+        <label for="genre-select" th:text="#{books-col-choose-genre} + ':'">Genre</label>
+
+        <select id="genre-select"
+                th:field="*{genreId}"
+                th:classappend="${#fields.hasErrors('genreId')} ? 'input-error' : ''">
+
+            <option value="" disabled selected>
+                -- choose genre --
+            </option>
+
+            <option th:each="genre : ${genres}"
+                    th:value="${genre.id}"
+                    th:text="${genre.name}"></option>
+        </select>
+
+        <div class="error-message" th:if="${#fields.hasErrors('genreId')}" th:errors="*{genreId}"></div>
+    </div>
+
+    <div class="actions">
+        <!-- Add -->
+        <button type="submit"
+                class="btn-add"
+                th:text="#{button-add}">
+            Add
+        </button>
+
+        <!-- Cancel -->
+        <button type="button"
+                class="btn-cancel"
+                th:text="#{button-cancel}"
+                th:onclick="|window.location.href='@{/}'|">
+            Cancel
+        </button>
+    </div>
+</form>
+
+</body>
+</html>
