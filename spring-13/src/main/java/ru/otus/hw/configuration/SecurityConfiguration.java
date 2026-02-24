@@ -30,11 +30,11 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET,"/api/books", "/api/books/**",
-                                "/api/authors", "/api/genres", "api/books/**/comments")
+                                "/api/authors", "/api/genres", "/api/books/**/comments")
                             .hasAnyRole("USER", "EDITOR", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/books/**").hasAnyRole("ADMIN", "EDITOR")
-                        .requestMatchers(HttpMethod.POST, "/api/books/**").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/books/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
