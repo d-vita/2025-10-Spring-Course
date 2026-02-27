@@ -11,13 +11,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "books")
-public class Book {
+public class BookMongo {
     @Id
     private String id;
 
     private String title;
 
-    private String authorId;
+    private AuthorMongo authorMongo;
 
-    private String genreId;
+    private GenreMongo genreMongo;
 }

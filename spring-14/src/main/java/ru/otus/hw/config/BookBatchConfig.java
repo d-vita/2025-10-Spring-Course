@@ -16,59 +16,59 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
-import ru.otus.hw.converters.GenreConverter;
-import ru.otus.hw.models.jpa.Genre;
-import ru.otus.hw.models.mongo.GenreMongo;
+import ru.otus.hw.converters.BookConverter;
+import ru.otus.hw.models.jpa.Book;
+import ru.otus.hw.models.mongo.BookMongo;
 
 @RequiredArgsConstructor
 @Configuration
-public class GenreBatchConfig {
+public class BookBatchConfig {
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
     private final EntityManagerFactory entityManagerFactory;
     private final MongoTemplate mongoTemplate;
-    private final GenreConverter genreConverter;
+    private final BookConverter bookConverter;
 
     private static final int CHUNK_SIZE = 5;
 
     @Bean
-    public Job importGenreJob() {
-        return new JobBuilder("importGenreJob", jobRepository)
-                .start((genreStep()))
+    public Job importBookJob() {
+        return new JobBuilder("importBookJob", jobRepository)
+                .start((bookStep()))
                 .build();
     }
 
     @Bean
-    public Step genreStep() {
-        return new StepBuilder("genreStep", jobRepository)
-                .<Genre, GenreMongo>chunk(CHUNK_SIZE, transactionManager)
-                .reader(genreReader())
-                .processor(genreProcessor())
-                .writer(genreWriter(mongoTemplate))
+    public Step bookStep() {
+        return new StepBuilder("bookStep", jobRepository)
+                .<Book, BookMongo>chunk(CHUNK_SIZE, transactionManager)
+                .reader(bookReader())
+                .processor(bookProcessor())
+                .writer(bookWriter(mongoTemplate))
                 .build();
     }
 
     @Bean
-    public JpaPagingItemReader<Genre> genreReader() {
-        return new JpaPagingItemReaderBuilder<Genre>()
-                .name("genreReader")
+    public JpaPagingItemReader<Book> bookReader() {
+        return new JpaPagingItemReaderBuilder<Book>()
+                .name("bookReader")
                 .entityManagerFactory(entityManagerFactory)
                 .pageSize(10)
-                .queryString("SELECT g FROM Genre g ORDER BY g.id ASC")
+                .queryString("SELECT b FROM Book b ORDER BY b.id ASC")
                 .build();
     }
 
     @Bean
-    public ItemProcessor<Genre, GenreMongo> genreProcessor() {
-        return genreConverter::fromJPAtoMongo;
+    public ItemProcessor<Book, BookMongo> bookProcessor() {
+        return bookConverter::fromJPAtoMongo;
     }
 
     @Bean
-    public MongoItemWriter<GenreMongo> genreWriter(MongoTemplate mongoTemplate) {
-        return new MongoItemWriterBuilder<GenreMongo>()
+    public MongoItemWriter<BookMongo> bookWriter(MongoTemplate mongoTemplate) {
+        return new MongoItemWriterBuilder<BookMongo>()
                 .template(mongoTemplate)
-                .collection("genres")
+                .collection("books")
                 .build();
     }
 }

@@ -17,7 +17,7 @@ public class GenreCommands {
 
     private final JobLauncher jobLauncher;
 
-    @ShellMethod(value = "startMigrationJobWithJobLauncher", key = "mig-gen")
+    @ShellMethod(value = "startMigrationJobWithJobLauncher", key = "mig-g")
     public void migrateAllGenres() throws Exception {
         JobExecution execution = jobLauncher.run(
                 importGenreJob,

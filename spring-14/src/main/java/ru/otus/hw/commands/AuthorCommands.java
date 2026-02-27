@@ -17,7 +17,7 @@ public class AuthorCommands {
 
     private final JobLauncher jobLauncher;
 
-    @ShellMethod(value = "startMigrationJobWithJobLauncher", key = "mig-auth")
+    @ShellMethod(value = "startMigrationJobWithJobLauncher", key = "mig-a")
     public void migrateAllAuthors() throws Exception {
         JobExecution execution = jobLauncher.run(
                 importAuthorJob,
