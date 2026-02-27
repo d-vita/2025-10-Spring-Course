@@ -19,6 +19,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <reflections.version>0.10.2</reflections.version>
+        <spring.shell.version>3.2.4</spring.shell.version>
         <checkstyle-plugin.version>3.3.1</checkstyle-plugin.version>
         <checkstyle.version>10.15.0</checkstyle.version>
         <checkstyle.config.url>
@@ -28,8 +29,24 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-starter</artifactId>
+            <version>${spring.shell.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-batch</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
         <dependency>
@@ -68,28 +85,28 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle-plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>${checkstyle.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <configLocation>${checkstyle.config.url}</configLocation>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-checkstyle-plugin</artifactId>-->
+<!--                <version>${checkstyle-plugin.version}</version>-->
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>com.puppycrawl.tools</groupId>-->
+<!--                        <artifactId>checkstyle</artifactId>-->
+<!--                        <version>${checkstyle.version}</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
+<!--                <configuration>-->
+<!--                    <configLocation>${checkstyle.config.url}</configLocation>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

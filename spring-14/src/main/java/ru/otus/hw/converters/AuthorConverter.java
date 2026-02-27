@@ -1,15 +1,15 @@
 package ru.otus.hw.converters;
 
 import org.springframework.stereotype.Component;
-import ru.otus.hw.dto.AuthorDto;
-import ru.otus.hw.models.Author;
+import ru.otus.hw.models.jpa.Author;
+import ru.otus.hw.models.mongo.AuthorMongo;
 
 @Component
 public class AuthorConverter {
-    public AuthorDto fromDomainObject(Author author) {
-        return new AuthorDto(
-                author.getId(),
-                author.getFullName()
-        );
+
+    public AuthorMongo fromJPAtoMongo(Author author) {
+        AuthorMongo mongoAuthor = new AuthorMongo();
+        mongoAuthor.setFullName(author.getFullName());
+        return mongoAuthor;
     }
 }

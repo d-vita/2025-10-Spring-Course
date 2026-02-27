@@ -1,4 +1,4 @@
-package ru.otus.hw.models;
+package ru.otus.hw.models.jpa;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,24 +19,18 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "books")
-public class Book {
+@Table(name = "comments")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "message", nullable = false)
+    private String message;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "author_id", nullable = false)
-    private Author author;
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "genre_id", nullable = false)
-    private Genre genre;
+    @JoinColumn(name = "book_id", nullable = false)
+    private Book book;
 }

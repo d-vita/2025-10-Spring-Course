@@ -1,19 +1,42 @@
 spring:
+  # =========================
+  # H2 (SQL DATABASE)
+  # =========================
   datasource:
     url: jdbc:h2:mem:maindb
+  # =========================
+  # Spring Batch metadata are created in H2
+  # =========================
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  # =========================
+  # SQL initialization
+  # =========================
   sql:
     init:
-      mode: always
-      data-locations: classpath:data.sql
       schema-locations: classpath:schema.sql
-
+      data-locations: classpath:data.sql
+  # =========================
+  # JPA / Hibernate
+  # =========================
   jpa:
-    generate-ddl: false
     hibernate:
       ddl-auto: none
-
     show-sql: true
+  # =========================
+  # MongoDB (NoSQL)
+  # =========================
+  data:
+    mongodb:
+      uri: mongodb://admin:secret@localhost:27017/?authSource=admin
+      database: app_db
 
+# =========================
+# Logging
+# =========================
 logging:
   level:
     ROOT: ERROR

@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.DirtiesContext;
-import ru.otus.hw.models.Book;
-import ru.otus.hw.models.Comment;
+import ru.otus.hw.models.jpa.Book;
+import ru.otus.hw.models.jpa.Comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
