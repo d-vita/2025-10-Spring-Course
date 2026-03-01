@@ -24,7 +24,7 @@ import ru.otus.hw.models.mongo.GenreMongo;
 @Configuration
 public class GenreBatchConfig {
 
-    private static final int CHUNK_SIZE = 5;
+    private final BatchProperties batchProperties;
 
     private final JobRepository jobRepository;
 
@@ -46,7 +46,7 @@ public class GenreBatchConfig {
     @Bean
     public Step genreStep() {
         return new StepBuilder("genreStep", jobRepository)
-                .<Genre, GenreMongo>chunk(CHUNK_SIZE, transactionManager)
+                .<Genre, GenreMongo>chunk(batchProperties.getChunkSize(), transactionManager)
                 .reader(genreReader())
                 .processor(genreProcessor())
                 .writer(genreWriter(mongoTemplate))
@@ -58,7 +58,7 @@ public class GenreBatchConfig {
         return new JpaPagingItemReaderBuilder<Genre>()
                 .name("genreReader")
                 .entityManagerFactory(entityManagerFactory)
-                .pageSize(10)
+                .pageSize(batchProperties.getPageSize())
                 .queryString("SELECT g FROM Genre g ORDER BY g.id ASC")
                 .build();
     }

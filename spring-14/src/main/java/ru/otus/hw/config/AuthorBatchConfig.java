@@ -24,7 +24,7 @@ import ru.otus.hw.models.mongo.AuthorMongo;
 @Configuration
 public class AuthorBatchConfig {
 
-    private static final int CHUNK_SIZE = 5;
+    private final BatchProperties batchProperties;
 
     private final JobRepository jobRepository;
 
@@ -47,7 +47,7 @@ public class AuthorBatchConfig {
     @Bean
     public Step authorStep() {
         return new StepBuilder("authorStep", jobRepository)
-                .<Author, AuthorMongo>chunk(CHUNK_SIZE, transactionManager)
+                .<Author, AuthorMongo>chunk(batchProperties.getChunkSize(), transactionManager)
                 .reader(authorReader())
                 .processor(authorProcessor())
                 .writer(authorWriter(mongoTemplate))
@@ -59,7 +59,7 @@ public class AuthorBatchConfig {
         return new JpaPagingItemReaderBuilder<Author>()
                 .name("authorReader")
                 .entityManagerFactory(entityManagerFactory)
-                .pageSize(10)
+                .pageSize(batchProperties.getPageSize())
                 .queryString("SELECT a FROM Author a ORDER BY a.id ASC")
                 .build();
     }
