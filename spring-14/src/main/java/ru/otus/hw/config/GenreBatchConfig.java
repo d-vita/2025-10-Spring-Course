@@ -24,13 +24,17 @@ import ru.otus.hw.models.mongo.GenreMongo;
 @Configuration
 public class GenreBatchConfig {
 
-    private final JobRepository jobRepository;
-    private final PlatformTransactionManager transactionManager;
-    private final EntityManagerFactory entityManagerFactory;
-    private final MongoTemplate mongoTemplate;
-    private final GenreConverter genreConverter;
-
     private static final int CHUNK_SIZE = 5;
+
+    private final JobRepository jobRepository;
+
+    private final PlatformTransactionManager transactionManager;
+
+    private final EntityManagerFactory entityManagerFactory;
+
+    private final MongoTemplate mongoTemplate;
+
+    private final GenreConverter genreConverter;
 
     @Bean
     public Job importGenreJob() {

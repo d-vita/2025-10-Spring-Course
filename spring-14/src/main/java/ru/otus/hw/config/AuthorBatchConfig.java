@@ -24,13 +24,18 @@ import ru.otus.hw.models.mongo.AuthorMongo;
 @Configuration
 public class AuthorBatchConfig {
 
+    private static final int CHUNK_SIZE = 5;
+
     private final JobRepository jobRepository;
+
     private final PlatformTransactionManager transactionManager;
+
     private final EntityManagerFactory entityManagerFactory;
+
     private final MongoTemplate mongoTemplate;
+
     private final AuthorConverter authorConverter;
 
-    private static final int CHUNK_SIZE = 5;
 
     @Bean
     public Job importAuthorJob() {

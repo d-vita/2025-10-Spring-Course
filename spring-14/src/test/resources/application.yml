@@ -1,21 +1,48 @@
 spring:
+  main:
+    allow-circular-references: true
+
+  batch:
+    job:
+      enabled: false
+
+  shell:
+    interactive:
+      enabled: false
+    command:
+      version:
+        enabled: false
+
   datasource:
     url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
   sql:
     init:
       mode: always
-      data-locations: data.sql
-      schema-locations: schema.sql
+  data:
+    mongodb:
+      host: localhost
+      port: 0
+      database: SpringBatchTestExampleDB
 
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: none
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 6.0.5
 
-    properties:
-      hibernate:
-        format_sql: true
-
-logging:
-  level:
-    ROOT: ERROR
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.example.springbatch.testchangelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local

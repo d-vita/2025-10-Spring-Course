@@ -1,34 +1,19 @@
-create table authors (
+create table if not exists authors (
     id bigserial,
     full_name varchar(255),
     primary key (id)
 );
 
-create table genres (
+create table if not exists genres (
     id bigserial,
     name varchar(255),
     primary key (id)
 );
 
-create table books (
+create table if not exists books (
     id bigserial,
     title varchar(255),
     author_id bigint references authors(id) on delete cascade,
     genre_id bigint references genres(id) on delete cascade,
     primary key (id)
-);
-
-create table comments (
-    id bigserial,
-    message varchar(255),
-    book_id bigint references books(id) on delete cascade,
-    primary key (id)
-);
-
-create table users (
-   id bigserial,
-   username varchar(255) not null unique,
-   password varchar(255) not null,
-   enabled boolean not null default true,
-   primary key (id)
 );

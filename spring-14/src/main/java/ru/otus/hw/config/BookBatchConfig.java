@@ -24,13 +24,17 @@ import ru.otus.hw.models.mongo.BookMongo;
 @Configuration
 public class BookBatchConfig {
 
-    private final JobRepository jobRepository;
-    private final PlatformTransactionManager transactionManager;
-    private final EntityManagerFactory entityManagerFactory;
-    private final MongoTemplate mongoTemplate;
-    private final BookConverter bookConverter;
-
     private static final int CHUNK_SIZE = 5;
+
+    private final JobRepository jobRepository;
+
+    private final PlatformTransactionManager transactionManager;
+
+    private final EntityManagerFactory entityManagerFactory;
+
+    private final MongoTemplate mongoTemplate;
+
+    private final BookConverter bookConverter;
 
     @Bean
     public Job importBookJob() {

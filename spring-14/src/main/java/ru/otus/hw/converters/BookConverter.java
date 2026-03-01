@@ -43,6 +43,8 @@ public class BookConverter {
         return genreRepository
                 .findByName(bookJPA.getGenre().getName())
                 .stream().findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %s not found".formatted(bookJPA.getGenre().getName())));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Genre with id %s not found".formatted(bookJPA.getGenre().getName()))
+                );
     }
 }
