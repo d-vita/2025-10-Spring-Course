@@ -38,11 +38,6 @@ public class IntegrationConfiguration {
         return MessageChannels.direct();
     }
 
-    @Bean
-    public MessageChannelSpec<?, ?> accountingChannel() {
-        return MessageChannels.queue(50);
-    }
-
     @Bean(name = PollerMetadata.DEFAULT_POLLER)
     public PollerSpec poller() {
         return Pollers
@@ -51,30 +46,30 @@ public class IntegrationConfiguration {
     }
 
     @Bean
-    public IntegrationFlow createOrder(RequestService orderService, ShipmentService shipmentService) {
+    public IntegrationFlow createOrder(RequestService requestService, ShipmentService shipmentService) {
         return IntegrationFlow.from(directChannel())
                 .split()
-                .handle(orderService, "validate")
+                .<BookRequest, BookRequest>handle(requestService, "validate")
                 .<BookRequest, Order>transform(req -> new Order(req.getBookId(), req, OrderStatus.NEW))
                 .<Order, Boolean>route(
-                        ord -> ord.getRequest().isVip(),
+                        ord -> ord.getRequest().isVip(), // VIP-флаг
                         mapping -> mapping
                                 .subFlowMapping(true, sf -> sf
-                                .channel(priorityChannel()) // VIP канал
-                                .transform(o -> {
-                                    ((Order)o).setStatus(OrderStatus.PACKED);
-                                    return o;
-                                })
-                                .handle(shipmentService, "delivery")
-                        )
-                        .subFlowMapping(false, sf -> sf
-                                .channel(queueChannel()) // обычный канал
-                                .transform(o -> {
-                                    ((Order)o).setStatus(OrderStatus.PACKED);
-                                    return o;
-                                })
-                                .handle(shipmentService, "delivery")
-                        )
+                                        .channel(priorityChannel())
+                                        .<Order, Order>transform(o -> {
+                                            o.setStatus(OrderStatus.PACKED);
+                                            return o;
+                                        })
+                                        .handle(shipmentService, "delivery")
+                                )
+                                .subFlowMapping(false, sf -> sf
+                                        .channel(queueChannel())
+                                        .<Order, Order>transform(o -> {
+                                            o.setStatus(OrderStatus.PACKED);
+                                            return o;
+                                        })
+                                        .handle(shipmentService, "delivery")
+                                )
                 )
                 .channel(pubSubchannel())
                 .get();

@@ -7,13 +7,14 @@ import java.util.Objects;
 
 @Service
 public class RequestServiceImpl implements RequestService {
+
     @Override
-    public void validate(BookRequest request) {
+    public BookRequest validate(BookRequest request) {
 
         Objects.requireNonNull(request.getBookId(), "BookId shouldn't be null");
         Objects.requireNonNull(request.getCustomerId(), "CustomerId shouldn't be null");
         Objects.requireNonNull(request.getShippingAddress(), "Shipping Address shouldn't be null");
 
-        System.out.println("Validation Step....");
+        return request;
     }
 }
