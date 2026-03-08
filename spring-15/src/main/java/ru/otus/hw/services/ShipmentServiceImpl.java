@@ -17,6 +17,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         String trackingNumber = generateTrackingNumber(order.getOrderId(), shipmentCounter.get());
 
         order.setStatus(OrderStatus.SHIPPED);
+
+        System.out.println(order + " " + carrier + " " + trackingNumber);
         return new Shipment(
                 shipmentCounter.getAndIncrement(),
                 order,

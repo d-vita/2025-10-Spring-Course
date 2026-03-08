@@ -8,14 +8,11 @@ import org.springframework.integration.dsl.MessageChannels;
 import org.springframework.integration.dsl.PollerSpec;
 import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.scheduling.PollerMetadata;
-import ru.otus.hw.domain.BookOrderRequest;
+import ru.otus.hw.domain.BookRequest;
 import ru.otus.hw.domain.Order;
 import ru.otus.hw.domain.OrderStatus;
-import ru.otus.hw.domain.Shipment;
-import ru.otus.hw.services.OrderService;
+import ru.otus.hw.services.RequestService;
 import ru.otus.hw.services.ShipmentService;
-
-import static org.yaml.snakeyaml.nodes.NodeId.mapping;
 
 
 @Configuration
@@ -41,6 +38,11 @@ public class IntegrationConfiguration {
         return MessageChannels.direct();
     }
 
+    @Bean
+    public MessageChannelSpec<?, ?> accountingChannel() {
+        return MessageChannels.queue(50);
+    }
+
     @Bean(name = PollerMetadata.DEFAULT_POLLER)
     public PollerSpec poller() {
         return Pollers
@@ -49,24 +51,35 @@ public class IntegrationConfiguration {
     }
 
     @Bean
-    public IntegrationFlow createOrder(OrderService orderService, ShipmentService shipmentService) {
+    public IntegrationFlow createOrder(RequestService orderService, ShipmentService shipmentService) {
         return IntegrationFlow.from(directChannel())
                 .split()
-                .<BookOrderRequest, Order>transform(req -> new Order(req.getBookId(), req, OrderStatus.NEW))
+                .<BookRequest, Order>transform(req -> new Order(req.getBookId(), req, OrderStatus.NEW))
                 .handle(orderService, "validate")
                 .<Order, Order>transform(ord -> {
                     ord.setStatus(OrderStatus.VALIDATED);
                     return ord;
                 })
-                .<Order, Boolean>route(ord -> ord.getRequest().isVip(), mapping -> mapping
-                        .subFlowMapping(true, subflow -> subflow.channel(priorityChannel()))
-                        .subFlowMapping(false, subflow -> subflow.channel(queueChannel()))
+                .<Order, Boolean>route(
+                        ord -> ord.getRequest().isVip(),
+                        mapping -> mapping
+                                .subFlowMapping(true, sf -> sf
+                                .channel(priorityChannel()) // VIP канал
+                                .transform(o -> {
+                                    ((Order)o).setStatus(OrderStatus.PACKED);
+                                    return o;
+                                })
+                                .handle(shipmentService, "delivery")
+                        )
+                        .subFlowMapping(false, sf -> sf
+                                .channel(queueChannel()) // обычный канал
+                                .transform(o -> {
+                                    ((Order)o).setStatus(OrderStatus.PACKED);
+                                    return o;
+                                })
+                                .handle(shipmentService, "delivery")
+                        )
                 )
-                .<Order, Order>transform(ord -> {
-                    ord.setStatus(OrderStatus.PACKED);
-                    return ord;
-                })
-                .handle(shipmentService, "delivery")
                 .channel(pubSubchannel())
                 .get();
     }

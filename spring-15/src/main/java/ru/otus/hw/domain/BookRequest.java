@@ -7,7 +7,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BookOrderRequest {
+public class BookRequest {
     Long bookId;
     Long customerId;
     String shippingAddress;
