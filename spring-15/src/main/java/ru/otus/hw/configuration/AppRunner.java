@@ -2,16 +2,19 @@ package ru.otus.hw.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.services.OrderService;
 
-@Component
+@Configuration
 @RequiredArgsConstructor
-public class AppRunner implements CommandLineRunner {
-    final OrderService orderService;
+public class AppRunner {
 
-    @Override
-    public void run(String... args) {
-        orderService.startGenerateOrdersLoop();
+    private final OrderService orderService;
+
+    @Bean
+    CommandLineRunner startLoop() {
+        return args -> orderService.startGenerateOrdersLoop();
     }
 }

@@ -10,6 +10,9 @@ import java.util.Collection;
 @MessagingGateway
 public interface BookShopGateway {
 
-    @Gateway(requestChannel = "directChannel", replyChannel = "pubSubchannel")
-    Collection<Shipment> process(Collection<BookRequest> orderItem);
+    @Gateway(
+            requestChannel = "ordersInputChannel",
+            replyChannel = "shippedOrdersChannel"
+    )
+    Collection<Shipment> process(Collection<BookRequest> requests);
 }

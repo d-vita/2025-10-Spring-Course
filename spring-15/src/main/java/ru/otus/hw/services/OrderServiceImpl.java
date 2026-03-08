@@ -1,5 +1,7 @@
 package ru.otus.hw.services;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.domain.BookRequest;
 import ru.otus.hw.domain.Shipment;
@@ -10,6 +12,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -17,7 +20,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final BookShopGateway shop;
 
-    public OrderServiceImpl(BookShopGateway shop) {
+    public OrderServiceImpl(@Qualifier("bookShopGateway") BookShopGateway shop) {
         this.shop = shop;
     }
 
@@ -25,8 +28,8 @@ public class OrderServiceImpl implements OrderService {
     public void startGenerateOrdersLoop() {
         ForkJoinPool pool = ForkJoinPool.commonPool();
         for (int i = 0; i < 10; i++) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             int num = i + 1;
+            log.info("STARTING BATCH #{}", num);
             pool.execute(() -> {
                 Collection<BookRequest> requests = generateBookRequests();
 
@@ -35,11 +38,11 @@ public class OrderServiceImpl implements OrderService {
                 String deliveredBooks = shipments.stream()
                         .map(s -> {
                             BookRequest r = s.getOrder().getRequest();
-                            return "!!!!!!!!!!!!!BookId:" + r.getBookId() + (r.isVip() ? "(VIP)" : "");
+                            return "BookId:" + r.getBookId() + (r.isVip() ? "(VIP)" : "");
                         })
                         .collect(Collectors.joining(", "));
 
-                System.out.println("!!!!!!!!!!!!Batch #" + num + ", Delivered books: " + deliveredBooks);
+                log.info("Batch #{} delivered books: {}", num, deliveredBooks);
             });
             delay();
         }
