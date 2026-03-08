@@ -1,5 +1,6 @@
 package ru.otus.hw.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.IntegrationComponentScan;
@@ -16,7 +17,7 @@ import ru.otus.hw.domain.OrderStatus;
 import ru.otus.hw.services.RequestService;
 import ru.otus.hw.services.ShipmentService;
 
-
+@Slf4j
 @Configuration
 @EnableIntegration
 @IntegrationComponentScan(basePackages = "ru.otus.hw.services")
@@ -58,7 +59,9 @@ public class IntegrationConfiguration {
                 .<Order, Boolean>route(
                         ord -> ord.getRequest().isVip(),
                         mapping -> mapping
-                                .subFlowMapping(true, sf -> sf.channel(vipOrdersQueue()))
+                                .subFlowMapping(true, sf -> sf
+                                        .enrichHeaders(h -> h.header("priority", 10))
+                                        .channel(vipOrdersQueue()))
                                 .subFlowMapping(false, sf -> sf.channel(regularOrdersQueue()))
                 )
                 .get();
@@ -69,6 +72,7 @@ public class IntegrationConfiguration {
         return IntegrationFlow.from(vipOrdersQueue())
                 .transform((Order o) -> {
                     o.setStatus(OrderStatus.PACKED);
+                    log.info("VIP order packed: {}", o.getOrderId());
                     return o;
                 })
                 .handle(shipmentService, "delivery")
@@ -81,6 +85,7 @@ public class IntegrationConfiguration {
         return IntegrationFlow.from(regularOrdersQueue())
                 .transform((Order o) -> {
                     o.setStatus(OrderStatus.PACKED);
+                    log.info("Regular order packed: {}", o.getOrderId());
                     return o;
                 })
                 .handle(shipmentService, "delivery")
