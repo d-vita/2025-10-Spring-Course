@@ -54,12 +54,8 @@ public class IntegrationConfiguration {
     public IntegrationFlow createOrder(RequestService orderService, ShipmentService shipmentService) {
         return IntegrationFlow.from(directChannel())
                 .split()
-                .<BookRequest, Order>transform(req -> new Order(req.getBookId(), req, OrderStatus.NEW))
                 .handle(orderService, "validate")
-                .<Order, Order>transform(ord -> {
-                    ord.setStatus(OrderStatus.VALIDATED);
-                    return ord;
-                })
+                .<BookRequest, Order>transform(req -> new Order(req.getBookId(), req, OrderStatus.NEW))
                 .<Order, Boolean>route(
                         ord -> ord.getRequest().isVip(),
                         mapping -> mapping

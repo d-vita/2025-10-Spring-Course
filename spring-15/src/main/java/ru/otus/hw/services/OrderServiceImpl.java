@@ -25,6 +25,7 @@ public class OrderServiceImpl implements OrderService {
     public void startGenerateOrdersLoop() {
         ForkJoinPool pool = ForkJoinPool.commonPool();
         for (int i = 0; i < 10; i++) {
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             int num = i + 1;
             pool.execute(() -> {
                 Collection<BookRequest> requests = generateBookRequests();
@@ -34,11 +35,11 @@ public class OrderServiceImpl implements OrderService {
                 String deliveredBooks = shipments.stream()
                         .map(s -> {
                             BookRequest r = s.getOrder().getRequest();
-                            return "BookId:" + r.getBookId() + (r.isVip() ? "(VIP)" : "");
+                            return "!!!!!!!!!!!!!BookId:" + r.getBookId() + (r.isVip() ? "(VIP)" : "");
                         })
                         .collect(Collectors.joining(", "));
 
-                System.out.println("Batch #" + num + ", Delivered books: " + deliveredBooks);
+                System.out.println("!!!!!!!!!!!!Batch #" + num + ", Delivered books: " + deliveredBooks);
             });
             delay();
         }
