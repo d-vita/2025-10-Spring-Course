@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @SpringBatchTest
-@Import({AuthorBatchConfig.class, GenreBatchConfig.class, BookBatchConfig.class})
+@Import({AuthorStepConfig.class, GenreStepConfig.class, JobConfig.class})
 @Sql("/data.sql")
 public class BookBatchConfigTest {
 
@@ -37,12 +37,6 @@ public class BookBatchConfigTest {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private Job importAuthorJob;
-
-    @Autowired
-    private Job importGenreJob;
-
-    @Autowired
     private Job importBookJob;
 
     @BeforeEach
@@ -52,12 +46,6 @@ public class BookBatchConfigTest {
         mongoTemplate.dropCollection("books");
 
         jobRepositoryTestUtils.removeJobExecutions();
-
-        jobLauncherTestUtils.setJob(importAuthorJob);
-        jobLauncherTestUtils.launchJob();
-
-        jobLauncherTestUtils.setJob(importGenreJob);
-        jobLauncherTestUtils.launchJob();
 
         jobLauncherTestUtils.setJob(importBookJob);
     }

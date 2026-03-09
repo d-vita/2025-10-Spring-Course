@@ -2,9 +2,7 @@ package ru.otus.hw.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
@@ -19,12 +17,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 import ru.otus.hw.converters.AuthorConverter;
 import ru.otus.hw.models.jpa.Author;
 import ru.otus.hw.models.mongo.AuthorMongo;
+import ru.otus.hw.services.BookMigrationService;
 
 @RequiredArgsConstructor
 @Configuration
-public class AuthorBatchConfig {
+public class AuthorStepConfig {
 
-    private final BatchProperties batchProperties;
+    private final JobProperties batchProperties;
 
     private final JobRepository jobRepository;
 
@@ -36,13 +35,7 @@ public class AuthorBatchConfig {
 
     private final AuthorConverter authorConverter;
 
-
-    @Bean
-    public Job importAuthorJob() {
-        return new JobBuilder("importAuthorJob", jobRepository)
-                .start((authorStep()))
-                .build();
-    }
+    private final BookMigrationService bookMigrationService;
 
     @Bean
     public Step authorStep() {
@@ -66,7 +59,11 @@ public class AuthorBatchConfig {
 
     @Bean
     public ItemProcessor<Author, AuthorMongo> authorProcessor() {
-        return authorConverter::fromJPAtoMongo;
+        return author -> {
+          AuthorMongo mongo = authorConverter.fromJPAtoMongo(author);
+          bookMigrationService.putAuthor(author.getId(), mongo);
+          return mongo;
+        };
     }
 
     @Bean

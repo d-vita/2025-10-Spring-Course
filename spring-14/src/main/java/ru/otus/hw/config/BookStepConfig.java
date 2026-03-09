@@ -6,12 +6,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ChunkListener;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -30,11 +25,11 @@ import ru.otus.hw.services.BookMigrationService;
 
 @RequiredArgsConstructor
 @Configuration
-public class BookBatchConfig {
+public class BookStepConfig {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookBatchConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookStepConfig.class);
 
-    private final BatchProperties batchProperties;
+    private final JobProperties batchProperties;
 
     private final JobRepository jobRepository;
 
@@ -46,32 +41,6 @@ public class BookBatchConfig {
 
     private final BookMigrationService bookMigrationService;
 
-
-    @Bean
-    public Job importBookJob(Step bookStep) {
-        return new JobBuilder("importBookJob", jobRepository)
-                .incrementer(new RunIdIncrementer()) // позволяет запускать job повторно
-                .flow(bookStep)
-                .end()
-                .listener(new JobExecutionListener() {
-                    @Override
-                    public void beforeJob(@NonNull JobExecution jobExecution) {
-                        LOGGER.info(
-                                "Job '{}' started at {}",
-                                jobExecution.getJobInstance().getJobName(),
-                                jobExecution.getStartTime());
-                    }
-
-                    @Override
-                    public void afterJob(@NonNull JobExecution jobExecution) {
-                        LOGGER.info(
-                                "Job '{}' finished with status {}",
-                                jobExecution.getJobInstance().getJobName(),
-                                jobExecution.getExitStatus());
-                    }
-                })
-                .build();
-    }
 
     @Bean
     public Step bookStep() {

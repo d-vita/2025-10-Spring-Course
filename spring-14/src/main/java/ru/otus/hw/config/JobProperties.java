@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties(prefix = "batch")
-public class BatchProperties {
+public class JobProperties {
 
     private int chunkSize = 5;
 

@@ -2,9 +2,7 @@ package ru.otus.hw.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
@@ -18,13 +16,15 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.models.jpa.Genre;
+import ru.otus.hw.models.mongo.AuthorMongo;
 import ru.otus.hw.models.mongo.GenreMongo;
+import ru.otus.hw.services.BookMigrationService;
 
 @RequiredArgsConstructor
 @Configuration
-public class GenreBatchConfig {
+public class GenreStepConfig {
 
-    private final BatchProperties batchProperties;
+    private final JobProperties batchProperties;
 
     private final JobRepository jobRepository;
 
@@ -36,12 +36,7 @@ public class GenreBatchConfig {
 
     private final GenreConverter genreConverter;
 
-    @Bean
-    public Job importGenreJob() {
-        return new JobBuilder("importGenreJob", jobRepository)
-                .start((genreStep()))
-                .build();
-    }
+    private final BookMigrationService bookMigrationService;
 
     @Bean
     public Step genreStep() {
@@ -65,7 +60,11 @@ public class GenreBatchConfig {
 
     @Bean
     public ItemProcessor<Genre, GenreMongo> genreProcessor() {
-        return genreConverter::fromJPAtoMongo;
+        return genre -> {
+            GenreMongo mongo = genreConverter.fromJPAtoMongo(genre);
+            bookMigrationService.putGenre(genre.getId(), mongo);
+            return mongo;
+        };
     }
 
     @Bean
