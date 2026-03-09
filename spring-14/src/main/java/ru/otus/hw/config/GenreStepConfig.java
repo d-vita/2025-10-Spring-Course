@@ -16,7 +16,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.models.jpa.Genre;
-import ru.otus.hw.models.mongo.AuthorMongo;
 import ru.otus.hw.models.mongo.GenreMongo;
 import ru.otus.hw.services.BookMigrationService;
 

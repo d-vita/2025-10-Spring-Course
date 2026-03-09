@@ -11,16 +11,16 @@ import org.springframework.shell.standard.ShellMethod;
 
 @RequiredArgsConstructor
 @ShellComponent
-public class GenreCommands {
+public class JobCommands {
 
-    private final Job importGenreJob;
+    private final Job importBookJob;
 
     private final JobLauncher jobLauncher;
 
-    @ShellMethod(value = "startMigrationJobWithJobLauncher", key = "mig-g")
-    public void migrateAllGenres() throws Exception {
+    @ShellMethod(value = "startMigrationJobWithJobLauncher", key = "mig")
+    public void migrateAll() throws Exception {
         JobExecution execution = jobLauncher.run(
-                importGenreJob,
+                importBookJob,
                 new JobParametersBuilder()
                         .addLong("run.id", System.currentTimeMillis())
                         .toJobParameters()

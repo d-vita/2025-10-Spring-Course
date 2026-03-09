@@ -8,8 +8,6 @@ import ru.otus.hw.models.jpa.Book;
 import ru.otus.hw.models.mongo.AuthorMongo;
 import ru.otus.hw.models.mongo.BookMongo;
 import ru.otus.hw.models.mongo.GenreMongo;
-import ru.otus.hw.repositories.AuthorRepository;
-import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,10 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @RequiredArgsConstructor
 public class BookMigrationService {
-
-    private final AuthorRepository authorRepository;
-
-    private final GenreRepository genreRepository;
 
     private final BookConverter bookConverter;
 
