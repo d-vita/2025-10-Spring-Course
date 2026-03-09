@@ -43,4 +43,9 @@ public class BookMigrationService {
         }
         return bookConverter.fromJPAtoMongo(bookJPA, authorMongo, genreMongo);
     }
+
+    public void clearCache() {
+        authorCache.clear();
+        genreCache.clear();
+    }
 }
