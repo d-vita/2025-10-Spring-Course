@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Slf4j
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
-    AtomicLong shipmentCounter = new AtomicLong(1);
+    private final AtomicLong shipmentCounter = new AtomicLong(1);
 
     @Override
     public Shipment delivery(Order order) {

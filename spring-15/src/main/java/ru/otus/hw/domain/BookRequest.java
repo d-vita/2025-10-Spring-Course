@@ -8,8 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookRequest {
-    Long bookId;
-    Long customerId;
-    String shippingAddress;
-    boolean isVip;
+
+    private Long bookId;
+
+    private Long customerId;
+
+    private String shippingAddress;
+
+    private boolean isVip;
 }

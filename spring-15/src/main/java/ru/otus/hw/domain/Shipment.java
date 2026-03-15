@@ -8,8 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Shipment {
-    Long shipmentId;
-    Order order;
-    String carrier;
-    String trackingNumber;
+
+    private Long shipmentId;
+
+    private Order order;
+
+    private String carrier;
+
+    private String trackingNumber;
 }

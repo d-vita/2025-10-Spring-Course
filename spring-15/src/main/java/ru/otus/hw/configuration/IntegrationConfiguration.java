@@ -14,6 +14,7 @@ import org.springframework.integration.scheduling.PollerMetadata;
 import ru.otus.hw.domain.BookRequest;
 import ru.otus.hw.domain.Order;
 import ru.otus.hw.domain.OrderStatus;
+import ru.otus.hw.services.OrderPackingService;
 import ru.otus.hw.services.RequestService;
 import ru.otus.hw.services.ShipmentService;
 
@@ -68,26 +69,18 @@ public class IntegrationConfiguration {
     }
 
     @Bean
-    public IntegrationFlow vipOrdersFlow(ShipmentService shipmentService) {
+    public IntegrationFlow vipOrdersFlow(OrderPackingService packingService, ShipmentService shipmentService) {
         return IntegrationFlow.from(vipOrdersQueue())
-                .transform((Order o) -> {
-                    o.setStatus(OrderStatus.PACKED);
-                    log.info("VIP order packed: {}", o.getOrderId());
-                    return o;
-                })
+                .transform(packingService, "packVipOrder")
                 .handle(shipmentService, "delivery")
                 .channel(shippedOrdersChannel())
                 .get();
     }
 
     @Bean
-    public IntegrationFlow regularOrdersFlow(ShipmentService shipmentService) {
+    public IntegrationFlow regularOrdersFlow(OrderPackingService packingService, ShipmentService shipmentService) {
         return IntegrationFlow.from(regularOrdersQueue())
-                .transform((Order o) -> {
-                    o.setStatus(OrderStatus.PACKED);
-                    log.info("Regular order packed: {}", o.getOrderId());
-                    return o;
-                })
+                .transform(packingService, "packRegularOrder")
                 .handle(shipmentService, "delivery")
                 .channel(shippedOrdersChannel())
                 .get();

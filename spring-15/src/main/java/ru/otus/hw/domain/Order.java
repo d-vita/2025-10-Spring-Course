@@ -9,7 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Order {
-    Long orderId;
-    BookRequest request;
-    OrderStatus status;
+
+    private Long orderId;
+
+    private BookRequest request;
+
+    private OrderStatus status;
 }

@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 import ru.otus.hw.domain.BookRequest;
 import ru.otus.hw.services.BookShopGateway;
+import ru.otus.hw.services.OrderPackingServiceImpl;
 import ru.otus.hw.services.RequestServiceImpl;
 import ru.otus.hw.services.ShipmentServiceImpl;
 
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = {
         IntegrationConfiguration.class,
         RequestServiceImpl.class,
+        OrderPackingServiceImpl.class,
         ShipmentServiceImpl.class
 })
 @IntegrationComponentScan(basePackages = "ru.otus.hw.services")

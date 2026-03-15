@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private static final int numOfBook = 3;
+    private static final int BOOK_COUNT = 3;
 
     private final BookShopGateway shop;
 
@@ -51,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
     private static Collection<BookRequest> generateBookRequests() {
         Collection<BookRequest> requests = new ArrayList<>();
 
-        for (long i = 1; i <= numOfBook; i++) {
+        for (long i = 1; i <= BOOK_COUNT; i++) {
             boolean isVip = ThreadLocalRandom.current().nextBoolean();
 
             BookRequest br = new BookRequest(
