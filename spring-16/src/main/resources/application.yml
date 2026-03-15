@@ -11,9 +11,23 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: none
-
     show-sql: true
+
+  data:
+    rest:
+      base-path: /hateoas
 
 logging:
   level:
     ROOT: ERROR
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics, health, logfile
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      enabled: true
