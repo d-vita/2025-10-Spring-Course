@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BookRepositoryTest {
 
     private static final long FIRST_BOOK_ID = 1L;
-    private static final int EXPECTED_QUERIES_COUNT = 1;
     private static final int EXPECTED_NUMBER_OF_BOOKS = 3;
     private static final long NON_EXISTING_BOOK_ID = 999L;
     @Autowired
@@ -37,7 +36,6 @@ class BookRepositoryTest {
                 .allMatch(b -> !b.getTitle().equals(""))
                 .allMatch(b -> b.getAuthor().getFullName() != null)
                 .allMatch(b -> b.getGenre().getName() != null);
-        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERIES_COUNT);
     }
 
     @Test

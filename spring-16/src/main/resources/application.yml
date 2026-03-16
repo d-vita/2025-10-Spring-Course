@@ -20,6 +20,8 @@ spring:
 logging:
   level:
     ROOT: ERROR
+  file:
+    name: logs/application.log
 
 management:
   endpoints:
