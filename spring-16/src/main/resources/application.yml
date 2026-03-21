@@ -1,3 +1,14 @@
+library:
+  thresholds:
+    empty: 0
+    critical: 2
+    low: 10
+    replenish: 20
+  message:
+    empty: "Library inventory is almost empty!"
+    low: "Inventory is low. Reprint books required."
+    ok: "Inventory level is sufficient."
+
 spring:
   datasource:
     url: jdbc:h2:mem:maindb

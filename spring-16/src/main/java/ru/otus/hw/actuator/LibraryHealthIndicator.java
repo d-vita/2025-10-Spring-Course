@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
+import ru.otus.hw.configuration.LibraryProperties;
 import ru.otus.hw.repositories.BookRepository;
 
 
@@ -12,6 +13,8 @@ import ru.otus.hw.repositories.BookRepository;
 public class LibraryHealthIndicator implements HealthIndicator  {
 
     private final BookRepository bookRepository;
+
+    private final LibraryProperties properties;
 
     @Override
     public Health health() {
@@ -33,19 +36,24 @@ public class LibraryHealthIndicator implements HealthIndicator  {
     }
 
     private Health.Builder switchStatus(long books) {
-        if (books == 0) {
+        var t = properties.getThresholds();
+
+        if (books == t.getEmpty()) {
             return Health.down();
         }
-        if (books < 20) {
+        if (books < t.getReplenish()) {
             return Health.status("REPLENISHMENT_REQUIRED");
         }
         return Health.up();
     }
 
     private String getInventoryMessage(long books) {
-        return books < 2 ? "Library inventory is almost empty!"
-                : books < 10 ? "Inventory is low. Reprint books required."
-                : "Inventory level is sufficient.";
+        var t = properties.getThresholds();
+        var m = properties.getMessage();
+
+        return books < t.getCritical() ? m.getEmpty()
+                : books < t.getLow() ? m.getLow()
+                : m.getOk();
     }
 
 }
