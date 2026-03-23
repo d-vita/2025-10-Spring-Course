@@ -17,3 +17,17 @@ spring:
 logging:
   level:
     ROOT: ERROR
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 50
+  instances:
+    serviceCircuitBreaker:
+      baseConfig: default

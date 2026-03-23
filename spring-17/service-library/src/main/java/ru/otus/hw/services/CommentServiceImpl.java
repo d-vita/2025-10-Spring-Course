@@ -1,5 +1,6 @@
 package ru.otus.hw.services;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +25,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public CommentDto findById(long id) {
         return commentConverter.fromDomainObject(getComment(id));
     }
 
     @Override
     @Transactional(readOnly = true)
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public List<CommentDto> findAllByBookId(long bookId) {
         return commentRepository.findAllByBookId(bookId)
                 .stream()
@@ -39,18 +42,21 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public CommentDto insert(String message, long bookId) {
         return commentConverter.fromDomainObject(save(0, message, bookId));
     }
 
     @Override
     @Transactional
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public CommentDto update(long id, String message, long bookId) {
         return commentConverter.fromDomainObject(save(id, message, bookId));
     }
 
     @Override
     @Transactional
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public void deleteById(long id) {
         if (!commentRepository.existsById(id)) {
             throw new EntityNotFoundException("Comment with id %d not found".formatted(id));

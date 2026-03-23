@@ -1,6 +1,5 @@
 package ru.demo.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Setter;
 
 @Setter

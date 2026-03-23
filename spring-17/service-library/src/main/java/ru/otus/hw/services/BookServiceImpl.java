@@ -1,5 +1,6 @@
 package ru.otus.hw.services;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +28,14 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public BookDto findById(long id) {
         return bookConverter.fromDomainObject(getBook(id));
     }
 
     @Override
     @Transactional(readOnly = true)
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public List<BookDto> findAll() {
         return bookRepository.findAll()
                 .stream()
@@ -42,18 +45,21 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public BookDto insert(BookFormDto bookFormDto) {
         return bookConverter.fromDomainObject(save(0, bookFormDto));
     }
 
     @Override
     @Transactional
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public BookDto update(long id, BookFormDto bookFormDto) {
         return bookConverter.fromDomainObject(save(id, bookFormDto));
     }
 
     @Override
     @Transactional
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public void deleteById(long id) {
         if (!bookRepository.existsById(id)) {
             throw new EntityNotFoundException("Book with id %d not found".formatted(id));

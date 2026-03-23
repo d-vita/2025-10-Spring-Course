@@ -1,5 +1,6 @@
 package ru.otus.hw.services;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional(readOnly = true)
+    @CircuitBreaker(name = "serviceCircuitBreaker")
     public List<GenreDto> findAll() {
         return genreRepository.findAll().stream()
                 .map(genreConverter::fromDomainObject)

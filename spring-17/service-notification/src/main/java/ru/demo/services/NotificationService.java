@@ -1,5 +1,6 @@
 package ru.demo.services;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.demo.dto.NotificationRequest;
