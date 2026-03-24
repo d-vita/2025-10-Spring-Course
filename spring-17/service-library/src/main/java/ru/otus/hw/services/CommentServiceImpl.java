@@ -4,6 +4,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.client.NotificationClient;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
@@ -22,6 +23,8 @@ public class CommentServiceImpl implements CommentService {
     private final CommentConverter commentConverter;
 
     private final BookRepository bookRepository;
+
+    private final NotificationClient notificationClient;
 
     @Override
     @Transactional(readOnly = true)
@@ -73,6 +76,10 @@ public class CommentServiceImpl implements CommentService {
         var book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
         var comment = new Comment(id, message, book);
+
+        notificationService.send(book.getAuthor().getId(),
+                "New comment added:" + message);
+
         return commentRepository.save(comment);
     }
 }

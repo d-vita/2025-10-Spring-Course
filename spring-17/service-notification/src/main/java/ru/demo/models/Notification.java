@@ -1,9 +1,9 @@
-package ru.demo.dto;
+package ru.demo.models;
 
 import lombok.Setter;
 
 @Setter
-public class NotificationRequest {
+public class Notification {
 
     private Long userId;
 

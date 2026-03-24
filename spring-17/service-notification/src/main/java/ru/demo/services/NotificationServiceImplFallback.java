@@ -1,13 +1,13 @@
 package ru.demo.services;
 
 import org.springframework.stereotype.Component;
-import ru.demo.dto.NotificationRequest;
+import ru.demo.models.Notification;
 
 @Component
-public class NotificationClientFallback implements NotificationClient {
+public class NotificationServiceImplFallback implements NotificationService {
 
     @Override
-    public void sendNotification(NotificationRequest request) {
+    public void sendNotification(Notification notification) {
         System.out.println("Notification service unavailable. Skipping notification.");
     }
 }
