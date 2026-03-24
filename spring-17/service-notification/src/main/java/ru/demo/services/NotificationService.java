@@ -1,13 +1,20 @@
 package ru.demo.services;
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import ru.demo.models.Notification;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import ru.demo.dto.NotificationDto;
 
-@FeignClient(value = "notification-service" , fallback = NotificationServiceImplFallback.class)
-public interface NotificationService {
+@Service
+@RequiredArgsConstructor
+public class NotificationService {
 
-    @PostMapping("/notifications")
-    void sendNotification(@RequestBody Notification request);
+    @CircuitBreaker(name = "serviceCircuitBreaker", fallbackMethod = "fallback")
+    public void send(NotificationDto notificationDto) {
+        System.out.println("Sending notification to user " + notificationDto.getUserId() + ": " + notificationDto.getMessage());
+    }
+
+    public void fallback(NotificationDto notificationDto, Throwable ex) {
+        System.out.println("⚠ Notification service unavailable for user " + notificationDto.getUserId());
+    }
 }

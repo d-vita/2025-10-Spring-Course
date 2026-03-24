@@ -3,10 +3,12 @@ package ru.otus.hw.services;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.client.NotificationClient;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
@@ -21,7 +23,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
         CommentServiceImpl.class,
         CommentConverter.class
 })
-@Transactional(propagation = Propagation.NEVER)
 class CommentServiceImplTest {
 
     private static final Long EXISTING_COMMENT_ID = 1L;
@@ -30,6 +31,12 @@ class CommentServiceImplTest {
 
     @Autowired
     private CommentService commentService;
+
+    @MockBean
+    private NotificationClient notificationClient;
+
+    @MockBean
+    private NotificationService notificationService;
 
 
     @Test
