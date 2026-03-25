@@ -11,10 +11,17 @@ public class NotificationService {
 
     @CircuitBreaker(name = "serviceCircuitBreaker", fallbackMethod = "fallback")
     public void send(NotificationDto notificationDto) {
-        System.out.println("Sending notification to user " + notificationDto.getUserId() + ": " + notificationDto.getMessage());
+        System.out.printf(
+                "Sending notification to user %s: %s%n",
+                notificationDto.getUserId(),
+                notificationDto.getMessage()
+        );
     }
 
     public void fallback(NotificationDto notificationDto, Throwable ex) {
-        System.out.println("⚠ Notification service unavailable for user " + notificationDto.getUserId());
+        System.out.printf(
+                "Notification service unavailable for user: %s",
+                notificationDto.getUserId()
+        );
     }
 }

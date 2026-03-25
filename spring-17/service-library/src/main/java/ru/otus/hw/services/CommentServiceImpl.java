@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDto;
+import ru.otus.hw.dto.CommentFormDto;
 import ru.otus.hw.dto.NotificationDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Comment;
@@ -46,15 +47,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     @CircuitBreaker(name = "serviceCircuitBreaker")
-    public CommentDto insert(String message, long bookId) {
-        return commentConverter.fromDomainObject(save(0, message, bookId));
+    public CommentDto insert(CommentFormDto commentFormDto) {
+        return commentConverter.fromDomainObject(save(0, commentFormDto));
     }
 
     @Override
     @Transactional
     @CircuitBreaker(name = "serviceCircuitBreaker")
-    public CommentDto update(long id, String message, long bookId) {
-        return commentConverter.fromDomainObject(save(id, message, bookId));
+    public CommentDto update(long id, CommentFormDto commentFormDto) {
+        return commentConverter.fromDomainObject(save(id, commentFormDto));
     }
 
     @Override
@@ -72,15 +73,15 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new EntityNotFoundException("Comment with id %d not found".formatted(id)));
     }
 
-    private Comment save(long id, String message, long bookId) {
-        var book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
+    private Comment save(long id, CommentFormDto commentFormDto) {
+        var book = bookRepository.findById(commentFormDto.bookId())
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(commentFormDto.bookId())));
 
-        var comment = commentRepository.save(new Comment(id, message, book));
+        var comment = commentRepository.save(new Comment(id, commentFormDto.message(), book));
 
         notificationService.send(new NotificationDto(
                 book.getAuthor().getId(),
-                "New comment added: " + message));
+                "New comment added: " + commentFormDto.message()));
 
         return comment;
     }
