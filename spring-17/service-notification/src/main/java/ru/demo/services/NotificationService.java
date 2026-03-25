@@ -13,7 +13,7 @@ public class NotificationService {
 
     @CircuitBreaker(name = "serviceCircuitBreaker", fallbackMethod = "fallback")
     public void send(NotificationDto notificationDto) {
-        log.info("Sending notification to user {}: {}",
+        log.info("Sending notification to user {}: {}" ,
                 notificationDto.getUserId(),
                 notificationDto.getMessage());
     }
