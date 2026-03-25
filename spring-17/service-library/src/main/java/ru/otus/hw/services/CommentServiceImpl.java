@@ -75,7 +75,9 @@ public class CommentServiceImpl implements CommentService {
 
     private Comment save(long id, CommentFormDto commentFormDto) {
         var book = bookRepository.findById(commentFormDto.bookId())
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(commentFormDto.bookId())));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Book with id %d not found".formatted(commentFormDto.bookId()))
+                );
 
         var comment = commentRepository.save(new Comment(id, commentFormDto.message(), book));
 

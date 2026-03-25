@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.client.NotificationClient;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDto;
+import ru.otus.hw.dto.CommentFormDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 
 import java.util.List;
@@ -66,7 +67,10 @@ class CommentServiceImplTest {
 
         assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
 
-        commentService.insert("New comment was created", EXISTING_BOOK_ID);
+        commentService.insert(new CommentFormDto(
+                "New comment was created",
+                EXISTING_BOOK_ID
+        ));
         assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(3);
 
         var actual = commentService.findById(5L);
@@ -81,7 +85,11 @@ class CommentServiceImplTest {
 
         assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
 
-        commentService.update(EXISTING_COMMENT_ID, "Test comment was updated", EXISTING_BOOK_ID);
+        commentService.update(EXISTING_COMMENT_ID,
+                new CommentFormDto(
+                "Test comment was updated",
+                EXISTING_BOOK_ID
+        ));
         assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
 
         var actual = commentService.findById(EXISTING_COMMENT_ID);

@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.dto.BookFormDto;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.dto.CommentFormDto;
 import ru.otus.hw.services.CommentService;
@@ -20,12 +18,12 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/api/comments")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @GetMapping("/{bookId}/comments")
+    @GetMapping("/book/{bookId}")
     public List<CommentDto> getByBook(@PathVariable long bookId) {
         return commentService.findAllByBookId(bookId);
     }
