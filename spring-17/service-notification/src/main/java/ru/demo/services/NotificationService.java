@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.demo.dto.NotificationDto;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class NotificationService {
 
