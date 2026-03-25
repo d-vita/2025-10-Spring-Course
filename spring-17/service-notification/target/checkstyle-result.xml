@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.15.0">
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-notification/src/main/java/ru/demo/dto/NotificationDto.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-notification/src/main/java/ru/demo/models/Notification.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-notification/src/main/java/ru/demo/controller/NotificationController.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-notification/src/main/java/ru/demo/ServiceNotificationApplication.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-notification/src/main/java/ru/demo/services/NotificationService.java">
+</file>
+</checkstyle>
