@@ -31,7 +31,7 @@ public class CommentControllerTest {
         );
         Mockito.when(commentService.findAllByBookId(bookId)).thenReturn(comments);
 
-        mockMvc.perform(get("/api/books/{bookId}/comments", bookId))
+        mockMvc.perform(get("/api/comments/book/{bookId}", bookId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(comments.size()))
                 .andExpect(jsonPath("$[0].id").value(1L))
