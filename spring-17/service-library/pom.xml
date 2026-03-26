@@ -14,7 +14,7 @@
     <groupId>ru.otus.hw</groupId>
     <artifactId>service-library</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-circuit-breaker</name>
+    <name>spring-service-library</name>
 
     <properties>
         <java.version>17</java.version>

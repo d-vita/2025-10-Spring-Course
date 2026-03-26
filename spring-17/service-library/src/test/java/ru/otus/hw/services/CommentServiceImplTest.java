@@ -77,37 +77,4 @@ class CommentServiceImplTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-
-    @Test
-    @DirtiesContext
-    void shouldUpdateComment() {
-        var expected = new CommentDto(EXISTING_COMMENT_ID, "Test comment was updated", 1L);
-
-        assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
-
-        commentService.update(EXISTING_COMMENT_ID,
-                new CommentFormDto(
-                "Test comment was updated",
-                EXISTING_BOOK_ID
-        ));
-        assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
-
-        var actual = commentService.findById(EXISTING_COMMENT_ID);
-        assertThat(actual).isEqualTo(expected);
-    }
-
-
-    @Test
-    @DirtiesContext
-    void shouldDeleteComment() {
-        assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(2);
-
-        commentService.deleteById(EXISTING_COMMENT_ID);
-        assertThat(commentService.findAllByBookId(EXISTING_BOOK_ID)).hasSize(1);
-
-        assertThatThrownBy(() -> commentService.findById(EXISTING_COMMENT_ID))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessageContaining("Comment with id 1 not found");
-    }
-
 }

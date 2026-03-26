@@ -13,7 +13,4 @@ public interface CommentService {
 
     CommentDto insert(CommentFormDto commentFormDto);
 
-    CommentDto update(long id, CommentFormDto commentFormDt);
-
-    void deleteById(long id);
 }

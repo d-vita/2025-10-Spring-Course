@@ -2,6 +2,7 @@ package ru.otus.hw.services;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.CommentConverter;
@@ -9,6 +10,7 @@ import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.dto.CommentFormDto;
 import ru.otus.hw.dto.NotificationDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
@@ -46,45 +49,33 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    @CircuitBreaker(name = "serviceCircuitBreaker")
     public CommentDto insert(CommentFormDto commentFormDto) {
-        return commentConverter.fromDomainObject(save(0, commentFormDto));
-    }
-
-    @Override
-    @Transactional
-    @CircuitBreaker(name = "serviceCircuitBreaker")
-    public CommentDto update(long id, CommentFormDto commentFormDto) {
-        return commentConverter.fromDomainObject(save(id, commentFormDto));
-    }
-
-    @Override
-    @Transactional
-    @CircuitBreaker(name = "serviceCircuitBreaker")
-    public void deleteById(long id) {
-        if (!commentRepository.existsById(id)) {
-            throw new EntityNotFoundException("Comment with id %d not found".formatted(id));
-        }
-        commentRepository.deleteById(id);
-    }
-
-    private Comment getComment(long id) {
-        return commentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Comment with id %d not found".formatted(id)));
-    }
-
-    private Comment save(long id, CommentFormDto commentFormDto) {
         var book = bookRepository.findById(commentFormDto.bookId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Book with id %d not found".formatted(commentFormDto.bookId()))
                 );
 
-        var comment = commentRepository.save(new Comment(id, commentFormDto.message(), book));
+        var comment = commentRepository.save(new Comment(0, commentFormDto.message(), book));
 
+        sendNotification(comment, book);
+
+        return commentConverter.fromDomainObject(comment);
+    }
+
+    @CircuitBreaker(name = "serviceCircuitBreaker", fallbackMethod = "notificationFallback")
+    public void sendNotification(Comment comment, Book book) {
         notificationService.send(new NotificationDto(
                 book.getAuthor().getId(),
-                "New comment added: " + commentFormDto.message()));
+                "New comment added: " + comment.getMessage()
+        ));
+    }
 
-        return comment;
+    public void notificationFallback(Comment comment, Book book, Throwable ex) {
+        log.warn("Notification service unavailable, comment saved anyway: {}", ex.getMessage());
+    }
+
+    private Comment getComment(long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Comment with id %d not found".formatted(id)));
     }
 }

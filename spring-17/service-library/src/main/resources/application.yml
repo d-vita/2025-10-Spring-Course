@@ -14,7 +14,6 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: none
-
     show-sql: true
 
 feign:
@@ -30,11 +29,17 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         waitDurationInOpenState: 5s
         failureRateThreshold: 50
-
     instances:
       serviceCircuitBreaker:
         baseConfig: default
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,circuitbreakers
+
 logging:
   level:
-    ROOT: ERROR
+    ROOT: WARN
+    io.github.resilience4j.circuitbreaker: DEBUG
