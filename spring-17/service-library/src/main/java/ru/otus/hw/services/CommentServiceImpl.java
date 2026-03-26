@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final BookRepository bookRepository;
 
-    private final NotificationService notificationService;
+    private final NotificationSenderService notificationSenderService;
 
     @Override
     @Transactional(readOnly = true)
@@ -62,16 +62,11 @@ public class CommentServiceImpl implements CommentService {
         return commentConverter.fromDomainObject(comment);
     }
 
-    @CircuitBreaker(name = "serviceCircuitBreaker", fallbackMethod = "notificationFallback")
     public void sendNotification(Comment comment, Book book) {
-        notificationService.send(new NotificationDto(
+        notificationSenderService.send(new NotificationDto(
                 book.getAuthor().getId(),
                 "New comment added: " + comment.getMessage()
         ));
-    }
-
-    public void notificationFallback(Comment comment, Book book, Throwable ex) {
-        log.warn("Notification service unavailable, comment saved anyway: {}", ex.getMessage());
     }
 
     private Comment getComment(long id) {

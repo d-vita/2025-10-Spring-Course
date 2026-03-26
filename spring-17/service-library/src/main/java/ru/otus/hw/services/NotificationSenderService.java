@@ -1,27 +1,25 @@
-package ru.demo.services;
+package ru.otus.hw.services;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.demo.dto.NotificationDto;
+import ru.otus.hw.dto.NotificationDto;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
-public class NotificationService {
+public class NotificationSenderService {
+
+    private final NotificationService notificationService;
 
     @CircuitBreaker(name = "serviceCircuitBreaker", fallbackMethod = "fallback")
     public void send(NotificationDto notificationDto) {
-        log.info("Sending notification to user {}: {}" ,
-                notificationDto.getUserId(),
-                notificationDto.getMessage());
-
-//         симуляция ошибки для теста CircuitBreaker
-//        throw new RuntimeException("Simulated notification failure");
+        notificationService.send(notificationDto);
     }
 
     public void fallback(NotificationDto notificationDto, Throwable ex) {
         log.warn("Notification service unavailable for user {}. Reason: {}",
-                notificationDto.getUserId(),
-                ex.getMessage());
+                notificationDto.userId(), ex.getMessage());
     }
 }
