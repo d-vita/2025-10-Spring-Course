@@ -2,8 +2,16 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: library-service
+
   datasource:
-    url: jdbc:h2:mem:maindb
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/library}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: 30000
   sql:
     init:
       mode: always
