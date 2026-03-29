@@ -39,6 +39,9 @@ class CommentServiceImplTest {
     @MockBean
     private NotificationService notificationService;
 
+    @MockBean
+    private NotificationSenderService notificationSenderService;
+
 
     @Test
     void shouldReturnCorrectCommentById() {
