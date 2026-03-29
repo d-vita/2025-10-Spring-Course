@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.15.0">
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/dto/BookDto.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/dto/NotificationDto.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/dto/GenreDto.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/dto/CommentFormDto.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/dto/AuthorDto.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/dto/BookFormDto.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/dto/CommentDto.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/ServiceLibraryApplication.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/converters/GenreConverter.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/converters/BookConverter.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/converters/AuthorConverter.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/converters/CommentConverter.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/repositories/CommentRepository.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/repositories/AuthorRepository.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/repositories/GenreRepository.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/repositories/BookRepository.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/models/Author.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/models/Comment.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/models/Book.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/models/Genre.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/exceptions/EntityNotFoundException.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/exceptions/GlobalExceptionHandler.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/controllers/CommentController.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/controllers/AuthorController.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/controllers/GenreController.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/controllers/BookController.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/client/NotificationClient.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/services/NotificationSenderService.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/services/GenreService.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/services/CommentService.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/services/BookServiceImpl.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/services/AuthorServiceImpl.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/services/NotificationService.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/services/CommentServiceImpl.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/services/AuthorService.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/services/GenreServiceImpl.java">
+</file>
+<file name="/Users/vita/Documents/2025-10-Spring-Course/spring-17/service-library/src/main/java/ru/otus/hw/services/BookService.java">
+</file>
+</checkstyle>

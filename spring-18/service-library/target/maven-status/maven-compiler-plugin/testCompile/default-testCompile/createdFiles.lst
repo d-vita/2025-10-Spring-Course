@@ -1,0 +1,11 @@
+ru/otus/hw/controllers/CommentControllerTest.class
+ru/otus/hw/controllers/GenreControllerTest.class
+ru/otus/hw/repositories/AuthorRepositoryTest.class
+ru/otus/hw/repositories/BookRepositoryTest.class
+ru/otus/hw/services/BookServiceImplTest.class
+ru/otus/hw/repositories/GenreRepositoryTest.class
+ru/otus/hw/controllers/BookControllerTest.class
+ru/otus/hw/controllers/AuthorControllerTest.class
+ru/otus/hw/repositories/CommentRepositoryTest.class
+ru/otus/hw/models/ModelsCommonTest.class
+ru/otus/hw/services/CommentServiceImplTest.class
