@@ -1,6 +1,7 @@
 package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.UserConverter;
@@ -22,6 +23,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final UserConverter userConverter;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
@@ -82,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
             user.setUsername(userFormDto.username());
             user.setEmail(userFormDto.email());
-            user.setPasswordHash(userFormDto.password());
+            user.setPasswordHash(passwordEncoder.encode(userFormDto.password()));
             user.setTariff(tariff);
         }
 

@@ -1,4 +1,4 @@
-create table tariffs (
+create table if not exists tariffs (
     id bigserial,
     name varchar(255) not null unique,
     max_links bigint,
@@ -6,7 +6,7 @@ create table tariffs (
     primary key (id)
 );
 
-create table users (
+create table if not exists users (
     id bigserial,
     username varchar(255),
     email varchar(255) not null unique,
