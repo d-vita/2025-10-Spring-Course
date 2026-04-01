@@ -18,7 +18,7 @@ public class TariffController {
     private final TariffService tariffService;
 
     @GetMapping
-    public List<TariffDto> getAuthors() {
+    public List<TariffDto> getTariffs() {
         return tariffService.findAll();
     }
 }

@@ -21,38 +21,39 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/books")
-public class BookController {
+@RequestMapping("/api/users")
+public class UserController {
 
-    private final UserService bookService;
+    private final UserService userService;
 
     @GetMapping
-    public List<UserDto> getBooks() {
-        return bookService.findAll();
+    public List<UserDto> getUsers() {
+        return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    public UserDto getBook(@PathVariable long id) {
-        return bookService.findById(id);
+    public UserDto getUser(@PathVariable long id) {
+        return userService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto create(@RequestBody @Valid UserFormDto bookFormDto) {
-        return bookService.insert(bookFormDto);
+    public UserDto create(@RequestBody @Valid UserFormDto userFormDto) {
+        System.out.println();
+        return userService.insert(userFormDto);
     }
 
     @PutMapping("/{id}")
     public UserDto update(
             @PathVariable long id,
-            @RequestBody @Valid UserFormDto bookFormDto
+            @RequestBody @Valid UserFormDto userFormDto
     ) {
-        return bookService.update(id, bookFormDto);
+        return userService.update(id, userFormDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBook(@PathVariable long id) {
-        bookService.deleteById(id);
+    public void delete(@PathVariable long id) {
+        userService.deleteById(id);
     }
 }

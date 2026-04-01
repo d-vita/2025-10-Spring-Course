@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDto findById(long id) {
-        return userConverter.fromDomainObject(getBook(id));
+        return userConverter.fromDomainObject(getUser(id));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    private User getBook(long id) {
+    private User getUser(long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with id %d not found".formatted(id)));
     }

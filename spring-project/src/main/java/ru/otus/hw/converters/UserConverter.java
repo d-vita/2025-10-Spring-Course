@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.UserDto;
 import ru.otus.hw.models.User;
-import ru.otus.hw.services.UserServiceImpl;
 
 
 @RequiredArgsConstructor
@@ -19,7 +18,7 @@ public class UserConverter {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPasswordHash(),
-                tariffConverter.fromDomainObject(user.getTariff())
+                tariffConverter.fromDomainObject(user.getTariff()).name()
         );
     }
 }
