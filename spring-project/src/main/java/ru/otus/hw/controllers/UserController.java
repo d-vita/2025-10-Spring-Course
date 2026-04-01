@@ -39,7 +39,6 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody @Valid UserFormDto userFormDto) {
-        System.out.println();
         return userService.insert(userFormDto);
     }
 

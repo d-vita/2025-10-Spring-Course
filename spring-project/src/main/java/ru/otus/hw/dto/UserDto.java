@@ -1,5 +1,10 @@
 package ru.otus.hw.dto;
 
 
-public record UserDto(long id, String username, String email, String password, String tariff) {
+public record UserDto(
+        Long id,
+        String username,
+        String email,
+        String tariff
+) {
 }

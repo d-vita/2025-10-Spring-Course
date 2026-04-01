@@ -9,21 +9,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -39,4 +37,11 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tariff_id", nullable = false)
     private Tariff tariff;
+
+    public User(String username, String email, String passwordHash, Tariff tariff) {
+        this.username = username;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.tariff = tariff;
+    }
 }

@@ -1,12 +1,8 @@
-insert into authors(full_name)
-values ('Author_1'), ('Author_2'), ('Author_3');
+insert into tariffs (name, max_links, max_clicks_per_link)
+values ('FREE', 100, 1000),
+       ('BASIC', 1000, 10000),
+       ('PRO', 10000, 100000);
 
-insert into genres(name)
-values ('Genre_1'), ('Genre_2'), ('Genre_3');
-
-insert into books(title, author_id, genre_id)
-values ('BookTitle_1', 1, 1), ('BookTitle_2', 2, 2), ('BookTitle_3', 3, 3);
-
-insert into comments(message, book_id)
-values ('Comment_1', 1), ('Comment_2', 2),
-       ('Comment_3', 3), ('Comment_4', 1);
+insert into users (username, email, password, tariff_id)
+values ('john_doe', 'john@example.com', 'password_hash_here',
+        (select id from tariffs where name='FREE'));

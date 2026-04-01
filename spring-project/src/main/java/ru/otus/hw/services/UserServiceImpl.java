@@ -26,7 +26,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDto findById(long id) {
-        return userConverter.fromDomainObject(getUser(id));
+        return userConverter.fromDomainObject(
+                userRepository.findById(id)
+                        .orElseThrow(() ->
+                                new EntityNotFoundException("User with id %d not found".formatted(id))
+                        )
+        );
     }
 
     @Override
@@ -40,35 +45,47 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto insert(UserFormDto bookFormDto) {
-        return userConverter.fromDomainObject(save(0, bookFormDto));
+    public UserDto insert(UserFormDto userFormDto) {
+        return userConverter.fromDomainObject(save(null, userFormDto));
     }
 
     @Override
     @Transactional
-    public UserDto update(long id, UserFormDto bookFormDto) {
-        return userConverter.fromDomainObject(save(id, bookFormDto));
+    public UserDto update(long id, UserFormDto userFormDto) {
+        return userConverter.fromDomainObject(save(id, userFormDto));
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
         if (!userRepository.existsById(id)) {
-            throw new EntityNotFoundException("Book with id %d not found".formatted(id));
+            throw new EntityNotFoundException("User with id %d not found".formatted(id));
         }
         userRepository.deleteById(id);
     }
 
-    private User getUser(long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User with id %d not found".formatted(id)));
-    }
-
-    private User save(long id, UserFormDto userFormDto) {
+    private User save(Long id, UserFormDto userFormDto) {
         var tariff = tariffRepository.findById(userFormDto.tariffId())
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Tariff with id %d not found".formatted(userFormDto.tariffId())));
-        var user = new User(id, userFormDto.username(), userFormDto.email(), userFormDto.password(), tariff);
+                        new EntityNotFoundException("Tariff with id %d not found".formatted(userFormDto.tariffId()))
+                );
+
+        User user;
+
+        if (id == null) {
+            user = new User(userFormDto.username(), userFormDto.email(), userFormDto.password(), tariff);
+        } else {
+            user = userRepository.findById(id)
+                    .orElseThrow(() ->
+                            new EntityNotFoundException("User with id %d not found".formatted(id))
+                    );
+
+            user.setUsername(userFormDto.username());
+            user.setEmail(userFormDto.email());
+            user.setPasswordHash(userFormDto.password());
+            user.setTariff(tariff);
+        }
+
         return userRepository.save(user);
     }
 }

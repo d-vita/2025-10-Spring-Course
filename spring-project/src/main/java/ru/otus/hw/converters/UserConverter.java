@@ -17,7 +17,6 @@ public class UserConverter {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getPasswordHash(),
                 tariffConverter.fromDomainObject(user.getTariff()).name()
         );
     }
