@@ -1,7 +1,7 @@
 package com.urlshortener.service.hashgenerator;
 
 import com.urlshortener.exception.UniqueHashGenerationException;
-import com.urlshortener.repository.StorageRepository;
+import com.urlshortener.repository.UrlRepository;
 import com.urlshortener.repository.cache.CacheRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import static com.urlshortener.constants.Constants.*;
 @AllArgsConstructor
 public class HashGeneratorImpl implements HashGenerator {
     private final CacheRepository<String, String> cache;
-    private final StorageRepository storage;
+    private final UrlRepository urlRepository;
     private static final SecureRandom RANDOM = new SecureRandom();
 
     @Override
@@ -59,6 +59,6 @@ public class HashGeneratorImpl implements HashGenerator {
      * true = unique, false = already exists
      */
     private boolean isHashExist(String hash) {
-        return cache.contains(hash) || storage.findUrlDocumentByShortUrl(hash) != null;
+        return cache.contains(hash) || urlRepository.findByShortUrl(hash) != null;
     }
 }

@@ -1,14 +1,6 @@
 package com.urlshortener.service.impl;
 
-import com.urlshortener.repository.StorageRepository;
-import com.urlshortener.service.UrlShortenerImpl;
-import com.urlshortener.service.hashgenerator.HashGenerator;
-import com.urlshortener.service.UrlShortener;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import static org.mockito.Mockito.*;
 
 @DisplayName("service for generate short URl")
 class UrlShortenerImplTest {

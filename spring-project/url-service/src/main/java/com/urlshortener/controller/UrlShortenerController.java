@@ -1,21 +1,15 @@
 package com.urlshortener.controller;
 
 import com.urlshortener.dto.ShortUrl;
-import com.urlshortener.service.UrlShortener;
+import com.urlshortener.dto.UrlInfoDto;
+import com.urlshortener.service.UrlService;
 import com.urlshortener.validation.UrlValidator;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static com.urlshortener.constants.Constants.DOMAIN;
 
@@ -23,16 +17,19 @@ import static com.urlshortener.constants.Constants.DOMAIN;
 @RestController
 @RequestMapping("/api/urls")
 public class UrlShortenerController {
-    private final UrlShortener urlShortener;
+    private final UrlService urlService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ShortUrl create(@RequestParam String originalUrl) {
+    public ShortUrl create(
+            @RequestParam String originalUrl,
+            @RequestParam(required = false) Long userId
+    ) {
         if (UrlValidator.isNotValidUrl(originalUrl)) {
             return new ShortUrl("Invalid url:" + originalUrl);
         }
 
-        String shortUrl = urlShortener.shorten(originalUrl);
+        String shortUrl = urlService.shorten(originalUrl, userId);
         return new ShortUrl(shortUrl);
     }
 
@@ -44,8 +41,13 @@ public class UrlShortenerController {
             throw new IllegalArgumentException("Invalid url: " + shortUrl);
         }
 
-        return urlShortener.retrieve(shortUrl)
+        return urlService.getUrl(shortUrl)
                 .map(ShortUrl::new)
                 .orElseThrow(() -> new NoSuchElementException("Short URL not found"));
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<UrlInfoDto> geUsertUrls(@PathVariable Long userId) {
+        return urlService.getUserUrls(userId);
     }
 }

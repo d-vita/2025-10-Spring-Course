@@ -15,7 +15,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "urls")
-public class UrlDocument {
+public class Url {
     @Id
     private String id;
 
@@ -28,6 +28,11 @@ public class UrlDocument {
     @NotEmpty
     @Field(name = "longUrl")
     private String longUrl;
+
+    @NotNull
+    @NotEmpty
+    @Field(name = "userId")
+    private Long userId;
 
     private Instant createdAt;
 }
