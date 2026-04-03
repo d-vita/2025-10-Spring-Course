@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>com.urlshortener</groupId>
-	<artifactId>url2-service</artifactId>
+	<artifactId>url-short-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>url-shortener</name>
 
