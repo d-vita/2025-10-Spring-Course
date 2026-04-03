@@ -36,23 +36,23 @@ services:
     networks:
       - backend-network
 
-#  PostgreSQL:
-#    image: postgres:15
-#    container_name: postgres
-#    environment:
-#      POSTGRES_DB: user
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: postgres
-#    ports:
-#      - "5432:5432"
-#    healthcheck:
-#      test: [ "CMD-SHELL", "pg_isready -U postgres -d user" ]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 5
-#      start_period: 5s
-#    networks:
-#      - backend-network
+  PostgreSQL:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: user
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d user" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - backend-network
 
   mongo:
     image: mongo:7.0
