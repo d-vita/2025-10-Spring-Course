@@ -1,8 +1,8 @@
-insert into tariffs (name, max_links, max_clicks_per_link)
-values
+INSERT INTO tariffs (name, max_links, max_clicks_per_link)
+VALUES
     ('FREE', 100, 1000),
     ('BASIC', 1000, 10000),
-    ('PRO', 10000, 100000),
+    ('PRO', 10000, 100000)
     ON CONFLICT (name) DO NOTHING;
 
 insert into users (username, email, password, tariff_id)
