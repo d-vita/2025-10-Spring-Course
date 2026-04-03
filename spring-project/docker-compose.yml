@@ -16,11 +16,11 @@ services:
 #    networks:
 #      - backend-network
 
-  url-service:
+  url2-service:
     build:
-      context: ./url-service
+      context: ./url2-service
       dockerfile: Dockerfile
-    container_name: url-service
+    container_name: url2-service
     ports:
       - "8081:8081"
     environment:
@@ -29,8 +29,8 @@ services:
       - SPRING_DATA_REDIS_PORT:6379
       - SERVER_PORT=8081
     depends_on:
-#      mongo:
-#        condition: service_healthy
+      mongo:
+        condition: service_healthy
       redis:
         condition: service_started
     networks:
