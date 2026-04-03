@@ -6,6 +6,7 @@ import ru.otus.hw.dto.UserFormDto;
 import java.util.List;
 
 public interface UserService {
+
     UserDto findById(long id);
 
     List<UserDto> findAll();

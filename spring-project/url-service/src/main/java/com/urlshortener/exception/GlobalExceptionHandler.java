@@ -14,14 +14,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UniqueHashGenerationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public String handleUniqueHashGenerationException(UniqueHashGenerationException ex){
+    public String handleUniqueHashGenerationException(UniqueHashGenerationException ex) {
         log.error("Hash generation error: {}", ex.getMessage(), ex);
         return ex.getMessage();
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleNoSuchElementException(NoSuchElementException ex){
+    public String handleNoSuchElementException(NoSuchElementException ex) {
         log.error("Short URL not found: {}", ex.getMessage(), ex);
         return ex.getMessage();
     }

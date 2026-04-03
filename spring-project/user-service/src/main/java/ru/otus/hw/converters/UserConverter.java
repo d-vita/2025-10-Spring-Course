@@ -3,6 +3,7 @@ package ru.otus.hw.converters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.UserDto;
+import ru.otus.hw.dto.UserFormDto;
 import ru.otus.hw.models.User;
 
 
@@ -18,6 +19,15 @@ public class UserConverter {
                 user.getUsername(),
                 user.getEmail(),
                 tariffConverter.fromDomainObject(user.getTariff()).name()
+        );
+    }
+
+    public User fromDto(UserFormDto dto) {
+        return new User(
+                dto.username(),
+                dto.email(),
+                null,
+                null
         );
     }
 }

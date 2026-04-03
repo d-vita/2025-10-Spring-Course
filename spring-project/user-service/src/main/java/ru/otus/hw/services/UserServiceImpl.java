@@ -8,6 +8,7 @@ import ru.otus.hw.converters.UserConverter;
 import ru.otus.hw.dto.UserDto;
 import ru.otus.hw.dto.UserFormDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.models.Tariff;
 import ru.otus.hw.models.User;
 import ru.otus.hw.repositories.TariffRepository;
 import ru.otus.hw.repositories.UserRepository;
@@ -49,13 +50,38 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto insert(UserFormDto userFormDto) {
-        return userConverter.fromDomainObject(save(null, userFormDto));
+        var tariff = getTariff(userFormDto.tariffId());
+
+        User user = new User(
+                userFormDto.username(),
+                userFormDto.email(),
+                passwordEncoder.encode(userFormDto.password()),
+                tariff
+        );
+
+        return userConverter.fromDomainObject(userRepository.save(user));
     }
 
     @Override
     @Transactional
-    public UserDto update(long id, UserFormDto userFormDto) {
-        return userConverter.fromDomainObject(save(id, userFormDto));
+    public UserDto update(long id, UserFormDto dto) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("User with id %d not found".formatted(id))
+                );
+
+        var tariff = getTariff(dto.tariffId());
+
+        user.setUsername(dto.username());
+        user.setEmail(dto.email());
+        user.setTariff(tariff);
+
+        if (dto.password() != null && !dto.password().isBlank()) {
+            user.setPasswordHash(passwordEncoder.encode(dto.password()));
+        }
+
+        return userConverter.fromDomainObject(user);
     }
 
     @Override
@@ -67,28 +93,10 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    private User save(Long id, UserFormDto userFormDto) {
-        var tariff = tariffRepository.findById(userFormDto.tariffId())
+    private Tariff getTariff(Long tariffId) {
+        return tariffRepository.findById(tariffId)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Tariff with id %d not found".formatted(userFormDto.tariffId()))
+                        new EntityNotFoundException("Tariff with id %d not found".formatted(tariffId))
                 );
-
-        User user;
-
-        if (id == null) {
-            user = new User(userFormDto.username(), userFormDto.email(), userFormDto.password(), tariff);
-        } else {
-            user = userRepository.findById(id)
-                    .orElseThrow(() ->
-                            new EntityNotFoundException("User with id %d not found".formatted(id))
-                    );
-
-            user.setUsername(userFormDto.username());
-            user.setEmail(userFormDto.email());
-            user.setPasswordHash(passwordEncoder.encode(userFormDto.password()));
-            user.setTariff(tariff);
-        }
-
-        return userRepository.save(user);
     }
 }

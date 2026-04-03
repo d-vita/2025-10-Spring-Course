@@ -6,13 +6,16 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
 
-import static com.urlshortener.constants.Constants.*;
+import static com.urlshortener.constants.Constants.LONG_KEY_PREFIX;
+import static com.urlshortener.constants.Constants.SHORT_KEY_PREFIX;
+
 
 @Repository
 @AllArgsConstructor
 public class RedisRepository implements CacheRepository<String, String> {
 
     private final RedisTemplate<String, String> redisTemplate;
+
     @Override
     public void save(String key, String value, Duration ttl) {
         redisTemplate.opsForValue().set(SHORT_KEY_PREFIX + key, value, ttl);

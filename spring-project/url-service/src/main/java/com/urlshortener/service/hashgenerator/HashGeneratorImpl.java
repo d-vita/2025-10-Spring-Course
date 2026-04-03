@@ -12,7 +12,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-import static com.urlshortener.constants.Constants.*;
+import static com.urlshortener.constants.Constants.HASH_ALGORITHM;
+import static com.urlshortener.constants.Constants.MAX_ATTEMPTS;
+import static com.urlshortener.constants.Constants.SHORT_BYTES_LENGTH;
+
 
 /**
  * Generates short hash codes for URLs using SHA-256 + Base62 and ensures uniqueness.
@@ -21,34 +24,21 @@ import static com.urlshortener.constants.Constants.*;
 @Service
 @AllArgsConstructor
 public class HashGeneratorImpl implements HashGenerator {
-    private final CacheRepository<String, String> cache;
-    private final UrlRepository urlRepository;
+
     private static final SecureRandom RANDOM = new SecureRandom();
+
+    private final CacheRepository<String, String> cache;
+
+    private final UrlRepository urlRepository;
 
     @Override
     public String encode(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
             byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
-
             byte[] shortBytes = Arrays.copyOf(digest, SHORT_BYTES_LENGTH);
 
-            String hash = Base62.encode(shortBytes);
-            int attempt = 0;
-
-            while (isHashExist(hash) && attempt < MAX_ATTEMPTS) {
-                int randomIndex = RANDOM.nextInt(shortBytes.length);
-                shortBytes[randomIndex] = (byte) RANDOM.nextInt(256);
-
-                hash = Base62.encode(shortBytes);
-                attempt++;
-            }
-
-            if (attempt >= MAX_ATTEMPTS) {
-                throw new UniqueHashGenerationException("Failed to generate unique short URL after " + MAX_ATTEMPTS + " attempts");
-            }
-
-            return hash;
+            return generateUniqueHash(shortBytes);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Hash algorithm not found: " + HASH_ALGORITHM, e);
         }
@@ -60,5 +50,25 @@ public class HashGeneratorImpl implements HashGenerator {
      */
     private boolean isHashExist(String hash) {
         return cache.contains(hash) || urlRepository.findByShortUrl(hash) != null;
+    }
+
+    private String generateUniqueHash(byte[] shortBytes) {
+        String hash = Base62.encode(shortBytes);
+        int attempt = 0;
+
+        while (isHashExist(hash) && attempt < MAX_ATTEMPTS) {
+            int randomIndex = RANDOM.nextInt(shortBytes.length);
+            shortBytes[randomIndex] = (byte) RANDOM.nextInt(256);
+
+            hash = Base62.encode(shortBytes);
+            attempt++;
+        }
+
+        if (attempt >= MAX_ATTEMPTS) {
+            throw new UniqueHashGenerationException(
+                    "Failed to generate unique short URL after " + MAX_ATTEMPTS + " attempts"
+            );
+        }
+        return hash;
     }
 }

@@ -13,7 +13,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-import static com.urlshortener.constants.Constants.*;
+import static com.urlshortener.constants.Constants.DOMAIN;
+import static com.urlshortener.constants.Constants.TTL;
+
 
 @Service
 @AllArgsConstructor
