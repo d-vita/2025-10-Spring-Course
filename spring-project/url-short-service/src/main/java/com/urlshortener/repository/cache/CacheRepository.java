@@ -1,15 +1,17 @@
 package com.urlshortener.repository.cache;
 
+import com.urlshortener.dto.UrlCacheDto;
+
 import java.time.Duration;
 
-public interface CacheRepository<K, V> {
+public interface CacheRepository {
 
-    void save(K key, V value, Duration ttl);
+    void save(String shortCode, UrlCacheDto dto, Duration ttl);
 
-    V get(K key);
+    UrlCacheDto get(String shortCode);
 
-    K getByValue(V value);
+    String getByValue(String longUrl);
 
-    boolean contains(K key);
+    boolean contains(String shortCode);
 
 }

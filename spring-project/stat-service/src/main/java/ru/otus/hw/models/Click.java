@@ -18,16 +18,17 @@ import java.time.Instant;
 public class Click {
 
     @Id
-    private String id; // shortUrl + ":" + userId
+    private String id;
 
-    @Column(nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(name = "short_url", nullable = false)
     private String shortUrl;
 
-    @Column(nullable = false)
+    @Column(name = "clicks", nullable = false)
     private long clicks;
 
+    @Column(name = "last_click_at")
     private Instant lastClickAt;
 }

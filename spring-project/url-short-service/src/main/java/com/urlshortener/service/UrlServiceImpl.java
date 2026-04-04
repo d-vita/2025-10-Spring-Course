@@ -1,5 +1,6 @@
 package com.urlshortener.service;
 
+import com.urlshortener.dto.UrlCacheDto;
 import com.urlshortener.dto.UrlInfoDto;
 import com.urlshortener.model.Url;
 import com.urlshortener.repository.UrlRepository;
@@ -24,7 +25,7 @@ public class UrlServiceImpl implements UrlService {
 
     private final HashGenerator hashGenerator;
 
-    private final CacheRepository<String, String> cacheRepository;
+    private final CacheRepository cacheRepository;
 
     private final UrlRepository urlRepository;
 
@@ -35,21 +36,36 @@ public class UrlServiceImpl implements UrlService {
      */
     @Override
     public String shorten(String originalUrl, Long userId) {
+
+        if (userId == null) {
+            throw new IllegalArgumentException("ГserId must not be null");
+        }
+
         String cachedShortUrl = cacheRepository.getByValue(originalUrl);
         if (cachedShortUrl != null) {
             return DOMAIN + cachedShortUrl;
         }
 
+        Url existing = urlRepository.findByLongUrl(originalUrl);
+        if (existing != null) {
+            return DOMAIN + existing.getShortUrl();
+        }
+
         String shortCode = hashGenerator.encode(originalUrl);
 
-        Url url = new Url();
-        url.setShortUrl(shortCode);
-        url.setLongUrl(originalUrl);
-        url.setUserId(userId);
-        url.setCreatedAt(Instant.now());
+        Url url = new Url(
+                null,
+                shortCode,
+                originalUrl,
+                userId,
+                Instant.now()
+        );
         urlRepository.save(url);
 
-        cacheRepository.save(shortCode, originalUrl, TTL);
+        cacheRepository.save(
+                shortCode,
+                new UrlCacheDto(originalUrl, userId),
+                TTL);
 
         return DOMAIN + shortCode;
     }
@@ -59,40 +75,29 @@ public class UrlServiceImpl implements UrlService {
      */
     @Override
     public Optional<String> getOriginalUrl(String shortUrl) {
-        String originalUrl = cacheRepository.get(shortUrl);
-        Url url;
+        UrlCacheDto cached = cacheRepository.get(shortUrl);
 
-        if (originalUrl == null) {
-            url = urlRepository.findByShortUrl(shortUrl);
-
-            if (url == null) {
-                return Optional.empty();
-            }
-
-            originalUrl = url.getLongUrl();
-            cacheRepository.save(shortUrl, originalUrl, TTL);
-
-        } else {
-            // ⚠️ важно: нужен userId → идём в Mongo
-            url = urlRepository.findByShortUrl(shortUrl);
-
-            if (url == null) {
-                return Optional.of(originalUrl); // fallback
-            }
+        if (cached != null) {
+            sendClickEvent(shortUrl, cached);
+            return Optional.of(cached.getLongUrl());
         }
 
-        // 🔥 Kafka event — ВСЕГДА при клике
-        try {
-            clickEventProducer.sendClickEvent(
-                    shortUrl,
-                    originalUrl,
-                    url.getUserId()
-            );
-        } catch (Exception e) {
-            log.error("Failed to send click event", e);
+        Url url = urlRepository.findByShortUrl(shortUrl);
+
+        if (url == null) {
+            return Optional.empty();
         }
 
-        return Optional.of(originalUrl);
+        UrlCacheDto dto = new UrlCacheDto(
+                url.getLongUrl(),
+                url.getUserId()
+        );
+
+        cacheRepository.save(shortUrl, dto, TTL);
+
+        sendClickEvent(shortUrl, dto);
+
+        return Optional.of(dto.getLongUrl());
     }
 
     /**
@@ -110,5 +115,17 @@ public class UrlServiceImpl implements UrlService {
                         url.getCreatedAt()
                 ))
                 .toList();
+    }
+
+    private void sendClickEvent(String shortUrl, UrlCacheDto dto) {
+        try {
+            clickEventProducer.sendClickEvent(
+                    shortUrl,
+                    dto.getLongUrl(),
+                    dto.getUserId()
+            );
+        } catch (Exception e) {
+            log.error("Kafka error", e);
+        }
     }
 }

@@ -18,22 +18,35 @@ import java.util.List;
 @Service
 public class ClickServiceImpl implements ClickService {
 
-    private final ClickRepository clickStatRepository;
-    private final UserClient userClient; // Feign REST client для получения тарифа
+    private final ClickRepository clickRepository;
+
+    private final UserClient userClient;
+
     private final NotificationService notificationService;
 
+    @Override
+    @Transactional
     public void recordClick(String shortUrl, Long userId) {
-        Click stat = clickStatRepository.findById(shortUrl + ":" + userId)
-                .orElse(new Click(shortUrl + ":" + userId, userId, shortUrl, 0, Instant.now()));
+        String id = shortUrl + ":" + userId;
+        Click click = clickRepository.findById(id)
+                .orElse(new Click(id, userId, shortUrl, 0, Instant.now()));
 
-        stat.setClicks(stat.getClicks() + 1);
-        stat.setLastClickAt(Instant.now());
-        clickStatRepository.save(stat);
+        click.setClicks(click.getClicks() + 1);
+        click.setLastClickAt(Instant.now());
+
+        clickRepository.save(click);
 
         long maxClicks = userClient.getUserTariffLimit(userId);
-        if (stat.getClicks() > maxClicks) {
+        if (click.getClicks() > maxClicks) {
             notificationService.sendLimitExceeded(userId);
         }
+    }
+
+    @Override
+    public long getClicks(Long userId, String shortUrl) {
+        return clickRepository.findByUserIdAndShortUrl(userId, shortUrl)
+                .map(Click::getClicks)
+                .orElse(0L);
     }
 
 }

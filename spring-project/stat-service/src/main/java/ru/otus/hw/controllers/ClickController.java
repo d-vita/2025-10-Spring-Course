@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.otus.hw.services.ClickService;
 
 
 @RequiredArgsConstructor
@@ -17,17 +18,11 @@ public class ClickController {
 
     private final ClickService clickService;
 
-    @PostMapping
-    public ResponseEntity<Void> recordClick(@RequestBody ClickRequest request) {
-        clickService.recordClick(request.getShortUrl(), request.getUserId());
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/{userId}/{shortUrl}")
-    public ResponseEntity<Long> getClicks(
+    public Long getClicks(
             @PathVariable Long userId,
             @PathVariable String shortUrl) {
-        long count = clickService.getClicks(userId, shortUrl);
-        return ResponseEntity.ok(count);
+        return clickService.getClicks(userId, shortUrl);
     }
+
 }
