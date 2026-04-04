@@ -60,25 +60,39 @@ public class UrlServiceImpl implements UrlService {
     @Override
     public Optional<String> getOriginalUrl(String shortUrl) {
         String originalUrl = cacheRepository.get(shortUrl);
+        Url url;
 
-        if (originalUrl != null) {
-            return Optional.of(originalUrl);
-        }
+        if (originalUrl == null) {
+            url = urlRepository.findByShortUrl(shortUrl);
 
-        Url url = urlRepository.findByShortUrl(shortUrl);
-        if (url != null) {
+            if (url == null) {
+                return Optional.empty();
+            }
+
             originalUrl = url.getLongUrl();
             cacheRepository.save(shortUrl, originalUrl, TTL);
-            return Optional.of(originalUrl);
+
+        } else {
+            // ⚠️ важно: нужен userId → идём в Mongo
+            url = urlRepository.findByShortUrl(shortUrl);
+
+            if (url == null) {
+                return Optional.of(originalUrl); // fallback
+            }
         }
 
+        // 🔥 Kafka event — ВСЕГДА при клике
         try {
-            clickEventProducer.sendClickEvent(shortUrl, url.getUserId());
+            clickEventProducer.sendClickEvent(
+                    shortUrl,
+                    originalUrl,
+                    url.getUserId()
+            );
         } catch (Exception e) {
             log.error("Failed to send click event", e);
         }
 
-        return Optional.empty();
+        return Optional.of(originalUrl);
     }
 
     /**

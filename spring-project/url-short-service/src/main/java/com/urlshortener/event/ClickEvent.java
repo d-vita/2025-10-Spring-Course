@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 /**
- * Event published when e new URL is created.
+ * Event published when e new URL is CLICKED.
  */
 @Data
 @NoArgsConstructor
@@ -20,5 +20,5 @@ public class ClickEvent {
 
     private Long userId;
 
-    private Instant createdAt;
+    private Instant clickedAt;
 }

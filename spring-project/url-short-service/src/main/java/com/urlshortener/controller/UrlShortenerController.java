@@ -30,7 +30,7 @@ public class UrlShortenerController {
     @ResponseStatus(HttpStatus.CREATED)
     public ShortUrl create(
             @RequestParam String originalUrl,
-            @RequestParam(required = false) Long userId
+            @RequestParam Long userId
     ) {
         if (UrlValidator.isNotValidUrl(originalUrl)) {
             throw new IllegalArgumentException("Invalid URL: " + originalUrl);
