@@ -31,3 +31,6 @@ spring:
 logging:
   level:
     ROOT: ERROR
+
+jwt:
+  secret: mySuperSecretKeyThatIsAtLeast256BitsLongForHS256

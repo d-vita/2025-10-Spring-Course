@@ -41,12 +41,13 @@ public class UrlServiceImpl implements UrlService {
 
         String shortCode = hashGenerator.encode(originalUrl);
 
-        Url doc = new Url();
-        doc.setShortUrl(shortCode);
-        doc.setLongUrl(originalUrl);
-        doc.setCreatedAt(Instant.now());
+        Url url = new Url();
+        url.setShortUrl(shortCode);
+        url.setLongUrl(originalUrl);
+        url.setUserId(userId);
+        url.setCreatedAt(Instant.now());
+        urlRepository.save(url);
 
-        urlRepository.save(doc);
         cacheRepository.save(shortCode, originalUrl, TTL);
 
         return DOMAIN + shortCode;
@@ -57,19 +58,22 @@ public class UrlServiceImpl implements UrlService {
      */
     @Override
     @Loggable
-    public Optional<String> getUrl(String shortUrl) {
+    public Optional<String> getOriginalUrl(String shortUrl) {
         String shortCode = shortUrl.substring(DOMAIN.length());
 
         String originalUrl = cacheRepository.get(shortCode);
 
-        if (originalUrl == null) {
-            Url url = urlRepository.findByShortUrl(shortCode);
-            if (url != null) {
-                originalUrl = url.getLongUrl();
-                cacheRepository.save(shortCode, originalUrl, TTL);
-            }
+        if (originalUrl != null) {
+            return Optional.of(originalUrl);
         }
-        return Optional.ofNullable(originalUrl);
+
+        Url url = urlRepository.findByShortUrl(shortCode);
+        if (url != null) {
+            originalUrl = url.getLongUrl();
+            cacheRepository.save(shortCode, originalUrl, TTL);
+            return Optional.of(originalUrl);
+        }
+        return Optional.empty();
     }
 
     /**

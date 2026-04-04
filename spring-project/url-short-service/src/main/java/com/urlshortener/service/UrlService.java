@@ -9,7 +9,7 @@ public interface UrlService {
 
     String shorten(String longUrl, Long userId);
 
-    Optional<String> getUrl(String shortUrl);
+    Optional<String> getOriginalUrl(String shortUrl);
 
     List<UrlInfoDto> getUserUrls(Long userId);
 }

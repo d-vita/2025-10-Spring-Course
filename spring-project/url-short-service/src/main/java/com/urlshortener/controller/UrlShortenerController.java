@@ -23,6 +23,7 @@ import static com.urlshortener.constants.Constants.DOMAIN;
 @RestController
 @RequestMapping("/api/urls")
 public class UrlShortenerController {
+
     private final UrlService urlService;
 
     @PostMapping
@@ -32,28 +33,22 @@ public class UrlShortenerController {
             @RequestParam(required = false) Long userId
     ) {
         if (UrlValidator.isNotValidUrl(originalUrl)) {
-            return new ShortUrl("Invalid url:" + originalUrl);
+            throw new IllegalArgumentException("Invalid URL: " + originalUrl);
         }
 
-        String shortUrl = urlService.shorten(originalUrl, userId);
-        return new ShortUrl(shortUrl);
+        return new ShortUrl(urlService.shorten(originalUrl, userId));
     }
 
     @GetMapping("/{shortCode}")
     public ShortUrl getUrl(@PathVariable String shortCode) {
-        String shortUrl = DOMAIN + shortCode;
-
-        if (!shortUrl.startsWith(DOMAIN)) {
-            throw new IllegalArgumentException("Invalid url: " + shortUrl);
-        }
-
-        return urlService.getUrl(shortUrl)
-                .map(ShortUrl::new)
+        String originalUrl = urlService.getOriginalUrl(shortCode)
                 .orElseThrow(() -> new NoSuchElementException("Short URL not found"));
+
+        return new ShortUrl(originalUrl);
     }
 
     @GetMapping("/user/{userId}")
-    public List<UrlInfoDto> geUsertUrls(@PathVariable Long userId) {
+    public List<UrlInfoDto> getUserUrls(@PathVariable Long userId) {
         return urlService.getUserUrls(userId);
     }
 }

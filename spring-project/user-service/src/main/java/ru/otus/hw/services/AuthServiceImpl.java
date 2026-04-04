@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.UserConverter;
+import ru.otus.hw.dto.AuthResponse;
 import ru.otus.hw.dto.LoginDto;
 import ru.otus.hw.dto.UserDto;
 import ru.otus.hw.dto.UserFormDto;
@@ -31,11 +32,11 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final String SECRET_KEY = "SECRET_KEY";
+    private final JwtService jwtService;
 
     @Override
     @Transactional
-    public UserDto register(UserFormDto userFormDto) {
+    public AuthResponse register(UserFormDto userFormDto) {
 
         if (userRepository.findByUsername(userFormDto.username()).isPresent()) {
             throw new UserAlreadyExistsException("Username already in use");
@@ -57,14 +58,19 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             User savedUser = userRepository.save(user);
-            return userConverter.fromDomainObject(savedUser);
+
+            String token = jwtService.generateToken(savedUser);
+            return new AuthResponse(
+                    token,
+                    userConverter.fromDomainObject(savedUser)
+            );
         } catch (DataIntegrityViolationException ex) {
             throw new UserAlreadyExistsException("Email already exists");
         }
     }
 
     @Override
-    public UserDto login(LoginDto loginDto) {
+    public AuthResponse login(LoginDto loginDto) {
 
         User user = userRepository.findByEmail(loginDto.email())
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid credentials"));
@@ -73,6 +79,11 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidCredentialsException("Invalid credentials");
         }
 
-        return userConverter.fromDomainObject(user);
+        String token = jwtService.generateToken(user);
+
+        return new AuthResponse(
+                token,
+                userConverter.fromDomainObject(user)
+        );
     }
 }
