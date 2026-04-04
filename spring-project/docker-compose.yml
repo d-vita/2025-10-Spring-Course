@@ -1,40 +1,40 @@
 services:
-  user-service:
-    build:
-      context: ./user-service
-      dockerfile: Dockerfile
-    container_name: user-service
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/user
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-    depends_on:
-      PostgreSQL:
-        condition: service_healthy
-    networks:
-      - backend-network
-
-  url-short-service:
-    build:
-      context: ./url-short-service
-      dockerfile: Dockerfile
-    container_name: url-short-service
-    ports:
-      - "8081:8081"
-    environment:
-      - SPRING_DATA_MONGODB_URI:mongodb://admin:secret@mongo:27017/urlshortener?authSource=admin
-      - SPRING_DATA_REDIS_HOST:redis
-      - SPRING_DATA_REDIS_PORT:6379
-      - SERVER_PORT=8081
-    depends_on:
-      mongo:
-        condition: service_healthy
-      redis:
-        condition: service_started
-    networks:
-      - backend-network
+#  user-service:
+#    build:
+#      context: ./user-service
+#      dockerfile: Dockerfile
+#    container_name: user-service
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/user
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#    depends_on:
+#      PostgreSQL:
+#        condition: service_healthy
+#    networks:
+#      - backend-network
+#
+#  url-short-service:
+#    build:
+#      context: ./url-short-service
+#      dockerfile: Dockerfile
+#    container_name: url-short-service
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      - SPRING_DATA_MONGODB_URI:mongodb://admin:secret@mongo:27017/urlshortener?authSource=admin
+#      - SPRING_DATA_REDIS_HOST:redis
+#      - SPRING_DATA_REDIS_PORT:6379
+#      - SERVER_PORT=8081
+#    depends_on:
+#      mongo:
+#        condition: service_healthy
+#      redis:
+#        condition: service_started
+#    networks:
+#      - backend-network
 
   PostgreSQL:
     image: postgres:15

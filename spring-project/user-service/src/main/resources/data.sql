@@ -11,4 +11,5 @@ values (
            'john@example.com',
            'password_hash_here',
            (select id from tariffs where name = 'FREE')
-       );
+       )
+    ON CONFLICT (email) DO NOTHING;

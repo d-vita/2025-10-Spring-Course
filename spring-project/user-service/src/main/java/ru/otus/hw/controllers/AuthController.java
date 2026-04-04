@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.otus.hw.dto.AuthResponse;
-import ru.otus.hw.dto.LoginRequest;
+import ru.otus.hw.dto.LoginDto;
+import ru.otus.hw.dto.UserDto;
 import ru.otus.hw.dto.UserFormDto;
-import ru.otus.hw.models.User;
 import ru.otus.hw.services.AuthService;
 
 
@@ -25,25 +24,17 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public AuthResponse register(@RequestBody @Valid UserFormDto userFormDto) {
-        //TODO: Add validation for existing username/email
+    public UserDto register(@RequestBody @Valid UserFormDto userFormDto) {
         //TODO: Publish UserRegisteredEvent to Kafka
-
-        User user = authService.register(userFormDto);
-
         // TODO: Generate real JWT token
-        String mockToken = "mock-jwt-token" + user.getId();
 
-        return new AuthResponse(user.getId(), user.getUsername(), mockToken);
+        return authService.register(userFormDto);
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody @Valid LoginRequest loginRequest) {
-        User user = authService.login(loginRequest);
-
+    public UserDto login(@RequestBody @Valid LoginDto loginDto) {
         // TODO: Generate real JWT token
-        String mockToken = "mock-jwt-token" + user.getId();
 
-        return new AuthResponse(user.getId(), user.getUsername(), mockToken);
+        return authService.login(loginDto);
     }
 }
