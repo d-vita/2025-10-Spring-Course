@@ -12,7 +12,7 @@ import java.time.Instant;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UrlCreatedEvent {
+public class ClickEvent {
 
     private String shortUrl;
 

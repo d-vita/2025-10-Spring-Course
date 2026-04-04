@@ -1,9 +1,19 @@
 server:
-  port: 8080
+  port: 8082
 
 spring:
   application:
-    name: user-service
+    name: stat-service
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:broker:29092}
+    consumer:
+      group-id: click-stats-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
 
   datasource:
 #    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/user}
@@ -31,6 +41,3 @@ spring:
 logging:
   level:
     ROOT: ERROR
-
-jwt:
-  secret: mySuperSecretKeyThatIsAtLeast256BitsLongForHS256

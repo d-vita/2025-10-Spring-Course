@@ -16,6 +16,14 @@ spring:
 #      uri: ${SPRING_DATA_MONGODB_URI:mongodb://admin:secret@mongo:27017/urlshortener?authSource=admin}
       uri: ${SPRING_DATA_MONGODB_URI:mongodb://admin:secret@localhost:27017/urlshortener?authSource=admin}
 
+    kafka:
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:broker:29092}
+      producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
 management:
   endpoints:
     web:

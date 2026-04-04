@@ -6,6 +6,7 @@ import com.urlshortener.repository.UrlRepository;
 import com.urlshortener.repository.cache.CacheRepository;
 import com.urlshortener.service.hashgenerator.HashGenerator;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -16,6 +17,7 @@ import static com.urlshortener.constants.Constants.DOMAIN;
 import static com.urlshortener.constants.Constants.TTL;
 
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UrlServiceImpl implements UrlService {
@@ -26,12 +28,13 @@ public class UrlServiceImpl implements UrlService {
 
     private final UrlRepository urlRepository;
 
+    private final ClickEventProducer clickEventProducer;
+
     /**
      * Shortens a long URL.
      */
     @Override
     public String shorten(String originalUrl, Long userId) {
-        //simple protection from double click
         String cachedShortUrl = cacheRepository.getByValue(originalUrl);
         if (cachedShortUrl != null) {
             return DOMAIN + cachedShortUrl;
@@ -68,6 +71,13 @@ public class UrlServiceImpl implements UrlService {
             cacheRepository.save(shortUrl, originalUrl, TTL);
             return Optional.of(originalUrl);
         }
+
+        try {
+            clickEventProducer.sendClickEvent(shortUrl, url.getUserId());
+        } catch (Exception e) {
+            log.error("Failed to send click event", e);
+        }
+
         return Optional.empty();
     }
 
