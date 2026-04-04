@@ -37,6 +37,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleAll(Exception ex) {
         log.error("Unexpected error occurred", ex);
-        return ex.getMessage();
+        return "Unexpected error occurred";
     }
 }

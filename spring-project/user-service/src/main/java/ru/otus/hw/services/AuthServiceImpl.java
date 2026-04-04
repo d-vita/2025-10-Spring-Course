@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.UserConverter;
 import ru.otus.hw.dto.AuthResponse;
 import ru.otus.hw.dto.LoginDto;
-import ru.otus.hw.dto.UserDto;
 import ru.otus.hw.dto.UserFormDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.exceptions.InvalidCredentialsException;
@@ -18,7 +17,6 @@ import ru.otus.hw.models.User;
 import ru.otus.hw.repositories.TariffRepository;
 import ru.otus.hw.repositories.UserRepository;
 
-import java.util.Date;
 
 @RequiredArgsConstructor
 @Service
@@ -39,15 +37,15 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse register(UserFormDto userFormDto) {
 
         if (userRepository.findByUsername(userFormDto.username()).isPresent()) {
-            throw new UserAlreadyExistsException("Username already in use");
+            throw new UserAlreadyExistsException("Username already exists");
         }
 
         if (userRepository.findByEmail(userFormDto.email()).isPresent()) {
-            throw new UserAlreadyExistsException("Email already in use");
+            throw new UserAlreadyExistsException("Email already exists");
         }
 
         Tariff tariff = tariffRepository.findById(userFormDto.tariffId())
-                .orElseThrow(() -> new EntityNotFoundException("Tariff not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Tariff is not found"));
 
         User user = new User(
                 userFormDto.username(),

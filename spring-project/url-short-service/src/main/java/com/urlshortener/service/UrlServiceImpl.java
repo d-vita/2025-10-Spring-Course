@@ -1,6 +1,5 @@
 package com.urlshortener.service;
 
-import com.urlshortener.aspect.Loggable;
 import com.urlshortener.dto.UrlInfoDto;
 import com.urlshortener.model.Url;
 import com.urlshortener.repository.UrlRepository;
@@ -31,7 +30,6 @@ public class UrlServiceImpl implements UrlService {
      * Shortens a long URL.
      */
     @Override
-    @Loggable
     public String shorten(String originalUrl, Long userId) {
         //simple protection from double click
         String cachedShortUrl = cacheRepository.getByValue(originalUrl);
@@ -57,20 +55,17 @@ public class UrlServiceImpl implements UrlService {
      * Retrieves the original URL from the shortened one.
      */
     @Override
-    @Loggable
     public Optional<String> getOriginalUrl(String shortUrl) {
-        String shortCode = shortUrl.substring(DOMAIN.length());
-
-        String originalUrl = cacheRepository.get(shortCode);
+        String originalUrl = cacheRepository.get(shortUrl);
 
         if (originalUrl != null) {
             return Optional.of(originalUrl);
         }
 
-        Url url = urlRepository.findByShortUrl(shortCode);
+        Url url = urlRepository.findByShortUrl(shortUrl);
         if (url != null) {
             originalUrl = url.getLongUrl();
-            cacheRepository.save(shortCode, originalUrl, TTL);
+            cacheRepository.save(shortUrl, originalUrl, TTL);
             return Optional.of(originalUrl);
         }
         return Optional.empty();
