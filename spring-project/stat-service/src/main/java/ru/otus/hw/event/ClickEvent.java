@@ -18,6 +18,6 @@ public class ClickEvent {
 
     private Long userId;
 
-    private Instant createdAt;
+    private Instant clickedAt;
 
 }
