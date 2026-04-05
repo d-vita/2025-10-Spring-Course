@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface ClickRepository extends JpaRepository<Click, Long> {
 
     Optional<Click> findByUserIdAndShortUrl(Long userId, String shortUrl);
+
+    Optional<Click> findById(String userId);
 }

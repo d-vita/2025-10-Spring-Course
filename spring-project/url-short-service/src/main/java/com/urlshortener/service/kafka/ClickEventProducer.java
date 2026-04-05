@@ -1,4 +1,4 @@
-package com.urlshortener.service;
+package com.urlshortener.service.kafka;
 
 import com.urlshortener.event.ClickEvent;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +11,9 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class ClickEventProducer {
 
-    private final KafkaTemplate<String, ClickEvent> kafkaTemplate;
-
     private static final String TOPIC = "url-clicks";
+
+    private final KafkaTemplate<String, ClickEvent> kafkaTemplate;
 
     public void sendClickEvent(String shortUrl, String longUrl, Long userId) {
         ClickEvent event = new ClickEvent(

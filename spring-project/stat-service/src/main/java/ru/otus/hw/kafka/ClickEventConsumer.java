@@ -1,9 +1,10 @@
-package ru.otus.hw.services;
+package ru.otus.hw.kafka;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.event.ClickEvent;
+import ru.otus.hw.services.ClickService;
 
 @RequiredArgsConstructor
 @Component

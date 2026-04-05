@@ -1,18 +1,12 @@
 package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.hw.converters.UserConverter;
-import ru.otus.hw.dto.UserDto;
-import ru.otus.hw.dto.UserFormDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Click;
 import ru.otus.hw.repositories.ClickRepository;
 
 import java.time.Instant;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -20,9 +14,9 @@ public class ClickServiceImpl implements ClickService {
 
     private final ClickRepository clickRepository;
 
-    private final UserClient userClient;
-
-    private final NotificationService notificationService;
+//    private final UserClient userClient;
+//
+//    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -36,10 +30,10 @@ public class ClickServiceImpl implements ClickService {
 
         clickRepository.save(click);
 
-        long maxClicks = userClient.getUserTariffLimit(userId);
-        if (click.getClicks() > maxClicks) {
-            notificationService.sendLimitExceeded(userId);
-        }
+//        long maxClicks = userClient.getUserTariffLimit(userId);
+//        if (click.getClicks() > maxClicks) {
+//            notificationService.sendLimitExceeded(userId);
+//        }
     }
 
     @Override

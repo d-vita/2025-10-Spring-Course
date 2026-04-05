@@ -6,6 +6,7 @@ import com.urlshortener.model.Url;
 import com.urlshortener.repository.UrlRepository;
 import com.urlshortener.repository.cache.CacheRepository;
 import com.urlshortener.service.hashgenerator.HashGenerator;
+import com.urlshortener.service.kafka.ClickEventProducer;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,6 @@ public class UrlServiceImpl implements UrlService {
      */
     @Override
     public String shorten(String originalUrl, Long userId) {
-
         if (userId == null) {
             throw new IllegalArgumentException("ГserId must not be null");
         }
@@ -52,20 +52,9 @@ public class UrlServiceImpl implements UrlService {
         }
 
         String shortCode = hashGenerator.encode(originalUrl);
-
-        Url url = new Url(
-                null,
-                shortCode,
-                originalUrl,
-                userId,
-                Instant.now()
-        );
+        Url url = new Url(null, shortCode, originalUrl, userId, Instant.now());
         urlRepository.save(url);
-
-        cacheRepository.save(
-                shortCode,
-                new UrlCacheDto(originalUrl, userId),
-                TTL);
+        cacheRepository.save(shortCode, new UrlCacheDto(originalUrl, userId), TTL);
 
         return DOMAIN + shortCode;
     }

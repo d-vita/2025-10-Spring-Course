@@ -1,6 +1,5 @@
 package com.urlshortener.controller;
 
-import com.urlshortener.dto.ShortUrl;
 import com.urlshortener.dto.UrlInfoDto;
 import com.urlshortener.service.UrlService;
 import com.urlshortener.validation.UrlValidator;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static com.urlshortener.constants.Constants.DOMAIN;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,7 +26,7 @@ public class UrlShortenerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ShortUrl create(
+    public String create(
             @RequestParam String originalUrl,
             @RequestParam Long userId
     ) {
@@ -36,15 +34,13 @@ public class UrlShortenerController {
             throw new IllegalArgumentException("Invalid URL: " + originalUrl);
         }
 
-        return new ShortUrl(urlService.shorten(originalUrl, userId));
+        return urlService.shorten(originalUrl, userId);
     }
 
     @GetMapping("/{shortCode}")
-    public ShortUrl getUrl(@PathVariable String shortCode) {
-        String originalUrl = urlService.getOriginalUrl(shortCode)
+    public String getUrl(@PathVariable String shortCode) {
+        return urlService.getOriginalUrl(shortCode)
                 .orElseThrow(() -> new NoSuchElementException("Short URL not found"));
-
-        return new ShortUrl(originalUrl);
     }
 
     @GetMapping("/user/{userId}")
