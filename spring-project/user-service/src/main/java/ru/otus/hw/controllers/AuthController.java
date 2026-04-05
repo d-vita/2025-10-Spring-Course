@@ -25,14 +25,11 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthResponse register(@RequestBody @Valid UserFormDto userFormDto) {
-        //TODO: Publish UserRegisteredEvent to Kafka
-        // TODO: Generate real JWT token
         return authService.register(userFormDto);
     }
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody @Valid LoginDto loginDto) {
-        // TODO: Generate real JWT token
         return authService.login(loginDto);
     }
 }

@@ -9,6 +9,7 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.add.type.headers: false
+        spring.json.write.dates.as.timestamps: false
 
   application:
     name: url-service

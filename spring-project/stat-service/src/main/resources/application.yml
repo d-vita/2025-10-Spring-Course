@@ -3,14 +3,15 @@ server:
 
 spring:
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    consumer:
-      group-id: url-clicks-group        # уникальный group id
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: ru.otus.hw.event
-        spring.json.value.default.type: ru.otus.hw.event.ClickEvent
+    kafka:
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      consumer:
+        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+        properties:
+          spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+          spring.json.trusted.packages: ru.otus.hw.event,com.urlshortener.event
+          spring.json.type.mapping: ClickEvent:ru.otus.hw.event.ClickEvent,UrlCreatedEvent:ru.otus.hw.event.UrlCreatedEvent
 
   application:
     name: stat-service
