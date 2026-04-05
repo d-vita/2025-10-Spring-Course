@@ -12,6 +12,7 @@ import ru.otus.hw.dto.UserFormDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.exceptions.InvalidCredentialsException;
 import ru.otus.hw.exceptions.UserAlreadyExistsException;
+import ru.otus.hw.kafka.producer.UserRegisteredEventProducer;
 import ru.otus.hw.models.Tariff;
 import ru.otus.hw.models.User;
 import ru.otus.hw.repositories.TariffRepository;
@@ -31,6 +32,8 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
     private final JwtService jwtService;
+
+    private final UserRegisteredEventProducer userRegisteredEventProducer;
 
     @Override
     @Transactional
@@ -56,6 +59,7 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             User savedUser = userRepository.save(user);
+            userRegisteredEventProducer.sendUserRegisteredEvent(savedUser);
 
             String token = jwtService.generateToken(savedUser);
             return new AuthResponse(

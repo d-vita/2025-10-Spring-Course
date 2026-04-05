@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.otus.hw.converters.NotificationConverter;
 import ru.otus.hw.dto.NotificationDto;
-import ru.otus.hw.models.Notification;
 import ru.otus.hw.services.NotificationService;
 
 import java.util.List;
@@ -19,11 +19,13 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
+    private final NotificationConverter notificationConverter;
+
     @GetMapping("/user/{userId}")
     public List<NotificationDto> getAllNotifications(@PathVariable Long userId) {
         return notificationService.getAllNotifications(userId)
                 .stream()
-                .map(this::toDto)
+                .map(notificationConverter::fromDomainObject)
                 .toList();
     }
 
@@ -31,23 +33,12 @@ public class NotificationController {
     public List<NotificationDto> getUnreadNotifications(@PathVariable Long userId) {
         return notificationService.getUnreadNotifications(userId)
                 .stream()
-                .map(this::toDto)
+                .map(notificationConverter::fromDomainObject)
                 .toList();
     }
 
     @PostMapping("/{notificationId}/mark-read")
     public void markAsRead(@PathVariable Long notificationId) {
         notificationService.markAsRead(notificationId);
-    }
-
-    private NotificationDto toDto(Notification notification) {
-        return new NotificationDto(
-                notification.getId(),
-                notification.getUserId(),
-                notification.getShortUrl(),
-                notification.getMessage(),
-                notification.isRead(),
-                notification.getCreatedAt()
-        );
     }
 }

@@ -1,9 +1,9 @@
-package ru.otus.hw.services.kafka;
+package ru.otus.hw.kafka.producer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.otus.hw.event.UserDeletedEvent;
+import ru.otus.hw.kafka.event.UserDeletedEvent;
 
 import java.time.Instant;
 

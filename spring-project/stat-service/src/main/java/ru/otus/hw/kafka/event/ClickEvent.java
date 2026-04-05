@@ -1,4 +1,4 @@
-package ru.otus.hw.event;
+package ru.otus.hw.kafka.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

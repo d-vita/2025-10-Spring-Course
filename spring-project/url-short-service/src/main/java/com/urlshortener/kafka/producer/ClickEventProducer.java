@@ -1,6 +1,6 @@
-package com.urlshortener.service.kafka;
+package com.urlshortener.kafka.producer;
 
-import com.urlshortener.event.ClickEvent;
+import com.urlshortener.kafka.event.ClickEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

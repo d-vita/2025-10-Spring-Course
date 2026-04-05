@@ -5,7 +5,8 @@ import ru.otus.hw.models.Notification;
 import java.util.List;
 
 public interface NotificationService {
-    void sendLimitExceeded(Long userId, String shortUrl, long currentClicks, long limit);
+
+    void createNotification(Long userId, String shortUrl, String message);
 
     List<Notification> getUnreadNotifications(Long userId);
 

@@ -1,4 +1,4 @@
-package ru.otus.hw.event;
+package ru.otus.hw.kafka.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +19,12 @@ public class UserRegisteredEvent {
     private String username;
 
     private String email;
+
+    private String tariffName;
+
+    private Long maxClicksPerLink;
+
+    private Long maxLinks;
 
     private Instant registeredAt;
 

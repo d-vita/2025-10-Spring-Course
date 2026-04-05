@@ -1,9 +1,9 @@
-package ru.otus.hw.kafka;
+package ru.otus.hw.kafka.consumer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import ru.otus.hw.event.UserDeletedEvent;
+import ru.otus.hw.kafka.event.UserDeletedEvent;
 import ru.otus.hw.services.ClickService;
 
 @RequiredArgsConstructor

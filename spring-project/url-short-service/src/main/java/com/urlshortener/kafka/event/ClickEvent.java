@@ -1,4 +1,4 @@
-package com.urlshortener.event;
+package com.urlshortener.kafka.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 /**
- * Event published when e new URL is created.
+ * Event published when e new URL is CLICKED.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UrlCreatedEvent {
+public class ClickEvent {
 
     private String shortUrl;
 
@@ -20,5 +20,5 @@ public class UrlCreatedEvent {
 
     private Long userId;
 
-    private Instant createdAt;
+    private Instant clickedAt;
 }

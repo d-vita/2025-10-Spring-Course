@@ -1,4 +1,4 @@
-package ru.otus.hw.event;
+package com.urlshortener.kafka.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 /**
- * Event published when user is deleted.
+ * Event consumed when a user is deleted.
  */
 @Data
 @NoArgsConstructor

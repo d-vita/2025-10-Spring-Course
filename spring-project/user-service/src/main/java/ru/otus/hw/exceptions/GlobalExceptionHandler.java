@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public String handleUserAlreadyExists(UserAlreadyExistsException ex) {
-        return "User already exists)";
+        return "User already exists";
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

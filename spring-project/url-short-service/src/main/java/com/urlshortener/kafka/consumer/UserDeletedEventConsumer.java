@@ -1,6 +1,6 @@
-package com.urlshortener.kafka;
+package com.urlshortener.kafka.consumer;
 
-import com.urlshortener.event.UserDeletedEvent;
+import com.urlshortener.kafka.event.UserDeletedEvent;
 import com.urlshortener.service.UrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;

@@ -18,18 +18,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public void sendLimitExceeded(Long userId, String shortUrl, long currentClicks, long limit) {
-        String message = String.format(
-                "Превышен лимит кликов для URL %s. Текущее количество: %d, лимит: %d",
-                shortUrl,
-                currentClicks,
-                limit
-        );
-
+    public void createNotification(Long userId, String shortUrl, String message) {
         Notification notification = new Notification(userId, shortUrl, message);
         notificationRepository.save(notification);
-
-        log.info("Created limit exceeded notification for userId: {}, shortUrl: {}", userId, shortUrl);
     }
 
     @Override

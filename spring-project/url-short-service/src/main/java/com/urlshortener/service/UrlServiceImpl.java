@@ -7,8 +7,8 @@ import com.urlshortener.model.Url;
 import com.urlshortener.repository.UrlRepository;
 import com.urlshortener.repository.cache.CacheRepository;
 import com.urlshortener.service.hashgenerator.HashGenerator;
-import com.urlshortener.service.kafka.ClickEventProducer;
-import com.urlshortener.service.kafka.UrlCreatedEventProducer;
+import com.urlshortener.kafka.producer.ClickEventProducer;
+import com.urlshortener.kafka.producer.UrlCreatedEventProducer;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import lombok.AllArgsConstructor;
@@ -137,10 +137,8 @@ public class UrlServiceImpl implements UrlService {
     public void deleteAllByUserId(Long userId) {
         log.info("Starting deletion of all URLs for userId: {}", userId);
 
-        // Get all URLs for this user before deleting
         List<Url> userUrls = urlRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
-        // Delete from cache first
         for (Url url : userUrls) {
             try {
                 cacheRepository.deleteByShortCode(url.getShortUrl());
@@ -150,7 +148,6 @@ public class UrlServiceImpl implements UrlService {
             }
         }
 
-        // Delete from MongoDB
         urlRepository.deleteByUserId(userId);
 
         log.info("Successfully deleted {} URLs for userId: {}", userUrls.size(), userId);

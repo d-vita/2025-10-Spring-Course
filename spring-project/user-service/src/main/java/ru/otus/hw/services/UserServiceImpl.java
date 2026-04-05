@@ -8,11 +8,13 @@ import ru.otus.hw.converters.UserConverter;
 import ru.otus.hw.dto.UserDto;
 import ru.otus.hw.dto.UserFormDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.kafka.producer.UserRegisteredEventProducer;
+import ru.otus.hw.kafka.producer.UserTariffUpdatedEventProducer;
 import ru.otus.hw.models.Tariff;
 import ru.otus.hw.models.User;
 import ru.otus.hw.repositories.TariffRepository;
 import ru.otus.hw.repositories.UserRepository;
-import ru.otus.hw.services.kafka.UserDeletedEventProducer;
+import ru.otus.hw.kafka.producer.UserDeletedEventProducer;
 
 import java.util.List;
 
@@ -29,6 +31,10 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserDeletedEventProducer userDeletedEventProducer;
+
+    private final UserRegisteredEventProducer userRegisteredEventProducer;
+
+    private final UserTariffUpdatedEventProducer userTariffUpdatedEventProducer;
 
     @Override
     @Transactional(readOnly = true)
@@ -62,7 +68,10 @@ public class UserServiceImpl implements UserService {
                 tariff
         );
 
-        return userConverter.fromDomainObject(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+        userRegisteredEventProducer.sendUserRegisteredEvent(savedUser);
+
+        return userConverter.fromDomainObject(savedUser);
     }
 
     @Override
@@ -75,6 +84,7 @@ public class UserServiceImpl implements UserService {
                 );
 
         var tariff = getTariff(dto.tariffId());
+        boolean tariffChanged = !user.getTariff().getId().equals(tariff.getId());
 
         user.setUsername(dto.username());
         user.setEmail(dto.email());
@@ -82,6 +92,10 @@ public class UserServiceImpl implements UserService {
 
         if (dto.password() != null && !dto.password().isBlank()) {
             user.setPasswordHash(passwordEncoder.encode(dto.password()));
+        }
+
+        if (tariffChanged) {
+            userTariffUpdatedEventProducer.sendUserTariffUpdatedEvent(user);
         }
 
         return userConverter.fromDomainObject(user);
