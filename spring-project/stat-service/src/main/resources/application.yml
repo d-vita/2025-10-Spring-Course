@@ -9,7 +9,8 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: com.urlshortener.dto,com.urlshortener.model
+        spring.json.trusted.packages: ru.otus.hw.event
+        spring.json.value.default.type: ru.otus.hw.event.ClickEvent
 
   application:
     name: stat-service

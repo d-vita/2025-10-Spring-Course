@@ -1,5 +1,7 @@
 package ru.otus.hw.services;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

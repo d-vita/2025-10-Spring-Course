@@ -5,9 +5,7 @@ import ru.otus.hw.models.Click;
 
 import java.util.Optional;
 
-public interface ClickRepository extends JpaRepository<Click, Long> {
+public interface ClickRepository extends JpaRepository<Click, String> {
 
     Optional<Click> findByUserIdAndShortUrl(Long userId, String shortUrl);
-
-    Optional<Click> findById(String userId);
 }
