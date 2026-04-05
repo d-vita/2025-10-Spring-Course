@@ -12,3 +12,14 @@ create table if not exists url_created_stats (
     last_created_at timestamp
 );
 
+create table if not exists notifications (
+    id bigint primary key,
+    user_id bigint not null,
+    short_url varchar(255) not null,
+    message varchar(500) not null,
+    read boolean not null default false,
+    created_at timestamp not null
+);
+
+create index if not exists idx_notifications_user_id on notifications(user_id);
+create index if not exists idx_notifications_user_read on notifications(user_id, read);

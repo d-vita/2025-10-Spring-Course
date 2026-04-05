@@ -12,6 +12,7 @@ import ru.otus.hw.models.Tariff;
 import ru.otus.hw.models.User;
 import ru.otus.hw.repositories.TariffRepository;
 import ru.otus.hw.repositories.UserRepository;
+import ru.otus.hw.services.kafka.UserDeletedEventProducer;
 
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class UserServiceImpl implements UserService {
     private final UserConverter userConverter;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final UserDeletedEventProducer userDeletedEventProducer;
 
     @Override
     @Transactional(readOnly = true)
@@ -87,10 +90,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteById(long id) {
-        if (!userRepository.existsById(id)) {
-            throw new EntityNotFoundException("User with id %d not found".formatted(id));
-        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("User with id %d not found".formatted(id))
+                );
         userRepository.deleteById(id);
+        userDeletedEventProducer.sendUserDeletedEvent(user.getId(), user.getUsername());
     }
 
     private Tariff getTariff(Long tariffId) {

@@ -12,4 +12,6 @@ public interface UrlService {
     Optional<String> getOriginalUrl(String shortUrl);
 
     List<UrlInfoDto> getUserUrls(Long userId);
+
+    void deleteAllByUserId(Long userId);
 }

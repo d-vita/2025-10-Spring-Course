@@ -14,4 +14,7 @@ public interface CacheRepository {
 
     boolean contains(String shortCode);
 
+    void deleteByShortCode(String shortCode);
+
+    void deleteByLongUrl(String longUrl);
 }

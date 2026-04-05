@@ -24,16 +24,16 @@
           ]
         },
         "url": {
-          "raw": "http://localhost:8080/api/urls",
+          "raw": "http://localhost:8081/api/urls",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "8080",
+          "port": "8081",
           "path": ["api", "urls"]
         }
       }
     },
     {
-      "name": "Get Original URL",
+      "name": "Get Original URL (Redirect)",
       "request": {
         "method": "GET",
         "url": {
@@ -43,10 +43,7 @@
           "port": "8081",
           "path": ["api", "urls", "{{shortCode}}"]
         }
-      },
-      "variable": [
-        { "key": "shortCode", "value": "abc123" }
-      ]
+      }
     },
     {
       "name": "Get User URLs",
@@ -59,10 +56,19 @@
           "port": "8081",
           "path": ["api", "urls", "user", "{{userId}}"]
         }
-      },
-      "variable": [
-        { "key": "userId", "value": "1" }
-      ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "shortCode",
+      "value": "abc123",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
     }
   ]
 }

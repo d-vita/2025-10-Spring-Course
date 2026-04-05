@@ -12,7 +12,8 @@ spring:
         spring.json.trusted.packages: ru.otus.hw.event,com.urlshortener.event
         spring.json.type.mapping: |
           com.urlshortener.event.UrlCreatedEvent:ru.otus.hw.event.UrlCreatedEvent,
-          com.urlshortener.event.ClickEvent:ru.otus.hw.event.ClickEvent
+          com.urlshortener.event.ClickEvent:ru.otus.hw.event.ClickEvent,
+          ru.otus.hw.event.UserDeletedEvent:ru.otus.hw.event.UserDeletedEvent
 
   application:
     name: stat-service

@@ -7,19 +7,17 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 /**
- * Event published when a new user registers.
+ * Event consumed when a user is deleted.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegisteredEvent {
+public class UserDeletedEvent {
 
     private Long userId;
 
     private String username;
 
-    private String email;
-
-    private Instant registeredAt;
+    private Instant deletedAt;
 
 }

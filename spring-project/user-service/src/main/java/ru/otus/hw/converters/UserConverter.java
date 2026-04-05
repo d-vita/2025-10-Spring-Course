@@ -15,6 +15,7 @@ public class UserConverter {
 
     public UserDto fromDomainObject(User user) {
         return new UserDto(
+                user.getId(),
                 user.getUsername(),
                 user.getEmail(),
                 tariffConverter.fromDomainObject(user.getTariff())

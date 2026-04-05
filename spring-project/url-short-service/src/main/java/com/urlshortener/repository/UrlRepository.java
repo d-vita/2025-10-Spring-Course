@@ -11,4 +11,6 @@ public interface UrlRepository extends MongoRepository<Url, String> {
     List<Url> findByUserIdOrderByCreatedAtDesc(Long userId);
 
     Url findByLongUrl(String originalUrl);
+
+    void deleteByUserId(Long userId);
 }

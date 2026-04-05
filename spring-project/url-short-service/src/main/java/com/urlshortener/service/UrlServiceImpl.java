@@ -2,12 +2,15 @@ package com.urlshortener.service;
 
 import com.urlshortener.dto.UrlCacheDto;
 import com.urlshortener.dto.UrlInfoDto;
+import com.urlshortener.exception.UrlNotFoundException;
 import com.urlshortener.model.Url;
 import com.urlshortener.repository.UrlRepository;
 import com.urlshortener.repository.cache.CacheRepository;
 import com.urlshortener.service.hashgenerator.HashGenerator;
 import com.urlshortener.service.kafka.ClickEventProducer;
 import com.urlshortener.service.kafka.UrlCreatedEventProducer;
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,33 +38,44 @@ public class UrlServiceImpl implements UrlService {
 
     private final UrlCreatedEventProducer urlCreatedEventProducer;
 
+    private final RateLimiter createUrlRateLimiter;
+
+    private final RateLimiter getUrlRateLimiter;
+
     /**
      * Shortens a long URL.
      */
     @Override
     public String shorten(String originalUrl, Long userId) {
-        if (userId == null) {
-            throw new IllegalArgumentException("UserId must not be null");
+        try {
+            return createUrlRateLimiter.executeSupplier(() -> {
+                if (userId == null) {
+                    throw new IllegalArgumentException("UserId must not be null");
+                }
+
+                String cachedShortUrl = cacheRepository.getByValue(originalUrl);
+                if (cachedShortUrl != null) {
+                    return DOMAIN + cachedShortUrl;
+                }
+
+                Url existing = urlRepository.findByLongUrl(originalUrl);
+                if (existing != null) {
+                    return DOMAIN + existing.getShortUrl();
+                }
+
+                String shortCode = hashGenerator.encode(originalUrl);
+                Url url = new Url(null, shortCode, originalUrl, userId, Instant.now());
+                urlRepository.save(url);
+                cacheRepository.save(shortCode, new UrlCacheDto(originalUrl, userId), TTL);
+
+                sendUrlCreatedEvent(shortCode, originalUrl, userId);
+
+                return DOMAIN + shortCode;
+            });
+        } catch (RequestNotPermitted e) {
+            log.warn("Rate limit exceeded for creating URL by userId: {}", userId);
+            throw new IllegalStateException("Rate limit exceeded. Please try again later.", e);
         }
-
-        String cachedShortUrl = cacheRepository.getByValue(originalUrl);
-        if (cachedShortUrl != null) {
-            return DOMAIN + cachedShortUrl;
-        }
-
-        Url existing = urlRepository.findByLongUrl(originalUrl);
-        if (existing != null) {
-            return DOMAIN + existing.getShortUrl();
-        }
-
-        String shortCode = hashGenerator.encode(originalUrl);
-        Url url = new Url(null, shortCode, originalUrl, userId, Instant.now());
-        urlRepository.save(url);
-        cacheRepository.save(shortCode, new UrlCacheDto(originalUrl, userId), TTL);
-
-        sendUrlCreatedEvent(shortCode, originalUrl, userId);
-
-        return DOMAIN + shortCode;
     }
 
     /**
@@ -69,29 +83,33 @@ public class UrlServiceImpl implements UrlService {
      */
     @Override
     public Optional<String> getOriginalUrl(String shortUrl) {
-        UrlCacheDto cached = cacheRepository.get(shortUrl);
+        try {
+            return getUrlRateLimiter.executeSupplier(() -> {
+                UrlCacheDto cached = cacheRepository.get(shortUrl);
 
-        if (cached != null) {
-            sendClickEvent(shortUrl, cached);
-            return Optional.of(cached.getLongUrl());
+                if (cached != null) {
+                    sendClickEvent(shortUrl, cached);
+                    return Optional.of(cached.getLongUrl());
+                }
+
+                Url url = urlRepository.findByShortUrl(shortUrl);
+
+                if (url == null) {
+                    throw new UrlNotFoundException("Short URL not found: " + shortUrl);
+                }
+
+                UrlCacheDto dto = new UrlCacheDto(url.getLongUrl(), url.getUserId());
+
+                cacheRepository.save(shortUrl, dto, TTL);
+
+                sendClickEvent(shortUrl, dto);
+
+                return Optional.of(dto.getLongUrl());
+            });
+        } catch (RequestNotPermitted e) {
+            log.warn("Rate limit exceeded for getting URL: {}", shortUrl);
+            throw new IllegalStateException("Rate limit exceeded for getting URL: {}" + shortUrl);
         }
-
-        Url url = urlRepository.findByShortUrl(shortUrl);
-
-        if (url == null) {
-            return Optional.empty();
-        }
-
-        UrlCacheDto dto = new UrlCacheDto(
-                url.getLongUrl(),
-                url.getUserId()
-        );
-
-        cacheRepository.save(shortUrl, dto, TTL);
-
-        sendClickEvent(shortUrl, dto);
-
-        return Optional.of(dto.getLongUrl());
     }
 
     /**
@@ -109,6 +127,33 @@ public class UrlServiceImpl implements UrlService {
                         url.getCreatedAt()
                 ))
                 .toList();
+    }
+
+    /**
+     * Deletes all URLs created by a specific user.
+     * This includes both MongoDB records and Redis cache entries.
+     */
+    @Override
+    public void deleteAllByUserId(Long userId) {
+        log.info("Starting deletion of all URLs for userId: {}", userId);
+
+        // Get all URLs for this user before deleting
+        List<Url> userUrls = urlRepository.findByUserIdOrderByCreatedAtDesc(userId);
+
+        // Delete from cache first
+        for (Url url : userUrls) {
+            try {
+                cacheRepository.deleteByShortCode(url.getShortUrl());
+                cacheRepository.deleteByLongUrl(url.getLongUrl());
+            } catch (Exception e) {
+                log.error("Error deleting cache for URL: {}", url.getShortUrl(), e);
+            }
+        }
+
+        // Delete from MongoDB
+        urlRepository.deleteByUserId(userId);
+
+        log.info("Successfully deleted {} URLs for userId: {}", userUrls.size(), userId);
     }
 
     private void sendClickEvent(String shortUrl, UrlCacheDto dto) {

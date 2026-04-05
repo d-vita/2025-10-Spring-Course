@@ -1,12 +1,11 @@
 package ru.otus.hw.services;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Click;
 import ru.otus.hw.repositories.ClickRepository;
+import ru.otus.hw.repositories.UrlCreatedRepository;
 
 import java.time.Instant;
 
@@ -15,10 +14,7 @@ import java.time.Instant;
 public class ClickServiceImpl implements ClickService {
 
     private final ClickRepository clickRepository;
-
-//    private final UserClient userClient;
-//
-//    private final NotificationService notificationService;
+    private final UrlCreatedRepository urlCreatedRepository;
 
     @Override
     @Transactional
@@ -31,11 +27,6 @@ public class ClickServiceImpl implements ClickService {
         click.setLastClickAt(Instant.now());
 
         clickRepository.save(click);
-
-//        long maxClicks = userClient.getUserTariffLimit(userId);
-//        if (click.getClicks() > maxClicks) {
-//            notificationService.sendLimitExceeded(userId);
-//        }
     }
 
     @Override
@@ -43,6 +34,13 @@ public class ClickServiceImpl implements ClickService {
         return clickRepository.findByUserIdAndShortUrl(userId, shortUrl)
                 .map(Click::getClicks)
                 .orElse(0L);
+    }
+
+    @Override
+    @Transactional
+    public void anonymizeUserClicks(Long userId) {
+        clickRepository.anonymizeByUserId(userId);
+        urlCreatedRepository.anonymizeByUserId(userId);
     }
 
 }

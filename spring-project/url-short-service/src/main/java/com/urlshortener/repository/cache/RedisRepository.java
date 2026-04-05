@@ -39,4 +39,14 @@ public class RedisRepository implements CacheRepository {
     public boolean contains(String key) {
         return redisTemplate.hasKey(SHORT_KEY_PREFIX + key);
     }
+
+    @Override
+    public void deleteByShortCode(String shortCode) {
+        redisTemplate.delete(SHORT_KEY_PREFIX + shortCode);
+    }
+
+    @Override
+    public void deleteByLongUrl(String longUrl) {
+        stringRedisTemplate.delete(LONG_KEY_PREFIX + longUrl);
+    }
 }

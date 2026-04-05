@@ -117,11 +117,56 @@
           "host": ["localhost"],
           "port": "8080",
           "path": ["api", "users", "{{userId}}"]
-        },
-        "variable": [
-          { "key": "userId", "value": "1" }
-        ]
+        }
       }
+    },
+    {
+      "name": "Get All Tariffs",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/api/tariffs",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "tariffs"]
+        }
+      }
+    },
+    {
+      "name": "Create Tariff",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Premium\",\n  \"maxLinks\": 1000,\n  \"maxClicksPerLink\": 10000\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/tariffs",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "tariffs"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
     }
   ]
 }
