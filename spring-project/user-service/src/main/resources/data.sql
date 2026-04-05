@@ -1,6 +1,6 @@
 INSERT INTO tariffs (name, max_links, max_clicks_per_link)
 VALUES
-    ('FREE', 100, 1000),
+    ('FREE', 3, 3),
     ('BASIC', 1000, 10000),
     ('PRO', 10000, 100000)
     ON CONFLICT (name) DO NOTHING;

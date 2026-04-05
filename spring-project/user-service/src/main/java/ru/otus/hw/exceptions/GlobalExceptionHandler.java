@@ -27,6 +27,17 @@ public class GlobalExceptionHandler {
         return ex.getMessage();
     }
 
+    @ExceptionHandler(TariffAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleTariffAlreadyExists(TariffAlreadyExistsException ex) {return ex.getMessage();
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleUserAlreadyExists(UserAlreadyExistsException ex) {
+        return "User already exists)";
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public String handleDbConflict(DataIntegrityViolationException ex) {

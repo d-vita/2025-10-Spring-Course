@@ -17,16 +17,7 @@ public class UserConverter {
         return new UserDto(
                 user.getUsername(),
                 user.getEmail(),
-                tariffConverter.fromDomainObject(user.getTariff()).name()
-        );
-    }
-
-    public User fromDto(UserFormDto dto) {
-        return new User(
-                dto.username(),
-                dto.email(),
-                null,
-                null
+                tariffConverter.fromDomainObject(user.getTariff())
         );
     }
 }

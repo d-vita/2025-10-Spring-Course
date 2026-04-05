@@ -10,7 +10,9 @@ public class TariffConverter {
     public TariffDto fromDomainObject(Tariff tariff) {
         return new TariffDto(
                 tariff.getId(),
-                tariff.getName().name()
+                tariff.getName(),
+                tariff.getMaxLinks(),
+                tariff.getMaxClicksPerLink()
         );
     }
 }

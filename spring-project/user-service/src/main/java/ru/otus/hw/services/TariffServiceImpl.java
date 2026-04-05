@@ -5,6 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.TariffConverter;
 import ru.otus.hw.dto.TariffDto;
+import ru.otus.hw.dto.TariffFormDto;
+import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.exceptions.TariffAlreadyExistsException;
+import ru.otus.hw.models.Tariff;
+import ru.otus.hw.models.User;
 import ru.otus.hw.repositories.TariffRepository;
 
 import java.util.List;
@@ -23,5 +28,22 @@ public class TariffServiceImpl implements TariffService {
         return tariffRepository.findAll().stream()
                 .map(tariffConverter::fromDomainObject)
                 .toList();
+    }
+
+    @Override
+    public TariffDto insert(TariffFormDto tariffFormDto) {
+        if (tariffRepository.existsByName(tariffFormDto.name())) {
+            throw new TariffAlreadyExistsException(
+                    "Tariff with name %s already exists".formatted(tariffFormDto.name())
+            );
+        }
+
+        Tariff tariff = new Tariff(
+                null,
+                tariffFormDto.name(),
+                tariffFormDto.maxLinks(),
+                tariffFormDto.maxClicksPerLink()
+        );
+        return tariffConverter.fromDomainObject(tariffRepository.save(tariff));
     }
 }
