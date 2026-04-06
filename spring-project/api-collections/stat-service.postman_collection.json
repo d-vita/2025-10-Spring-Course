@@ -1,0 +1,107 @@
+{
+  "info": {
+    "name": "Stat Service API",
+    "_postman_id": "c7d2b5a3-9876-5432-bcde-fedcba987654",
+    "description": "Collection to test Statistics and Notification service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Statistics",
+      "item": [
+        {
+          "name": "Get User  Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/stats/user/{{userId}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["api", "stats", "user", "{{userId}}"]
+            },
+            "description": "Get statistics about URLs created by a user"
+          }
+        },
+        {
+          "name": "Get URL Click Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/stats/user/{{userId}}/url/{{shortUrl}}/clicks",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["api", "stats", "user", "{{userId}}", "url", "{{shortUrl}}", "clicks"]
+            },
+            "description": "Get click statistics for a specific short URL"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get All User Notifications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/notifications/user/{{userId}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["api", "notifications", "user", "{{userId}}"]
+            },
+            "description": "Get all notifications for a user"
+          }
+        },
+        {
+          "name": "Get Unread Notifications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/notifications/user/{{userId}}/unread",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["api", "notifications", "user", "{{userId}}", "unread"]
+            },
+            "description": "Get only unread notifications for a user"
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "http://localhost:8082/api/notifications/{{notificationId}}/mark-read",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["api", "notifications", "{{notificationId}}", "mark-read"]
+            },
+            "description": "Mark a specific notification as read"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "shortUrl",
+      "value": "abc123",
+      "type": "string"
+    },
+    {
+      "key": "notificationId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}
