@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.hw.dto.TariffDto;
 import ru.otus.hw.dto.TariffFormDto;
-import ru.otus.hw.dto.UserDto;
-import ru.otus.hw.dto.UserFormDto;
 import ru.otus.hw.services.TariffService;
 
 import java.util.List;

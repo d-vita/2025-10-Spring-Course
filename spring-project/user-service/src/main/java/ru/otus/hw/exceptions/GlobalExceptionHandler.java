@@ -2,9 +2,14 @@ package ru.otus.hw.exceptions;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -21,6 +26,21 @@ public class GlobalExceptionHandler {
         return ex.getMessage();
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+
+        return ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(Collectors.toMap(
+                        FieldError::getField,
+                        FieldError::getDefaultMessage,
+                        (msg1, msg2) -> msg1
+                ));
+    }
+
     @ExceptionHandler(InvalidCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String handleAuth(InvalidCredentialsException ex) {
@@ -29,7 +49,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TariffAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public String handleTariffAlreadyExists(TariffAlreadyExistsException ex) {return ex.getMessage();
+    public String handleTariffAlreadyExists(TariffAlreadyExistsException ex) {
+        return ex.getMessage();
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)

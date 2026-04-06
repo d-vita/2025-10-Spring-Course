@@ -38,18 +38,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AuthResponse register(UserFormDto userFormDto) {
-
-        if (userRepository.findByUsername(userFormDto.username()).isPresent()) {
-            throw new UserAlreadyExistsException("Username already exists");
-        }
-
-        if (userRepository.findByEmail(userFormDto.email()).isPresent()) {
-            throw new UserAlreadyExistsException("Email already exists");
-        }
-
+        validateUserForm(userFormDto);
         Tariff tariff = tariffRepository.findById(userFormDto.tariffId())
                 .orElseThrow(() -> new EntityNotFoundException("Tariff is not found"));
-
         User user = new User(
                 userFormDto.username(),
                 userFormDto.email(),
@@ -60,7 +51,6 @@ public class AuthServiceImpl implements AuthService {
         try {
             User savedUser = userRepository.save(user);
             userRegisteredEventProducer.sendUserRegisteredEvent(savedUser);
-
             String token = jwtService.generateToken(savedUser);
             return new AuthResponse(
                     token,
@@ -87,5 +77,14 @@ public class AuthServiceImpl implements AuthService {
                 token,
                 userConverter.fromDomainObject(user)
         );
+    }
+
+    private void validateUserForm (UserFormDto userFormDto) {
+        if (userRepository.findByUsername(userFormDto.username()).isPresent()) {
+            throw new UserAlreadyExistsException("Username already exists");
+        }
+        if (userRepository.findByEmail(userFormDto.email()).isPresent()) {
+            throw new UserAlreadyExistsException("Email already exists");
+        }
     }
 }
