@@ -15,9 +15,6 @@ spring:
     name: user-service
 
   datasource:
-#    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/user}
-#    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-#    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/user}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:postgres}
@@ -42,4 +39,5 @@ logging:
     ROOT: ERROR
 
 jwt:
-  secret: mySuperSecretKeyThatIsAtLeast256BitsLongForHS256
+#  secret: mySuperSecretKeyThatIsAtLeast256BitsLongForHS256
+  secret: ${JWT_SECRET:mySuperSecretKeyThatIsAtLeast256BitsLongForHS256}
