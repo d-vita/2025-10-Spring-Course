@@ -1,6 +1,7 @@
 package com.urlshortener.controller;
 
 import com.urlshortener.dto.UrlInfoDto;
+import com.urlshortener.exception.UrlNotFoundException;
 import com.urlshortener.service.UrlService;
 import com.urlshortener.validation.UrlValidator;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 
 @RequiredArgsConstructor
@@ -40,7 +40,7 @@ public class UrlShortenerController {
     @GetMapping("/{shortCode}")
     public String getUrl(@PathVariable String shortCode) {
         return urlService.getOriginalUrl(shortCode)
-                .orElseThrow(() -> new NoSuchElementException("Short URL not found"));
+                .orElseThrow(() -> new UrlNotFoundException("Short URL not found: " + shortCode));
     }
 
     @GetMapping("/user/{userId}")

@@ -49,9 +49,7 @@ public class UrlServiceImpl implements UrlService {
     public String shorten(String originalUrl, Long userId) {
         try {
             return createUrlRateLimiter.executeSupplier(() -> {
-                if (userId == null) {
-                    throw new IllegalArgumentException("UserId must not be null");
-                }
+                checkUserId(userId);
 
                 String cachedShortUrl = cacheRepository.getByValue(originalUrl);
                 if (cachedShortUrl != null) {
@@ -63,19 +61,21 @@ public class UrlServiceImpl implements UrlService {
                     return DOMAIN + existing.getShortUrl();
                 }
 
-                String shortCode = hashGenerator.encode(originalUrl);
-                Url url = new Url(null, shortCode, originalUrl, userId, Instant.now());
-                urlRepository.save(url);
-                cacheRepository.save(shortCode, new UrlCacheDto(originalUrl, userId), TTL);
-
-                sendUrlCreatedEvent(shortCode, originalUrl, userId);
-
-                return DOMAIN + shortCode;
+                return createAndSaveUrl(originalUrl, userId);
             });
         } catch (RequestNotPermitted e) {
             log.warn("Rate limit exceeded for creating URL by userId: {}", userId);
             throw new IllegalStateException("Rate limit exceeded. Please try again later.", e);
         }
+    }
+
+    private String createAndSaveUrl(String originalUrl, Long userId) {
+        String shortCode = hashGenerator.encode(originalUrl);
+        Url url = new Url(null, shortCode, originalUrl, userId, Instant.now());
+        urlRepository.save(url);
+        cacheRepository.save(shortCode, new UrlCacheDto(originalUrl, userId), TTL);
+        sendUrlCreatedEvent(shortCode, originalUrl, userId);
+        return DOMAIN + shortCode;
     }
 
     /**
@@ -91,25 +91,25 @@ public class UrlServiceImpl implements UrlService {
                     sendClickEvent(shortUrl, cached);
                     return Optional.of(cached.getLongUrl());
                 }
-
-                Url url = urlRepository.findByShortUrl(shortUrl);
-
-                if (url == null) {
-                    throw new UrlNotFoundException("Short URL not found: " + shortUrl);
-                }
-
-                UrlCacheDto dto = new UrlCacheDto(url.getLongUrl(), url.getUserId());
-
-                cacheRepository.save(shortUrl, dto, TTL);
-
-                sendClickEvent(shortUrl, dto);
-
-                return Optional.of(dto.getLongUrl());
+                return findAndCacheUrl(shortUrl);
             });
         } catch (RequestNotPermitted e) {
             log.warn("Rate limit exceeded for getting URL: {}", shortUrl);
             throw new IllegalStateException("Rate limit exceeded for getting URL: {}" + shortUrl);
         }
+    }
+
+    private Optional<String> findAndCacheUrl(String shortUrl) {
+        Url url = urlRepository.findByShortUrl(shortUrl);
+        if (url == null) {
+            throw new UrlNotFoundException("Short URL not found: " + shortUrl);
+        }
+
+        UrlCacheDto dto = new UrlCacheDto(url.getLongUrl(), url.getUserId());
+        cacheRepository.save(shortUrl, dto, TTL);
+        sendClickEvent(shortUrl, dto);
+
+        return Optional.of(dto.getLongUrl());
     }
 
     /**
@@ -174,6 +174,12 @@ public class UrlServiceImpl implements UrlService {
             );
         } catch (Exception e) {
             log.error("Kafka error sending url created event", e);
+        }
+    }
+
+    private void checkUserId(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("UserId must not be null");
         }
     }
 }
