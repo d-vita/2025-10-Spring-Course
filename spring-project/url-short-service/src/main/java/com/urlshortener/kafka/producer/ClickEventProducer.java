@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
-import static org.reflections.Reflections.log;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +17,6 @@ public class ClickEventProducer {
     private final KafkaTemplate<String, ClickEvent> kafkaTemplate;
 
     public void sendClickEvent(String shortUrl, String longUrl, Long userId) {
-        log.info("!!!!!!!!!!ClickEventProducer {} {}", shortUrl, userId);
         ClickEvent event = new ClickEvent(
                 shortUrl,
                 longUrl,
