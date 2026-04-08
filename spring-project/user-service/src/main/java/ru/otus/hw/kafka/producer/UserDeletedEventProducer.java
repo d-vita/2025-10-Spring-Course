@@ -7,6 +7,8 @@ import ru.otus.hw.kafka.event.UserDeletedEvent;
 
 import java.time.Instant;
 
+import static org.reflections.Reflections.log;
+
 @Service
 @RequiredArgsConstructor
 public class UserDeletedEventProducer {
@@ -16,6 +18,7 @@ public class UserDeletedEventProducer {
     private final KafkaTemplate<String, UserDeletedEvent> kafkaTemplate;
 
     public void sendUserDeletedEvent(Long userId, String username) {
+        log.info("!!!!!!!!!!UserDeletedEvent {} {}", username, userId);
         UserDeletedEvent event = new UserDeletedEvent(
                 userId,
                 username,

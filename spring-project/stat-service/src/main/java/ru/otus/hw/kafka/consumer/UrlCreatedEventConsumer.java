@@ -6,14 +6,17 @@ import org.springframework.stereotype.Component;
 import ru.otus.hw.kafka.event.UrlCreatedEvent;
 import ru.otus.hw.services.UrlCreatedService;
 
+import static org.reflections.Reflections.log;
+
 @RequiredArgsConstructor
 @Component
 public class UrlCreatedEventConsumer {
 
     private final UrlCreatedService urlCreatedService;
 
-    @KafkaListener(topics = "url-created", groupId = "url-created-stats-group")
+    @KafkaListener(topics = "url-created", groupId = "stat-service-group")
     public void consumeUrlCreatedEvent(UrlCreatedEvent event) {
+        log.info("!!!!!!!!!!url-created {} {}", event.getShortUrl(), event.getUserId());
         urlCreatedService.recordUrlCreation(event.getUserId());
     }
 }

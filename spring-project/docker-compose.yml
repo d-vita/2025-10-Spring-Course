@@ -54,9 +54,12 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/user
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - KAFKA_BOOTSTRAP_SERVERS=broker:29092
     depends_on:
       PostgreSQL:
         condition: service_healthy
+      broker:
+        condition: service_started
     networks:
       - backend-network
 
@@ -122,6 +125,7 @@ services:
     container_name: broker
     ports:
       - "9092:9092"
+      - "29092:29092"
     depends_on:
       - zookeeper
     environment:

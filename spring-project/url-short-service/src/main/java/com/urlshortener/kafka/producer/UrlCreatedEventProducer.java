@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
+import static org.reflections.Reflections.log;
+
 @Service
 @RequiredArgsConstructor
 public class UrlCreatedEventProducer {
@@ -16,6 +18,7 @@ public class UrlCreatedEventProducer {
     private final KafkaTemplate<String, UrlCreatedEvent> kafkaTemplate;
 
     public void sendUrlCreatedEvent(String shortUrl, String longUrl, Long userId) {
+        log.info("!!!!!!!!!!UrlCreatedEventProducer {} {}", shortUrl, userId);
         UrlCreatedEvent event = new UrlCreatedEvent(
                 shortUrl,
                 longUrl,
