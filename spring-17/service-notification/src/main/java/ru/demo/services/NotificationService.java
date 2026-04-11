@@ -14,9 +14,6 @@ public class NotificationService {
         log.info("Sending notification to user {}: {}" ,
                 notificationDto.getUserId(),
                 notificationDto.getMessage());
-
-//         симуляция ошибки для теста CircuitBreaker
-//        throw new RuntimeException("Simulated notification failure");
     }
 
     public void fallback(NotificationDto notificationDto, Throwable ex) {
