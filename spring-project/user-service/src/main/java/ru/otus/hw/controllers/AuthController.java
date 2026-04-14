@@ -1,0 +1,35 @@
+package ru.otus.hw.controllers;
+
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import ru.otus.hw.dto.AuthResponse;
+import ru.otus.hw.dto.LoginDto;
+import ru.otus.hw.dto.UserFormDto;
+import ru.otus.hw.services.AuthService;
+
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    private final AuthService authService;
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthResponse register(@RequestBody @Valid UserFormDto userFormDto) {
+        return authService.register(userFormDto);
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody @Valid LoginDto loginDto) {
+        return authService.login(loginDto);
+    }
+}

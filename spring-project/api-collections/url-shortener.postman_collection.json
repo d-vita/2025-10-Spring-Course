@@ -1,0 +1,74 @@
+{
+  "info": {
+    "name": "URL Shortener API",
+    "_postman_id": "b3f0a8a0-1234-5678-90ab-cdef12345678",
+    "description": "Collection to test URL Shortener service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Short URL",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "originalUrl", "value": "https://example.com/page1" },
+            { "key": "userId", "value": "1" }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8081/api/urls",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["api", "urls"]
+        }
+      }
+    },
+    {
+      "name": "Get Original URL (Redirect)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8081/api/urls/{{shortCode}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["api", "urls", "{{shortCode}}"]
+        }
+      }
+    },
+    {
+      "name": "Get User URLs",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8081/api/urls/user/{{userId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["api", "urls", "user", "{{userId}}"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "shortCode",
+      "value": "abc123",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}

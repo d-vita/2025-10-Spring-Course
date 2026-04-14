@@ -1,0 +1,28 @@
+spring:
+  data:
+    mongodb:
+      database: test-url-shortener
+    redis:
+      host: localhost
+      port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+resilience4j:
+  ratelimiter:
+    instances:
+      createUrl:
+        limit-for-period: 1000
+        limit-refresh-period: 1s
+        timeout-duration: 0s
+      getUrl:
+        limit-for-period: 2000
+        limit-refresh-period: 1s
+        timeout-duration: 0s
+
+logging:
+  level:
+    com.urlshortener: DEBUG

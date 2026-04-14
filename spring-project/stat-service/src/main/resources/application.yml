@@ -1,0 +1,50 @@
+server:
+  port: 8082
+
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: stat-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: "com.urlshortener.kafka.event.UrlCreatedEvent:ru.otus.hw.kafka.event.UrlCreatedEvent,
+          com.urlshortener.kafka.event.ClickEvent:ru.otus.hw.kafka.event.ClickEvent,
+          ru.otus.hw.kafka.event.UserDeletedEvent:ru.otus.hw.kafka.event.UserDeletedEvent,
+          ru.otus.hw.kafka.event.UserRegisteredEvent:ru.otus.hw.kafka.event.UserRegisteredEvent,
+          ru.otus.hw.kafka.event.UserTariffUpdatedEvent:ru.otus.hw.kafka.event.UserTariffUpdatedEvent,
+          com.urlshortener.kafka.event.LimitExceededEvent:ru.otus.hw.kafka.event.LimitExceededEvent"
+
+
+  application:
+    name: stat-service
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/user}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: 30000
+  sql:
+    init:
+      mode: always
+      data-locations: optional:classpath:data.sql
+      schema-locations: classpath:schema.sql
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+
+logging:
+  level:
+    ROOT: ERROR
+    org.springframework.kafka: DEBUG
